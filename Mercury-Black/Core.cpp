@@ -1,19 +1,26 @@
-#include <iostream>
+#include "GameEngine.h"
+#include "Gamestate.h"
 #include <SDL.h>
 
 int main(int argc, char ** argv) {
 
-	SDL_Init(SDL_INIT_EVERYTHING);
+	GameEngine engine;
 
-	SDL_Window * window;
+	engine.init();
 
-	window = SDL_CreateWindow("Project Mercury Black", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 600, 400, SDL_WINDOW_RESIZABLE);
+	// Add State And PushBack
 
-	SDL_Delay(5000);
+	while (engine.isRunning()) {
 
-	SDL_DestroyWindow(window);
+		engine.handleEvents();
+		engine.update();
+		engine.render();
 
-	SDL_Quit();
+		engine.quit();
+
+	}
+
+	engine.clean();
 
 	return 0;
 }
