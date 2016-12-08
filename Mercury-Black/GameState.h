@@ -7,15 +7,15 @@ class GameState {
 
 public:
 
-	void init() {}
-	void clean() {}
+	virtual void init() = 0;
+	virtual void clean() = 0;
 
-	void pause() {}
-	void resume() {}
+	virtual void pause() = 0;
+	virtual void resume() = 0;
 
-	void handleEvent(GameEngine * engine) {}
-	void update(GameEngine * engine) {}
-	void render(GameEngine * engine) {}
+	virtual void handleEvent(GameEngine * engine) = 0;
+	virtual void update(GameEngine * engine) = 0;
+	virtual void render(GameEngine * engine) = 0;
 
 	void changeState(GameEngine * engine, GameState * state) { 
 		engine->changeState(state); 

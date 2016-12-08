@@ -11,9 +11,9 @@ class GameEngine {
 public:
 
 	SDL_Window * window;
-	SDL_Renderer * renderer;
+	SDL_Surface * screen;
 
-	void init();
+	int init();
 	void clean();
 
 	void changeState(GameState * state);
@@ -30,7 +30,10 @@ public:
 private:
 
 	std::vector <GameState *> states;
+	
 	bool running;
+	
+	Uint32 bgColor;
 
 };
 

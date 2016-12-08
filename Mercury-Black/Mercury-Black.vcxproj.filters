@@ -19,12 +19,21 @@
     <Filter Include="Header Files\Engine">
       <UniqueIdentifier>{035368eb-01bf-4ee7-8330-7bf8e867fc4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameStates">
+      <UniqueIdentifier>{11836f27-2939-47af-8d0a-135fb43d77a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameStates">
+      <UniqueIdentifier>{6b2d48c0-1fef-4b14-ada8-93be66568a64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Core.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameEngine.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Core.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -34,6 +43,9 @@
     </ClInclude>
     <ClInclude Include="GameState.h">
       <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header Files\GameStates</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

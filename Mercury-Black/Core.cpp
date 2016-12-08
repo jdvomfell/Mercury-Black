@@ -1,22 +1,22 @@
 #include "GameEngine.h"
-#include "Gamestate.h"
-#include <SDL.h>
+#include "MainMenu.h"
 
 int main(int argc, char ** argv) {
 
 	GameEngine engine;
 
-	engine.init();
+	if (engine.init() == 0) {
+		printf("Closing: Could Not Initialize!\n");
+		return -1;
+	}
 
-	// Add State And PushBack
+	engine.changeState(MainMenu::instance());
 
 	while (engine.isRunning()) {
 
 		engine.handleEvents();
 		engine.update();
 		engine.render();
-
-		engine.quit();
 
 	}
 
