@@ -3,19 +3,11 @@
 
 #include <iostream>
 
-int GameEngine::init() {
+void GameEngine::init() {
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		std::cout << "SDL Video Init Failed! SDL_Error: " << SDL_GetError << std::endl;
-		return 0;
-	}
+	SDL_Init(SDL_INIT_VIDEO);
 
 	window = SDL_CreateWindow("Project Mercury Black", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1000, 600, SDL_WINDOW_SHOWN);
-
-	if (window == NULL) {
-		std::cout << "SDL Window Creation Failed! SDL_Error: " << SDL_GetError << std::endl;
-		return 0;
-	}
 
 	screen = SDL_GetWindowSurface(window);
 
@@ -23,7 +15,7 @@ int GameEngine::init() {
 
 	running = true;
 
-	return 1;
+	return;
 }
 
 void GameEngine::clean() {

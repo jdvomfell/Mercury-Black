@@ -2,6 +2,7 @@
 #define MAINMENU_H
 
 #include "GameState.h"
+#include <SDL_ttf.h>
 
 class MainMenu : public GameState {
 
@@ -22,6 +23,17 @@ public:
 private:
 
 	static MainMenu mainMenu;
+
+	TTF_Font * font;
+
+	SDL_Surface * newGame;
+	SDL_Surface * loadGame;
+	SDL_Surface * editor;
+	SDL_Surface * options;
+	SDL_Surface * quit;
+
+	SDL_Color unhighlited;
+	SDL_Color highlited;
 
 };
 

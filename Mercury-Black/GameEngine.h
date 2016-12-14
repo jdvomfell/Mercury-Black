@@ -13,7 +13,7 @@ public:
 	SDL_Window * window;
 	SDL_Surface * screen;
 
-	int init();
+	void init();
 	void clean();
 
 	void changeState(GameState * state);

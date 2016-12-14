@@ -4,7 +4,17 @@ MainMenu MainMenu::mainMenu;
 
 void MainMenu::init() {
 
-	printf("INIT\n");
+	font = TTF_OpenFont("ZenzaiItachi.ttf", 24);
+
+	unhighlited = { 150, 150, 150 };
+	highlited = { 255, 255, 255 };
+
+	newGame = TTF_RenderText_Solid(font, "New Game", unhighlited);
+	loadGame = TTF_RenderText_Solid(font, "New Game", unhighlited);
+	editor = TTF_RenderText_Solid(font, "New Game", unhighlited);
+	options = TTF_RenderText_Solid(font, "New Game", unhighlited);
+	quit = TTF_RenderText_Solid(font, "New Game", unhighlited);
+
 
 }
 
@@ -21,8 +31,6 @@ void MainMenu::resume() {
 }
 
 void MainMenu::handleEvent(GameEngine * engine) {
-
-	printf("HANDLE EVENTS\n");
 
 	SDL_Event event;
 

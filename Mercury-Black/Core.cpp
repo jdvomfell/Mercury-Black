@@ -5,10 +5,7 @@ int main(int argc, char ** argv) {
 
 	GameEngine engine;
 
-	if (engine.init() == 0) {
-		printf("Closing: Could Not Initialize!\n");
-		return -1;
-	}
+	engine.init();
 
 	engine.changeState(MainMenu::instance());
 
