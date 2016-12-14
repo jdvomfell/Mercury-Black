@@ -1,17 +1,19 @@
 #include "GameEngine.h"
 #include "GameState.h"
 
+#include <iostream>
+
 int GameEngine::init() {
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		printf("SDL Video Init Failed! SDL_Error: %s\n", SDL_GetError);
+		std::cout << "SDL Video Init Failed! SDL_Error: " << SDL_GetError << std::endl;
 		return 0;
 	}
 
-	window = SDL_CreateWindow("Project Mercury Black", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 600, 400, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("Project Mercury Black", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1000, 600, SDL_WINDOW_SHOWN);
 
 	if (window == NULL) {
-		printf("SDL Window Creation Failed! SDL_Error: &s\n", SDL_GetError);
+		std::cout << "SDL Window Creation Failed! SDL_Error: " << SDL_GetError << std::endl;
 		return 0;
 	}
 
@@ -26,7 +28,7 @@ int GameEngine::init() {
 
 void GameEngine::clean() {
 
-	for (int i = 0; i < states.size(); i++) {
+	for (size_t i = 0; i < states.size(); i++) {
 		states[i]->clean();
 	}
 
@@ -81,7 +83,7 @@ void GameEngine::render() {
 
 	SDL_FillRect(screen, NULL, bgColor);
 
-	for (int i = 0; i < states.size(); i++)
+	for (size_t i = 0; i < states.size(); i++)
 		states[i]->render(this);
 
 	SDL_UpdateWindowSurface(window);
