@@ -21,6 +21,10 @@ public:
 		engine->changeState(state); 
 	}
 
+protected:
+
+	GameState() {}
+
 };
 
 #endif

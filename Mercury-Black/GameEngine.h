@@ -1,6 +1,7 @@
 #ifndef GAMEENGINE_H
 #define GAMEENGINE_H
 
+#include <SFML\Graphics.hpp>
 #include <vector>
 
 class GameState;
@@ -8,6 +9,8 @@ class GameState;
 class GameEngine {
 
 public:
+
+	sf::RenderWindow window;
 
 	void init();
 	void clean();
@@ -26,7 +29,6 @@ public:
 private:
 
 	std::vector <GameState *> states;
-	
 	bool running;
 
 };

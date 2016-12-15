@@ -1,13 +1,12 @@
 #include "GameEngine.h"
 #include "GameState.h"
 
-#include <iostream>
-
 void GameEngine::init() {
 
+	window.create(sf::VideoMode(1920, 1080, 32), "Project Mercury Black");
+	
 	running = true;
 
-	return;
 }
 
 void GameEngine::clean() {
@@ -60,8 +59,12 @@ void GameEngine::update() {
 
 void GameEngine::render() {
 
+	window.clear(sf::Color::White);
+
 	for (size_t i = 0; i < states.size(); i++)
 		states[i]->render(this);
+
+	window.display();
 
 }
 
