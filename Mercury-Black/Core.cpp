@@ -1,7 +1,7 @@
 #include "GameEngine.h"
 #include "MainMenu.h"
 
-int main(int argc, char ** argv) {
+int main() {
 
 	GameEngine engine;
 
