@@ -1,7 +1,6 @@
 #ifndef GAMEENGINE_H
 #define GAMEENGINE_H
 
-#include <SDL.h>
 #include <vector>
 
 class GameState;
@@ -9,9 +8,6 @@ class GameState;
 class GameEngine {
 
 public:
-
-	SDL_Window * window;
-	SDL_Surface * screen;
 
 	void init();
 	void clean();
@@ -32,8 +28,6 @@ private:
 	std::vector <GameState *> states;
 	
 	bool running;
-	
-	Uint32 bgColor;
 
 };
 

@@ -5,14 +5,6 @@
 
 void GameEngine::init() {
 
-	SDL_Init(SDL_INIT_VIDEO);
-
-	window = SDL_CreateWindow("Project Mercury Black", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1000, 600, SDL_WINDOW_SHOWN);
-
-	screen = SDL_GetWindowSurface(window);
-
-	bgColor = SDL_MapRGB(screen->format, 0, 0, 0);
-
 	running = true;
 
 	return;
@@ -23,11 +15,6 @@ void GameEngine::clean() {
 	for (size_t i = 0; i < states.size(); i++) {
 		states[i]->clean();
 	}
-
-	SDL_FreeSurface(screen);
-	SDL_DestroyWindow(window);
-
-	SDL_Quit();
 
 }
 
@@ -73,12 +60,8 @@ void GameEngine::update() {
 
 void GameEngine::render() {
 
-	SDL_FillRect(screen, NULL, bgColor);
-
 	for (size_t i = 0; i < states.size(); i++)
 		states[i]->render(this);
-
-	SDL_UpdateWindowSurface(window);
 
 }
 
