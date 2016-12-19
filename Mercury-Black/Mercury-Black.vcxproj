@@ -132,13 +132,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="Editor.cpp" />
     <ClCompile Include="GameEngine.cpp" />
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="MainMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Buttons.h" />
+    <ClInclude Include="Editor.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GUI.h" />
     <ClInclude Include="MainMenu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

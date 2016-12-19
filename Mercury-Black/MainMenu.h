@@ -2,6 +2,7 @@
 #define MAINMENU_H
 
 #include "GameState.h"
+#include "Buttons.h"
 
 #define MENU_FONT_SIZE 130
 #define MENU_TITLE_SIZE 450
@@ -26,10 +27,6 @@ public:
 	void update(GameEngine * engine);
 	void render(GameEngine * engine);
 
-	void resized(int width, int height);
-	void keyPressed(sf::Event* event, GameEngine* engine);
-
-
 	static MainMenu * instance() { return &mainMenu; }
 
 private:
@@ -41,17 +38,15 @@ private:
 
 	sf::Font menuFont;
 
-	sf::Text newGame;
-	sf::Text loadGame;
-	sf::Text worldEditor;
-	sf::Text options;
-	sf::Text quit;
+	std::vector <GUI *> buttons;
+
+	GUI_NewGame newButton;
+	GUI_LoadGame loadButton;
+	GUI_Editor editorButton;
+	GUI_Options optionsButton;
+	GUI_Quit quitButton;
 
 	sf::Text title;
-
-	sf::Text test;
-
-	int selector;
 
 };
 
