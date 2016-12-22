@@ -59,13 +59,10 @@ void MainMenu::handleEvent(GameEngine * engine) {
 		case sf::Event::MouseButtonPressed:
 			if (event.mouseButton.button == sf::Mouse::Left) {
 
-				if (buttons[buttons.size() - 1]->isSelected(event.mouseButton.x, event.mouseButton.y))
-					engine->quit();
-
-				for (size_t i = 0; i < buttons.size() - 1; i++) {
+				for (size_t i = 0; i < buttons.size(); i++) {
 
 					if (buttons[i]->isSelected(event.mouseButton.x, event.mouseButton.y))
-						buttons[i]->interact();
+						buttons[i]->interact(engine);
 
 				}
 
