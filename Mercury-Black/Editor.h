@@ -2,6 +2,7 @@
 #define EDITOR_H
 
 #include <SFML/Graphics.hpp>
+#include "CollisionMap.h"
 #include "GameState.h"
 #include <map>
 
@@ -82,6 +83,8 @@ private:
 
 	std::map<int, Point*> pointMap;
 	std::multimap<int, sf::Sprite*> objectMap;
+
+	CollisionMap collisionMap;
 
 	int mode;
 	int tool;

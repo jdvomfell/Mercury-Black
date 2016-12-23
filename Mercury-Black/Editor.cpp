@@ -9,13 +9,14 @@ Editor Editor::editor;
 void Editor::init() {
 	
 	cursor.rect.setOutlineColor(sf::Color::Black);
-	cursor.rect.setSize(sf::Vector2f(5, 5));
-	cursor.rect.setOutlineThickness(5);
-	cursor.rect.setPosition(10, 10);
+	cursor.rect.setFillColor(sf::Color::Transparent);
+	cursor.rect.setSize(sf::Vector2f(15, 15));
+	cursor.rect.setOutlineThickness(3);
+	cursor.rect.setPosition(0, 0);
 
 	lines = sf::VertexArray(sf::LinesStrip, 0);
-	showLines = true;
 	showPoints = true;
+	showLines = true;
 	mode = POINT;
 	tool = PLACE;
 
@@ -59,21 +60,40 @@ void Editor::handleEvent(GameEngine* engine) {
 
 	engine->window.setKeyRepeatEnabled(false);
 	engine->window.pollEvent(event);
+
 	switch (event.type) {
 
 	case sf::Event::Closed:
-		engine->window.close();
-		clean();
-		exit(0);
+		engine->quit();
+		break;
+
+	case sf::Event::MouseButtonPressed:
+
+		if (event.mouseButton.button == sf::Mouse::Left)
+			collisionMap.insertCollisionPoint(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+		
+		if (event.mouseButton.button == sf::Mouse::Right) {
+			cursor.rect.setOutlineColor(sf::Color::Black);
+			collisionMap.findCollisionPoint(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)).x);
+			
+			if (collisionMap.selected != collisionMap.map.end()) {
+				cursor.rect.setPosition(collisionMap.selected->second->position);
+				cursor.rect.setOutlineColor(sf::Color::Red);
+			}
+		}
+
 		break;
 
 	case sf::Event::KeyPressed:
+		cursor.rect.setOutlineColor(sf::Color::Black);
 		if (event.key.code == sf::Keyboard::Escape)
 			//engine->pushState(EditorTools::instance());
 		if (event.key.shift == true)
 			find = true;
 		else
 			find = false;
+		if (event.key.code == sf::Keyboard::Delete)
+			collisionMap.removeCollisionPoint();
 		if (event.key.code == sf::Keyboard::A)
 			doLeft = true;
 		if (event.key.code == sf::Keyboard::D)
@@ -156,7 +176,7 @@ void Editor::update(GameEngine* engine) {
 			}
 		}
 		else if (find == false)
-			cursor.velX = -0.3;
+			view.move(-0.3, 0);
 	}
 
 	if (doRight == true) {
@@ -167,7 +187,7 @@ void Editor::update(GameEngine* engine) {
 			}
 		}
 		else if (find == false)
-			cursor.velX = 0.3;
+			view.move(0.3, 0);
 	}
 
 	if (doUp == true) {
@@ -180,7 +200,7 @@ void Editor::update(GameEngine* engine) {
 					lines.append(sf::Vertex(sf::Vector2f(it->second->x, it->second->rect.getPosition().y), sf::Color::Black));
 			}
 		}
-		cursor.velY = -0.3;
+		view.move(0, -0.3);
 	}
 
 	if (doDown == true) {
@@ -193,7 +213,7 @@ void Editor::update(GameEngine* engine) {
 					lines.append(sf::Vertex(sf::Vector2f(it->second->x, it->second->rect.getPosition().y), sf::Color::Black));
 			}
 		}
-		cursor.velY = 0.3;
+		view.move(0, 0.3);
 	}
 
 	if (doReturn == true) {
@@ -219,7 +239,6 @@ void Editor::update(GameEngine* engine) {
 	}
 
 	view.setSize(sf::Vector2f(engine->window.getSize()));
-	view.setCenter(cursor.rect.getPosition());
 	engine->window.setView(view);
 
 	modeText.setPosition(view.getCenter().x - engine->window.getSize().x / 2 + 50, view.getCenter().y - engine->window.getSize().y / 2 + 50);
@@ -236,13 +255,7 @@ void Editor::render(GameEngine* engine) {
 	std::map<int, Point*>::iterator it;
 
 	if (showLines)
-		engine->window.draw(lines);
-
-	if (showPoints) {
-		for (it = pointMap.begin(); it != pointMap.end(); it++) {
-			engine->window.draw(it->second->rect);
-		}
-	}
+		engine->window.draw(collisionMap.lines);
 
 	engine->window.draw(cursor.rect);
 

@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Buttons.cpp" />
+    <ClCompile Include="CollisionMap.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="GameEngine.cpp" />
@@ -141,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buttons.h" />
+    <ClInclude Include="CollisionMap.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameState.h" />
