@@ -1,5 +1,19 @@
 #include "CollisionMap.h"
 
+void CollisionMap::clean() {
+
+	std::map<float, sf::Vertex *>::iterator it;
+
+	it = map.begin();
+	while (it != map.end()) {
+
+		delete(it->second);
+		map.erase(it++);
+
+	}
+
+}
+
 void CollisionMap::insertCollisionPoint(sf::Vector2f position) {
 
 	sf::Vertex * tempVertex;

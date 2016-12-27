@@ -4,18 +4,14 @@
 #include <fstream>
 #include <string>
 
+#include "MainMenu.h"
+
 Editor Editor::editor;
 
 void Editor::init() {
 	
-	cursor.rect.setOutlineColor(sf::Color::Black);
-	cursor.rect.setFillColor(sf::Color::Transparent);
-	cursor.rect.setSize(sf::Vector2f(15, 15));
-	cursor.rect.setOutlineThickness(3);
-	cursor.rect.setPosition(0, 0);
+	cursor = Cursor();
 
-	lines = sf::VertexArray(sf::LinesStrip, 0);
-	showPoints = true;
 	showLines = true;
 	mode = POINT;
 	tool = PLACE;
@@ -28,18 +24,11 @@ void Editor::init() {
 	toolText = sf::Text("Tool: Place", font, 100);
 	toolText.setFillColor(sf::Color::Black);
 
-	xPos = sf::Text("X Pos: ", font, 50);
-	yPos = sf::Text("Y Pos: ", font, 50);
-
 }
 
 void Editor::clean() {
 
-	std::map<int, Point*>::iterator it;
-
-	for (it = pointMap.begin(); it != pointMap.end(); it++) {
-		delete(it->second);
-	}
+	collisionMap.clean();
 
 	return;
 }
@@ -54,11 +43,8 @@ void Editor::resume() {
 
 void Editor::handleEvent(GameEngine* engine) {
 
-	engine->window.setKeyRepeatEnabled(false);
-
 	sf::Event event;
 
-	engine->window.setKeyRepeatEnabled(false);
 	engine->window.pollEvent(event);
 
 	switch (event.type) {
@@ -85,15 +71,14 @@ void Editor::handleEvent(GameEngine* engine) {
 		break;
 
 	case sf::Event::KeyPressed:
-		cursor.rect.setOutlineColor(sf::Color::Black);
-		if (event.key.code == sf::Keyboard::Escape)
-			//engine->pushState(EditorTools::instance());
-		if (event.key.shift == true)
-			find = true;
-		else
-			find = false;
-		if (event.key.code == sf::Keyboard::Delete)
+		if (event.key.code == sf::Keyboard::Escape) {
+			engine->window.setView(engine->window.getDefaultView());
+			engine->changeState(MainMenu::instance());
+		}
+		if (event.key.code == sf::Keyboard::Delete) {
+			cursor.rect.setOutlineColor(sf::Color::Transparent);
 			collisionMap.removeCollisionPoint();
+		}
 		if (event.key.code == sf::Keyboard::A)
 			doLeft = true;
 		if (event.key.code == sf::Keyboard::D)
@@ -104,53 +89,21 @@ void Editor::handleEvent(GameEngine* engine) {
 			doDown = true;
 		if (event.key.code == sf::Keyboard::L)
 			showLines = !showLines;
-		if (event.key.code == sf::Keyboard::P)
-			showPoints = !showPoints;
 		if (event.key.code == sf::Keyboard::J)
 			save();
 		if (event.key.code == sf::Keyboard::K)
 			load();
-		if (event.key.code == sf::Keyboard::Return)
-			doReturn = true;
-		if (event.key.code == sf::Keyboard::Tab) {
-			if (mode == POINT) {
-				mode = OBJECT;
-				modeText.setString("Mode: Object");
-			}
-			else if (mode == OBJECT) {
-				mode = POINT;
-				modeText.setString("Mode: Point");
-			}
-			else {
-				mode = POINT;
-				modeText.setString("Mode: Point");
-			}
-		}
-		if (event.key.code == sf::Keyboard::T) {
-			if (tool == PLACE) {
-				tool = DELETE;
-				toolText.setString("Tool: Delete");
-			}
-			else if (tool == DELETE) {
-				tool = MOVE;
-				toolText.setString("Tool: Move");
-			}
-			else {
-				tool = PLACE;
-				toolText.setString("Tool: Place");
-			}
-		}
+		if (event.key.code == sf::Keyboard::Tab)
+			rotateMode();
+		if (event.key.code == sf::Keyboard::T)
+			rotateTool();
 		break;
 
 	case sf::Event::KeyReleased:
-		if (event.key.code == sf::Keyboard::A) {
+		if (event.key.code == sf::Keyboard::A)
 			doLeft = false;
-			leftReleased = true;
-		}
-		if (event.key.code == sf::Keyboard::D) {
+		if (event.key.code == sf::Keyboard::D)
 			doRight = false;
-			rightReleased = true;
-		}
 		if (event.key.code == sf::Keyboard::W)
 			doUp = false;
 		if (event.key.code == sf::Keyboard::S)
@@ -162,81 +115,19 @@ void Editor::handleEvent(GameEngine* engine) {
 
 void Editor::update(GameEngine* engine) {
 
-	std::map<int, Point*>::iterator it;
+	if (doLeft == true)
+		viewVelX = -0.3;
+	else if (doRight == true)
+		viewVelX = 0.3;
+	else
+		viewVelX = 0;
 
-	if (doLeft == true) {
-		if (leftReleased && find == true) {
-			if (pointMap.lower_bound(cursor.rect.getPosition().x) != pointMap.end()) {
-				it = pointMap.lower_bound(cursor.rect.getPosition().x);
-				if (it != pointMap.begin()) {
-					it--;
-					cursor.rect.setPosition(it->second->rect.getPosition());
-					leftReleased = false;
-				}
-			}
-		}
-		else if (find == false)
-			view.move(-0.3, 0);
-	}
-
-	if (doRight == true) {
-		if (rightReleased && find == true) {
-			if (pointMap.upper_bound(cursor.rect.getPosition().x) != pointMap.end()) {
-				cursor.rect.setPosition(pointMap.upper_bound(cursor.rect.getPosition().x)->second->rect.getPosition());
-				rightReleased = false;
-			}
-		}
-		else if (find == false)
-			view.move(0.3, 0);
-	}
-
-	if (doUp == true) {
-		if (mode == POINT) {
-			if (tool == MOVE) {
-				if (pointMap.find(cursor.rect.getPosition().x) != pointMap.end())
-					pointMap.find(cursor.rect.getPosition().x)->second->rect.move(0.0f, -0.3f);
-				lines.clear();
-				for (it = pointMap.begin(); it != pointMap.end(); it++)
-					lines.append(sf::Vertex(sf::Vector2f(it->second->x, it->second->rect.getPosition().y), sf::Color::Black));
-			}
-		}
-		view.move(0, -0.3);
-	}
-
-	if (doDown == true) {
-		if (mode == POINT) {
-			if (tool == MOVE) {
-				if (pointMap.find(cursor.rect.getPosition().x) != pointMap.end())
-					pointMap.find(cursor.rect.getPosition().x)->second->rect.move(0.0f, 0.3f);
-				lines.clear();
-				for (it = pointMap.begin(); it != pointMap.end(); it++)
-					lines.append(sf::Vertex(sf::Vector2f(it->second->x, it->second->rect.getPosition().y), sf::Color::Black));
-			}
-		}
-		view.move(0, 0.3);
-	}
-
-	if (doReturn == true) {
-		if (mode == POINT) {
-			if (tool == PLACE) {
-				tempPoint = new Point(cursor.rect.getPosition().x, cursor.rect.getPosition().y);
-				pointMap.insert(std::make_pair(tempPoint->x, tempPoint));
-			}
-
-			else if (tool == DELETE) {
-				if (pointMap.find(cursor.rect.getPosition().x) != pointMap.end())
-					pointMap.erase(cursor.rect.getPosition().x);
-			}
-
-			lines.clear();
-			for (it = pointMap.begin(); it != pointMap.end(); it++)
-				lines.append(sf::Vertex(sf::Vector2f(it->second->rect.getPosition().x, it->second->rect.getPosition().y), sf::Color::Black));
-
-		}
-
-		doReturn = false;
-
-	}
+	if (doUp == true)
+		viewVelY = -0.3;
+	else if (doDown == true)
+		viewVelY = 0.3;
+	else
+		viewVelY = 0;
 
 	view.setSize(sf::Vector2f(engine->window.getSize()));
 	engine->window.setView(view);
@@ -244,15 +135,11 @@ void Editor::update(GameEngine* engine) {
 	modeText.setPosition(view.getCenter().x - engine->window.getSize().x / 2 + 50, view.getCenter().y - engine->window.getSize().y / 2 + 50);
 	toolText.setPosition(view.getCenter().x - engine->window.getSize().x / 2 + 50, view.getCenter().y - engine->window.getSize().y / 2 + 200);
 
-	cursor.rect.move(cursor.velX, cursor.velY);
-	cursor.velX = 0;
-	cursor.velY = 0;
+	view.move(viewVelX, viewVelY);
 
 }
 
 void Editor::render(GameEngine* engine) {
-
-	std::map<int, Point*>::iterator it;
 
 	if (showLines)
 		engine->window.draw(collisionMap.lines);
@@ -272,10 +159,10 @@ void Editor::save() {
 	std::string pointFilename = "point.dat";
 	ofstream.open(pointFilename, std::ios::out | std::ios::binary);
 
-	for (std::map<int, Point*>::iterator pit = pointMap.begin(); pit != pointMap.end(); pit++) {
+	/*for (std::map<int, Point*>::iterator pit = pointMap.begin(); pit != pointMap.end(); pit++) {
 		ofstream.write((char*)&pit->second->x, sizeof(int));
 		ofstream.write((char*)&pit->second->y, sizeof(int));
-	}
+	}*/
 
 	ofstream.close();
 
@@ -295,13 +182,13 @@ void Editor::save() {
 
 void Editor::load() {
 
-	pointMap.clear();
+	//pointMap.clear();
 
 	std::ifstream ifstream;
 	std::string pointFilename = "point.dat";
 	ifstream.open(pointFilename, std::ios::in | std::ios::binary);
 
-	Point * tempPoint;
+	//Point * tempPoint;
 
 	while (ifstream.peek() != EOF) {
 
@@ -311,17 +198,61 @@ void Editor::load() {
 		ifstream.read((char*)&tempX, sizeof(int));
 		ifstream.read((char*)&tempY, sizeof(int));
 
-		tempPoint = new Point(tempX, tempY);
+		//tempPoint = new Point(tempX, tempY);
 
-		pointMap.insert(std::make_pair(tempX, tempPoint));
+		//pointMap.insert(std::make_pair(tempX, tempPoint));
 
 	}
 
-	lines.clear();
-	std::map<int, Point*>::iterator it;
+	//lines.clear();
+	/*std::map<int, Point*>::iterator it;
 	for (it = pointMap.begin(); it != pointMap.end(); it++)
 		lines.append(sf::Vertex(sf::Vector2f(it->second->rect.getPosition().x, it->second->rect.getPosition().y), sf::Color::Black));
-
+		*/
 	ifstream.close();
+
+}
+
+void Editor::rotateMode() {
+	
+	if (mode == POINT) {
+		mode = OBJECT;
+		modeText.setString("Mode: Object");
+	}
+	else if (mode == OBJECT) {
+		mode = POINT;
+		modeText.setString("Mode: Point");
+	}
+	else {
+		mode = POINT;
+		modeText.setString("Mode: Point");
+	}
+
+}
+
+void Editor::rotateTool() {
+
+	if (tool == PLACE) {
+		tool = DELETE;
+		toolText.setString("Tool: Delete");
+	}
+	else if (tool == DELETE) {
+		tool = MOVE;
+		toolText.setString("Tool: Move");
+	}
+	else {
+		tool = PLACE;
+		toolText.setString("Tool: Place");
+	}
+
+}
+
+Cursor::Cursor() {
+
+	rect.setOutlineColor(sf::Color::Transparent);
+	rect.setFillColor(sf::Color::Transparent);
+	rect.setSize(sf::Vector2f(15, 15));
+	rect.setOutlineThickness(3);
+	rect.setPosition(0, 0);
 
 }

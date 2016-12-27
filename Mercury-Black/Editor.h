@@ -21,21 +21,9 @@ class Cursor {
 
 public:
 
-	sf::RectangleShape rect;
-	float velX;
-	float velY;
-
-};
-
-class Point {
-
-public:
+	Cursor();
 
 	sf::RectangleShape rect;
-	int x;
-	int y;
-
-	Point(int x1, int y1) { rect.setSize(sf::Vector2f(5, 5)); rect.setFillColor(sf::Color::Black); x = x1; y = y1; rect.setPosition(sf::Vector2f(x, y)); }
 
 };
 
@@ -46,6 +34,7 @@ public:
 	int y;
 	int rotation;
 	float scale;
+
 };
 
 class Editor : public GameState {
@@ -65,6 +54,9 @@ public:
 	void save();
 	void load();
 
+	void rotateMode();
+	void rotateTool();
+
 	static Editor* instance() { return &editor; }
 
 	sf::View view;
@@ -78,10 +70,6 @@ private:
 	Cursor cursor;
 	static Editor editor;
 
-	Point* tempPoint;
-	sf::VertexArray lines;
-
-	std::map<int, Point*> pointMap;
 	std::multimap<int, sf::Sprite*> objectMap;
 
 	CollisionMap collisionMap;
@@ -93,19 +81,14 @@ private:
 	bool doRight;
 	bool doUp;
 	bool doDown;
-	bool doReturn;
-	bool find;
-	bool leftReleased;
-	bool rightReleased;
 
 	bool showLines;
-	bool showPoints;
+
+	float viewVelX;
+	float viewVelY;
 
 	sf::Text modeText;
 	sf::Text toolText;
-
-	sf::Text xPos;
-	sf::Text yPos;
 
 	sf::Font font;
 

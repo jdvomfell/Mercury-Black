@@ -8,6 +8,8 @@ class CollisionMap {
 
 public:
 
+	void clean();
+
 	void insertCollisionPoint(sf::Vector2f position);
 	void removeCollisionPoint();
 	void findCollisionPoint(int x);
