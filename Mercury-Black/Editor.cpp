@@ -116,18 +116,18 @@ void Editor::handleEvent(GameEngine* engine) {
 void Editor::update(GameEngine* engine) {
 
 	if (doLeft == true)
-		viewVelX = -0.3;
+		viewVelX = -0.3f;
 	else if (doRight == true)
-		viewVelX = 0.3;
+		viewVelX = 0.3f;
 	else
-		viewVelX = 0;
+		viewVelX = 0.0f;
 
 	if (doUp == true)
-		viewVelY = -0.3;
+		viewVelY = -0.3f;
 	else if (doDown == true)
-		viewVelY = 0.3;
+		viewVelY = 0.3f;
 	else
-		viewVelY = 0;
+		viewVelY = 0.0f;
 
 	view.setSize(sf::Vector2f(engine->window.getSize()));
 	engine->window.setView(view);

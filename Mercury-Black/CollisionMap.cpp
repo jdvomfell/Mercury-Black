@@ -38,9 +38,9 @@ void CollisionMap::removeCollisionPoint() {
 
 }
 
-void CollisionMap::findCollisionPoint(int x) {
+void CollisionMap::findCollisionPoint(float x) {
 
-	selected = map.upper_bound((float)x);
+	selected = map.upper_bound(x);
 
 }
 

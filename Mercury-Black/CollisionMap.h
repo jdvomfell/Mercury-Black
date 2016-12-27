@@ -12,7 +12,7 @@ public:
 
 	void insertCollisionPoint(sf::Vector2f position);
 	void removeCollisionPoint();
-	void findCollisionPoint(int x);
+	void findCollisionPoint(float x);
 	void moveCollisionPoint();
 
 	void updateVerticies();
