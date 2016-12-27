@@ -253,6 +253,7 @@ Cursor::Cursor() {
 	rect.setFillColor(sf::Color::Transparent);
 	rect.setSize(sf::Vector2f(15, 15));
 	rect.setOutlineThickness(3);
+	rect.setOrigin(rect.getLocalBounds().width / 2, rect.getLocalBounds().height / 2);
 	rect.setPosition(0, 0);
 
 }
