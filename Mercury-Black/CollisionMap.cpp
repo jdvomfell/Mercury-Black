@@ -1,4 +1,5 @@
 #include "CollisionMap.h"
+#include <fstream>
 
 void CollisionMap::clean() {
 
@@ -48,6 +49,65 @@ void CollisionMap::moveCollisionPoint() {
 
 	if (selected->second == NULL)
 		return;
+
+}
+
+void CollisionMap::save() {
+
+	// Save Points for collision map
+
+	std::ofstream ofstream;
+
+	std::string pointFilename = "point.dat";
+	ofstream.open(pointFilename, std::ios::out | std::ios::binary);
+
+	for (std::map<float, sf::Vertex *>::iterator it = map.begin(); it != map.end(); it++)
+		ofstream.write((char*)it->second, sizeof(sf::Vertex));
+
+	ofstream.close();
+
+	// Save objects for object map
+
+	/*std::string objectFilename = "object.dat";
+	ofstream.open(objectFilename);
+
+	std::multimap<int, sf::Sprite*>::iterator oit;
+	for (oit = objectMap.begin(); oit != objectMap.end(); oit++) {
+	ofstream << oit->second;
+	}
+
+	ofstream.close();*/
+
+}
+
+void CollisionMap::load() {
+
+	std::string pointFilename = "point.dat";
+	std::ifstream ifstream;
+
+	std::map<float, sf::Vertex *>::iterator it;
+	sf::Vertex * tempVertex;
+
+	map.clear();
+
+	ifstream.open(pointFilename, std::ios::in | std::ios::binary);
+
+	while (ifstream.peek() != EOF) {
+
+		tempVertex = new sf::Vertex;
+
+		ifstream.read((char*)tempVertex, sizeof(sf::Vertex));
+
+		map.insert(std::make_pair(tempVertex->position.x, tempVertex));
+
+	}
+
+	lines.clear();
+	
+	for (it = map.begin(); it != map.end(); it++)
+		lines.append(*(it->second));
+	
+	ifstream.close();
 
 }
 

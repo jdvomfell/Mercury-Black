@@ -15,6 +15,9 @@ public:
 	void findCollisionPoint(float x);
 	void moveCollisionPoint();
 
+	void save();
+	void load();
+
 	void updateVerticies();
 
 	CollisionMap() { lines = sf::VertexArray(sf::LinesStrip, 0); }

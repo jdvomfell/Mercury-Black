@@ -51,9 +51,6 @@ public:
 	void update(GameEngine* engine);
 	void render(GameEngine* engine);
 
-	void save();
-	void load();
-
 	void rotateMode();
 	void rotateTool();
 

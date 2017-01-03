@@ -71,14 +71,17 @@ void Editor::handleEvent(GameEngine* engine) {
 		break;
 
 	case sf::Event::KeyPressed:
+		
 		if (event.key.code == sf::Keyboard::Escape) {
 			engine->window.setView(engine->window.getDefaultView());
 			engine->changeState(MainMenu::instance());
 		}
+
 		if (event.key.code == sf::Keyboard::Delete) {
 			cursor.rect.setOutlineColor(sf::Color::Transparent);
 			collisionMap.removeCollisionPoint();
 		}
+
 		if (event.key.code == sf::Keyboard::A)
 			doLeft = true;
 		if (event.key.code == sf::Keyboard::D)
@@ -87,16 +90,20 @@ void Editor::handleEvent(GameEngine* engine) {
 			doUp = true;
 		if (event.key.code == sf::Keyboard::S)
 			doDown = true;
+
 		if (event.key.code == sf::Keyboard::L)
 			showLines = !showLines;
+
 		if (event.key.code == sf::Keyboard::J)
-			save();
+			collisionMap.save();
 		if (event.key.code == sf::Keyboard::K)
-			load();
+			collisionMap.load();
+
 		if (event.key.code == sf::Keyboard::Tab)
 			rotateMode();
 		if (event.key.code == sf::Keyboard::T)
 			rotateTool();
+
 		break;
 
 	case sf::Event::KeyReleased:
@@ -148,69 +155,6 @@ void Editor::render(GameEngine* engine) {
 
 	engine->window.draw(modeText);
 	engine->window.draw(toolText);
-}
-
-void Editor::save() {
-
-	// Save Points for collision map
-
-	std::ofstream ofstream;
-
-	std::string pointFilename = "point.dat";
-	ofstream.open(pointFilename, std::ios::out | std::ios::binary);
-
-	/*for (std::map<int, Point*>::iterator pit = pointMap.begin(); pit != pointMap.end(); pit++) {
-		ofstream.write((char*)&pit->second->x, sizeof(int));
-		ofstream.write((char*)&pit->second->y, sizeof(int));
-	}*/
-
-	ofstream.close();
-
-	// Save objects for object map
-
-	/*std::string objectFilename = "object.dat";
-	ofstream.open(objectFilename);
-
-	std::multimap<int, sf::Sprite*>::iterator oit;
-	for (oit = objectMap.begin(); oit != objectMap.end(); oit++) {
-	ofstream << oit->second;
-	}
-
-	ofstream.close();*/
-
-}
-
-void Editor::load() {
-
-	//pointMap.clear();
-
-	std::ifstream ifstream;
-	std::string pointFilename = "point.dat";
-	ifstream.open(pointFilename, std::ios::in | std::ios::binary);
-
-	//Point * tempPoint;
-
-	while (ifstream.peek() != EOF) {
-
-		int tempX;
-		int tempY;
-
-		ifstream.read((char*)&tempX, sizeof(int));
-		ifstream.read((char*)&tempY, sizeof(int));
-
-		//tempPoint = new Point(tempX, tempY);
-
-		//pointMap.insert(std::make_pair(tempX, tempPoint));
-
-	}
-
-	//lines.clear();
-	/*std::map<int, Point*>::iterator it;
-	for (it = pointMap.begin(); it != pointMap.end(); it++)
-		lines.append(sf::Vertex(sf::Vector2f(it->second->rect.getPosition().x, it->second->rect.getPosition().y), sf::Color::Black));
-		*/
-	ifstream.close();
-
 }
 
 void Editor::rotateMode() {
