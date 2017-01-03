@@ -27,16 +27,6 @@ public:
 
 };
 
-class Object {
-public:
-
-	int x;
-	int y;
-	int rotation;
-	float scale;
-
-};
-
 class Editor : public GameState {
 
 public:

@@ -40,6 +40,9 @@
     <Filter Include="Header Files\Resources">
       <UniqueIdentifier>{99c58a44-4cf3-416e-94f4-ea5ee4d46887}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resources">
+      <UniqueIdentifier>{c89dffd0-2060-4aef-a7ae-aad17c2db4ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -62,6 +65,9 @@
     </ClCompile>
     <ClCompile Include="CollisionMap.cpp">
       <Filter>Source Files\GameUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

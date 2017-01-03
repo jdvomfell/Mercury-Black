@@ -139,6 +139,7 @@
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buttons.h" />
