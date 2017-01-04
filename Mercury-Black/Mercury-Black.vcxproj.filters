@@ -43,6 +43,12 @@
     <Filter Include="Source Files\Resources">
       <UniqueIdentifier>{c89dffd0-2060-4aef-a7ae-aad17c2db4ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Entity Component System">
+      <UniqueIdentifier>{e684debe-58d0-47fa-9f7f-ae49da3abed7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entity Component System">
+      <UniqueIdentifier>{6141b342-b503-49b1-874c-1d5680d33bcf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp">
@@ -69,6 +75,9 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files\Entity Component System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -94,6 +103,12 @@
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Header Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Header Files\Entity Component System</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files\Entity Component System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

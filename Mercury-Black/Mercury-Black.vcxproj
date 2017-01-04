@@ -136,6 +136,7 @@
     <ClCompile Include="CollisionMap.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="MainMenu.cpp" />
@@ -144,7 +145,9 @@
   <ItemGroup>
     <ClInclude Include="Buttons.h" />
     <ClInclude Include="CollisionMap.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="Editor.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GUI.h" />
