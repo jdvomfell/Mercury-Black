@@ -137,9 +137,11 @@
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="System.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -148,10 +150,12 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="System.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

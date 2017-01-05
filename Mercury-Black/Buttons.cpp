@@ -1,5 +1,6 @@
 #include "Buttons.h"
 #include "Editor.h"
+#include "Game.h"
 
 GUI_NewGame::GUI_NewGame(float x, float y, sf::Color color, int size, sf::Font * font) {
 
@@ -10,6 +11,8 @@ GUI_NewGame::GUI_NewGame(float x, float y, sf::Color color, int size, sf::Font *
 }
 
 void GUI_NewGame::interact(GameEngine * engine) {
+
+	engine->changeState(Game::instance());
 
 }
 

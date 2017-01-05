@@ -25,15 +25,16 @@ struct Name {
 
 struct Input {
 
-	bool Up;
-	bool Down;
-	bool Left;
-	bool Right;
+	bool up;
+	bool down;
+	bool left;
+	bool right;
 
-	bool Jump;
+	bool jump;
 
-	bool Ink;
-	bool Swing;
+	bool attack;
+
+	bool special;
 
 };
 
@@ -61,6 +62,7 @@ struct Velocity {
 
 	float x;
 	float y;
+	float speed;
 
 };
 
