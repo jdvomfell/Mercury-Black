@@ -1,5 +1,8 @@
 #include "System.h"
 
+#define DEACCELERATION_CONST 0.97f
+#define GRAVITY_CONST 0.01f
+
 #define RENDER_MASK (POSITION | SPRITE)
 
 void renderSystem(World * world, sf::RenderWindow * window) {
@@ -24,11 +27,52 @@ void renderSystem(World * world, sf::RenderWindow * window) {
 
 }
 
+#define INPUT_MASK (INPUT | VELOCITY | GRAVITY)
+
+void inputSystem(World * world) {
+
+	Input * i;
+	Gravity * g;
+	Velocity * v;
+
+	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
+
+		if ((world->mask[entityID] & INPUT_MASK) == INPUT_MASK) {
+
+			i = &(world->input[entityID]);
+			g = &(world->gravity[entityID]);
+			v = &(world->velocity[entityID]);
+
+			/* INPUT */
+
+			if (i->left)
+				v->x = -v->speed;
+			if (i->right)
+				v->x = v->speed;
+
+			if (i->jump && g->onGround)
+				v->y = -2.0f;
+
+			/* GRAVITY MODS */
+
+			if (v->x != 0)
+				v->x *= DEACCELERATION_CONST;
+
+			if ((v->x < 0 && v->x > -0.01f) || (v->x > 0 && v->x < 0.01f))
+				v->x = 0;
+
+			v->y += GRAVITY_CONST * g->weight;
+
+		}
+
+	}
+
+}
+
 #define MOVEMENT_MASK (POSITION | VELOCITY | INPUT)
 
 void movementSystem(World * world) {
 
-	Input * i;
 	Position * p;
 	Velocity * v;
 
@@ -36,16 +80,8 @@ void movementSystem(World * world) {
 
 		if ((world->mask[entityID] & MOVEMENT_MASK) == MOVEMENT_MASK) {
 
-			i = &(world->input[entityID]);
 			p = &(world->position[entityID]);
 			v = &(world->velocity[entityID]);
-
-			v->x = 0;
-
-			if (i->left)
-				v->x = -v->speed;
-			if (i->right)
-				v->x = v->speed;
 
 			p->x += v->x;
 			p->y += v->y;

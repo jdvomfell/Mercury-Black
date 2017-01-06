@@ -87,6 +87,7 @@ void Game::handleEvent(GameEngine* engine) {
 
 void Game::update(GameEngine* engine) {
 
+	inputSystem(&world);
 	movementSystem(&world);
 
 }

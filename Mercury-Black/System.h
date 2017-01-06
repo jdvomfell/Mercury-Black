@@ -3,6 +3,7 @@
 
 #include "Entity.h"
 
+void inputSystem(World * world);
 void renderSystem(World * world, sf::RenderWindow * window);
 void movementSystem(World * world);
 void collisionSystem(World * world);
