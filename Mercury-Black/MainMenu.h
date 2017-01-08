@@ -4,8 +4,8 @@
 #include "GameState.h"
 #include "Buttons.h"
 
-#define MENU_FONT_SIZE 130
-#define MENU_TITLE_SIZE 450
+#define MENU_FONT_SIZE 70
+#define MENU_TITLE_SIZE 250
 
 #define NEW_GAME 1
 #define LOAD_GAME 2
