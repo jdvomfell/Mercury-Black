@@ -3,7 +3,6 @@
 
 #include "GameState.h"
 #include "Entity.h"
-#include "CollisionMap.h"
 
 class Game : public GameState {
 
@@ -29,7 +28,6 @@ private:
 
 	static Game game;
 
-	CollisionMap collisionMap;
 	World world;
 
 	int playerID;

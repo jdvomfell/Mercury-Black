@@ -92,40 +92,6 @@ void movementSystem(World * world) {
 
 }
 
-#define COLLISION_MASK (POSITION | VELOCITY | COLLISION)
-
-void collisionSystem(World * world, CollisionMap * collisionMap) {
-
-	Position * p;
-	Velocity * v;
-
-	float ground;
-	sf::Vertex * leftVertex;
-	sf::Vertex * rightVertex;
-
-	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
-
-		if ((world->mask[entityID] & COLLISION_MASK) == COLLISION_MASK) {
-
-			p = &(world->position[entityID]);
-			v = &(world->velocity[entityID]);
-			
-			if (collisionMap->map.upper_bound(p->x) != collisionMap->map.begin())
-				leftVertex = (--(collisionMap->map.lower_bound(p->x)))->second;
-			else
-				leftVertex = collisionMap->map.lower_bound(p->x)->second;
-
-			rightVertex = collisionMap->map.lower_bound(p->x)->second;
-
-			ground = ((rightVertex->position.y - leftVertex->position.y) / (rightVertex->position.x - leftVertex->position.x)) * ((p->x - leftVertex->position.x) / (rightVertex->position.x - leftVertex->position.x));
-
-			printf("Ground: %f\n", ground);
-
-			if (p->y += v->y > ground)
-				v->y = ground - p->y;
-
-		}
-
-	}
+void collisionSystem(World * world) {
 
 }
