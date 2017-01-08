@@ -8,9 +8,13 @@ void Game::init() {
 
 	playerID = createPlayer(&world, 0, 0);
 
+	collisionMap.load();
+
 }
 
 void Game::clean() {
+
+	collisionMap.clean();
 
 }
 
@@ -32,6 +36,7 @@ void Game::handleEvent(GameEngine* engine) {
 
 		case sf::Event::Closed:
 
+			clean();
 			engine->quit();
 
 			break;
@@ -40,6 +45,8 @@ void Game::handleEvent(GameEngine* engine) {
 
 			if (event.mouseButton.button == sf::Mouse::Left)
 				world.input[playerID].attack = true;
+			
+			break;
 
 		case sf::Event::KeyPressed:
 
@@ -88,11 +95,14 @@ void Game::handleEvent(GameEngine* engine) {
 void Game::update(GameEngine* engine) {
 
 	inputSystem(&world);
+	collisionSystem(&world, &collisionMap);
 	movementSystem(&world);
 
 }
 
 void Game::render(GameEngine* engine) {
+
+	engine->window.draw(collisionMap.lines);
 
 	renderSystem(&world, &engine->window);
 
