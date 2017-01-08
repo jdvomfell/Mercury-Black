@@ -243,7 +243,3 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
-
-#SFML
-**/SFML-2.4.1/**
-**/SFML/**
