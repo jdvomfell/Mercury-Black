@@ -3,7 +3,7 @@
 
 void GameEngine::init() {
 
-	window.create(sf::VideoMode(1000, 500, 32), "Project Mercury Black");
+	window.create(sf::VideoMode(1200, 700, 32), "Project Mercury Black");
 	
 	running = true;
 

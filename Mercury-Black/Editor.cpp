@@ -18,10 +18,10 @@ void Editor::init() {
 
 	font.loadFromFile("ZenzaiItachi.ttf");
 
-	modeText = sf::Text("Mode: Point", font, 100);
+	modeText = sf::Text("Mode: Point", font, 60);
 	modeText.setFillColor(sf::Color::Black);
 
-	toolText = sf::Text("Tool: Place", font, 100);
+	toolText = sf::Text("Tool: Place", font, 60);
 	toolText.setFillColor(sf::Color::Black);
 
 }
