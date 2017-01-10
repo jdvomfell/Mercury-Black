@@ -50,7 +50,7 @@ void inputSystem(World * world) {
 			if (i->right)
 				v->x = v->speed;
 
-			if (i->jump && g->onGround)
+			if (i->jump && v->onGround)
 				v->y = -2.0f;
 
 			/* GRAVITY MODS */
@@ -99,7 +99,12 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 	Position * p;
 	Velocity * v;
 
-	float ground;
+	float ground = 0.0f;
+	float slope = 0.0f;
+	float x1;
+	float x2;
+	float y1;
+	float y2;
 	sf::Vertex * leftVertex;
 	sf::Vertex * rightVertex;
 
@@ -109,7 +114,7 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 			p = &(world->position[entityID]);
 			v = &(world->velocity[entityID]);
-			
+
 			if (collisionMap->map.upper_bound(p->x) != collisionMap->map.begin())
 				leftVertex = (--(collisionMap->map.lower_bound(p->x)))->second;
 			else
@@ -117,15 +122,24 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 			rightVertex = collisionMap->map.lower_bound(p->x)->second;
 
-			ground = ((rightVertex->position.y - leftVertex->position.y) / (rightVertex->position.x - leftVertex->position.x)) * ((p->x - leftVertex->position.x) / (rightVertex->position.x - leftVertex->position.x));
+			x1 = leftVertex->position.x;
+			x2 = rightVertex->position.x;
+			y1 = leftVertex->position.y;
+			y2 = rightVertex->position.y;
 
-			printf("Ground: %f\n", ground);
+			printf("Position: %f\n PY: %f\n  Slope: %f\n   Ground: %f\n", p->x, p->y, slope, ground);
 
-			if (p->y += v->y > ground)
-				v->y = ground - p->y;
+			slope = ((y2 - y1) / (x2 - x1));
+			ground = ((slope * (p->x - x1)) + (y1));
+
+			if ((p->y += v->y) > ground) {
+				p->y = ground;
+				v->y = 0;
+				v->onGround = true;
+			}
 
 		}
 
 	}
 
-}
+} 

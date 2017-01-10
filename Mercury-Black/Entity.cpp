@@ -39,9 +39,9 @@ int createPlayer(World * world, float x, float y) {
 	world->velocity[entityID].x = 0.0f;
 	world->velocity[entityID].y = 0.0f;
 	world->velocity[entityID].speed = 1.3f;
+	world->velocity[entityID].onGround = false;
 
 	world->gravity[entityID].weight = 1.0f;
-	world->gravity[entityID].onGround = true;
 
 	world->sprite[entityID].sprite.setSize(sf::Vector2f(250, 250));
 	world->sprite[entityID].sprite.setFillColor(sf::Color::Black);

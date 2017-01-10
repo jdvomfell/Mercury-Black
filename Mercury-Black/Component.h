@@ -47,7 +47,6 @@ struct Sprite {
 struct Gravity {
 
 	float weight;
-	bool onGround;
 
 };
 
@@ -63,6 +62,7 @@ struct Velocity {
 	float x;
 	float y;
 	float speed;
+	bool onGround;
 
 };
 
