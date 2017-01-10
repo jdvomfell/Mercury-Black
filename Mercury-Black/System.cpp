@@ -1,7 +1,9 @@
 #include "System.h"
 
-#define DEACCELERATION_CONST 0.97f
+/* Do Not Edit CONSTS Without Discussing Gameplay Implications First */
+#define DEACCELERATION_CONST 0.99f
 #define GRAVITY_CONST 0.0005f
+#define JUMP_CONST -0.4f
 
 #define RENDER_MASK (POSITION | SPRITE)
 
@@ -51,7 +53,7 @@ void inputSystem(World * world) {
 				v->x = v->speed;
 
 			if (i->jump && v->onGround) {
-				v->y = -0.3f;
+				v->y = JUMP_CONST;
 				v->onGround = false;
 			}
 
