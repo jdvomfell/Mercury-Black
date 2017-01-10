@@ -1,7 +1,7 @@
 #include "System.h"
 
 #define DEACCELERATION_CONST 0.97f
-#define GRAVITY_CONST 0.01f
+#define GRAVITY_CONST 0.0005f
 
 #define RENDER_MASK (POSITION | SPRITE)
 
@@ -50,8 +50,10 @@ void inputSystem(World * world) {
 			if (i->right)
 				v->x = v->speed;
 
-			if (i->jump && v->onGround)
-				v->y = -2.0f;
+			if (i->jump && v->onGround) {
+				v->y = -0.3f;
+				v->onGround = false;
+			}
 
 			/* GRAVITY MODS */
 

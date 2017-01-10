@@ -98,6 +98,10 @@ void Game::update(GameEngine* engine) {
 	collisionSystem(&world, &collisionMap);
 	movementSystem(&world);
 
+	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
+	view.setCenter(sf::Vector2f(world.position[playerID].x, world.position[playerID].y));
+	engine->window.setView(view);
+
 }
 
 void Game::render(GameEngine* engine) {

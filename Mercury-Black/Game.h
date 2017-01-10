@@ -29,7 +29,10 @@ private:
 
 	static Game game;
 
+	sf::View view;
+
 	CollisionMap collisionMap;
+	
 	World world;
 
 	int playerID;
