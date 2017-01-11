@@ -126,15 +126,10 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 			rightVertex = collisionMap->map.lower_bound(p->x)->second;
 
-			x1 = leftVertex->position.x;
-			x2 = rightVertex->position.x;
-			y1 = leftVertex->position.y;
-			y2 = rightVertex->position.y;
-
 			printf("Position: %f\n PY: %f\n  Slope: %f\n   Ground: %f\n", p->x, p->y, slope, ground);
 
-			slope = ((y2 - y1) / (x2 - x1));
-			ground = ((slope * (p->x - x1)) + (y1));
+			slope = ((rightVertex->position.y - leftVertex->position.y) / (rightVertex->position.x - leftVertex->position.x));
+			ground = ((slope * (p->x - leftVertex->position.x)) + (leftVertex->position.y));
 
 			if ((p->y += v->y) > ground) {
 				p->y = ground;

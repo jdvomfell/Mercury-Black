@@ -30,7 +30,6 @@ void Editor::clean() {
 
 	collisionMap.clean();
 
-	return;
 }
 
 void Editor::pause() {
