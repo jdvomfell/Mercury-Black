@@ -122,8 +122,6 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 			rightVertex = collisionMap->map.lower_bound(p->x)->second;
 
-			printf("Position: %f\n PY: %f\n  Slope: %f\n   Ground: %f\n", p->x, p->y, slope, ground);
-
 			slope = ((rightVertex->position.y - leftVertex->position.y) / (rightVertex->position.x - leftVertex->position.x));
 			ground = ((slope * (p->x - leftVertex->position.x)) + (leftVertex->position.y));
 
