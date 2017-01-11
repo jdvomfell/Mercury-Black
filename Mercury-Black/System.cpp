@@ -105,10 +105,6 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 	float ground = 0.0f;
 	float slope = 0.0f;
-	float x1;
-	float x2;
-	float y1;
-	float y2;
 	sf::Vertex * leftVertex;
 	sf::Vertex * rightVertex;
 
