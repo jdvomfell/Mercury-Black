@@ -1,4 +1,5 @@
 #include "System.h"
+#include <cmath>
 
 /* Do Not Edit CONSTS Without Discussing Gameplay Implications First */
 #define DEACCELERATION_CONST 0.99f
@@ -107,6 +108,9 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 	float slope = 0.0f;
 	sf::Vertex * leftVertex;
 	sf::Vertex * rightVertex;
+	sf::Vertex * rVertexCheck; 
+	sf::Vertex * lVertexCheck; 
+
 
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
@@ -125,11 +129,24 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 			slope = ((rightVertex->position.y - leftVertex->position.y) / (rightVertex->position.x - leftVertex->position.x));
 			ground = ((slope * (p->x - leftVertex->position.x)) + (leftVertex->position.y));
 
+			if (v->onGround && std::abs(slope) > 1.2) {
+				if (slope > 1.2 && v->x <= 0) {
+					v->x = .005;
+					v->y = .05;
+				}
+				else if (slope < -1.2 && v->x >= 0) {
+					v->x = -.005;
+					v->y = .05;
+				}
+			}
+
 			if ((p->y += v->y) > ground) {
 				p->y = ground;
 				v->y = 0;
 				v->onGround = true;
+
 			}
+
 
 		}
 
