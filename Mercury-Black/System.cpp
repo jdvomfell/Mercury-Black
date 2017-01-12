@@ -97,10 +97,11 @@ void movementSystem(World * world) {
 
 }
 
-#define COLLISION_MASK (POSITION | VELOCITY | COLLISION)
+#define COLLISION_MASK (POSITION | VELOCITY | COLLISION | GRAVITY)
 
 void collisionSystem(World * world, CollisionMap * collisionMap) {
 
+	Gravity * g;
 	Position * p;
 	Velocity * v;
 
@@ -116,6 +117,7 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 		if ((world->mask[entityID] & COLLISION_MASK) == COLLISION_MASK) {
 
+			g = &(world->gravity[entityID]);
 			p = &(world->position[entityID]);
 			v = &(world->velocity[entityID]);
 
@@ -129,24 +131,33 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 			slope = ((rightVertex->position.y - leftVertex->position.y) / (rightVertex->position.x - leftVertex->position.x));
 			ground = ((slope * (p->x - leftVertex->position.x)) + (leftVertex->position.y));
 
-			if (v->onGround && std::abs(slope) > 1.2) {
-				if (slope > 1.2 && v->x <= 0) {
-					v->x = .005;
-					v->y = .05;
-				}
-				else if (slope < -1.2 && v->x >= 0) {
-					v->x = -.005;
-					v->y = .05;
-				}
-			}
+			/* Check If On Course To Pass Through The Ground */
+			/* Adjust To Hit The Ground */
 
 			if ((p->y += v->y) > ground) {
+				
 				p->y = ground;
 				v->y = 0;
 				v->onGround = true;
 
 			}
 
+			/* Slide Down Step Slopes, Cancel Jump */
+
+			if (v->onGround && std::abs(slope) > 1.2) {
+				
+				if (slope > 1.2 && v->x <= 0) {
+					v->x = .005;
+				}
+				
+				else if (slope < -1.2 && v->x >= 0) {
+					v->x = -.005;
+				}
+
+				v->y = GRAVITY_CONST * g->weight;
+				v->onGround = false;
+
+			}
 
 		}
 
