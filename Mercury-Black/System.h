@@ -6,6 +6,7 @@
 
 void inputSystem(World * world);
 void renderSystem(World * world, sf::RenderWindow * window);
+void gravitySystem(World * world);
 void movementSystem(World * world);
 void collisionSystem(World * world, CollisionMap * collisionMap);
 

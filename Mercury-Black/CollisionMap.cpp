@@ -39,9 +39,38 @@ void CollisionMap::removeCollisionPoint() {
 
 }
 
-void CollisionMap::findCollisionPoint(float x) {
+std::map <float, sf::Vertex *>::iterator CollisionMap::findRight(float x) {
 
-	selected = map.upper_bound(x);
+	return map.lower_bound(x);
+
+}
+
+std::map <float, sf::Vertex *>::iterator CollisionMap::findLeft(float x) {
+
+	if (map.lower_bound(x) != map.begin())
+		return --map.lower_bound(x);
+	else
+		return map.end();
+
+}
+
+std::map <float, sf::Vertex *>::iterator CollisionMap::findClosest(float x) {
+
+	if (findLeft(x) != map.end() && findRight(x) != map.end()) {
+		if ((x - findLeft(x)->first) < (findRight(x)->first - x))
+			return findLeft(x);
+		else
+			return findRight(x);
+	}
+	
+	else if (findLeft(x) == map.end())
+		return findRight(x);
+	
+	else if (findRight(x) == map.end())
+		return findLeft(x);
+	
+	else
+		return map.end();
 
 }
 

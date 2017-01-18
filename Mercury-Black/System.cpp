@@ -29,12 +29,11 @@ void renderSystem(World * world, sf::RenderWindow * window) {
 
 }
 
-#define INPUT_MASK (INPUT | VELOCITY | GRAVITY)
+#define INPUT_MASK (INPUT | VELOCITY)
 
 void inputSystem(World * world) {
 
 	Input * i;
-	Gravity * g;
 	Velocity * v;
 
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
@@ -42,7 +41,6 @@ void inputSystem(World * world) {
 		if ((world->mask[entityID] & INPUT_MASK) == INPUT_MASK) {
 
 			i = &(world->input[entityID]);
-			g = &(world->gravity[entityID]);
 			v = &(world->velocity[entityID]);
 
 			/* INPUT */
@@ -57,7 +55,7 @@ void inputSystem(World * world) {
 				v->onGround = false;
 			}
 
-			/* GRAVITY MODS */
+			/* DEACCELERATION MODS */
 
 			if (v->x != 0)
 				v->x *= DEACCELERATION_CONST;
@@ -65,9 +63,25 @@ void inputSystem(World * world) {
 			if ((v->x < 0 && v->x > -0.01f) || (v->x > 0 && v->x < 0.01f))
 				v->x = 0;
 
-			v->y += GRAVITY_CONST * g->weight;
-
 		}
+
+	}
+
+}
+
+#define GRAVITY_MASK (VELOCITY | GRAVITY)
+
+void gravitySystem(World * world) {
+
+	Gravity * g;
+	Velocity * v;
+
+	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
+
+		g = &(world->gravity[entityID]);
+		v = &(world->velocity[entityID]);
+
+		v->y += GRAVITY_CONST * g->weight;
 
 	}
 
@@ -105,8 +119,8 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 	float ground = 0.0f;
 	float slope = 0.0f;
-	sf::Vertex * leftVertex;
-	sf::Vertex * rightVertex;
+	sf::Vertex * leftVertex = NULL;
+	sf::Vertex * rightVertex = NULL;
 
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
@@ -115,12 +129,13 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 			p = &(world->position[entityID]);
 			v = &(world->velocity[entityID]);
 
-			if (collisionMap->map.upper_bound(p->x) != collisionMap->map.begin())
-				leftVertex = (--(collisionMap->map.lower_bound(p->x)))->second;
+			if (collisionMap->findRight(p->x) != collisionMap->map.begin())
+				leftVertex = collisionMap->findLeft(p->x)->second;
 			else
-				leftVertex = collisionMap->map.lower_bound(p->x)->second;
+				leftVertex = collisionMap->findRight(p->x)->second;
 
-			rightVertex = collisionMap->map.lower_bound(p->x)->second;
+			if (collisionMap->findRight(p->x) != collisionMap->map.end())
+				rightVertex = collisionMap->findRight(p->x)->second;
 
 			slope = ((rightVertex->position.y - leftVertex->position.y) / (rightVertex->position.x - leftVertex->position.x));
 			ground = ((slope * (p->x - leftVertex->position.x)) + (leftVertex->position.y));

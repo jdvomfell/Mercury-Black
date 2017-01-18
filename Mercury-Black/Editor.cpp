@@ -59,7 +59,7 @@ void Editor::handleEvent(GameEngine* engine) {
 		
 		if (event.mouseButton.button == sf::Mouse::Right) {
 			cursor.rect.setOutlineColor(sf::Color::Black);
-			collisionMap.findCollisionPoint(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)).x);
+			collisionMap.selected = collisionMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)).x);
 			
 			if (collisionMap.selected != collisionMap.map.end()) {
 				cursor.rect.setPosition(collisionMap.selected->second->position);

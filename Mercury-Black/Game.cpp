@@ -95,6 +95,7 @@ void Game::handleEvent(GameEngine* engine) {
 void Game::update(GameEngine* engine) {
 
 	inputSystem(&world);
+	gravitySystem(&world);
 	collisionSystem(&world, &collisionMap);
 	movementSystem(&world);
 

@@ -10,9 +10,11 @@ public:
 
 	void clean();
 
+	std::map <float, sf::Vertex *>::iterator findClosest(float x);
+	std::map <float, sf::Vertex *>::iterator findRight(float x);
+	std::map <float, sf::Vertex *>::iterator findLeft(float x);
 	void insertCollisionPoint(sf::Vector2f position);
 	void removeCollisionPoint();
-	void findCollisionPoint(float x);
 	void moveCollisionPoint();
 
 	void save();
