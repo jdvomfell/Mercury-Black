@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include "System.h"
+#include "MainMenu.h"
 
 Game Game::game;
 
@@ -14,6 +15,7 @@ void Game::init() {
 
 void Game::clean() {
 
+	cleanWorld(&world);
 	collisionMap.clean();
 
 }
@@ -48,6 +50,9 @@ void Game::handleEvent(GameEngine* engine) {
 			break;
 
 		case sf::Event::KeyPressed:
+
+			if (event.key.code == sf::Keyboard::Escape)
+				engine->changeState(MainMenu::instance());
 
 			if (event.key.code == sf::Keyboard::W)
 				world.input[playerID].up = true;

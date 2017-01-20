@@ -1,5 +1,15 @@
 #include "Entity.h"
 
+void cleanWorld(World * world) {
+
+	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
+
+		world->mask[entityID] = EMPTY;
+
+	}
+
+}
+
 int createEntity(World * world){
 
 	int entityID;

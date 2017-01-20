@@ -131,6 +131,8 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 			p = &(world->position[entityID]);
 			v = &(world->velocity[entityID]);
 
+			/* Find Nearby Collision Points */
+
 			if (collisionMap->findLeft(p->x) != collisionMap->map.end())
 				leftVertex = collisionMap->findLeft(p->x)->second;
 			else
@@ -140,6 +142,8 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 				rightVertex = collisionMap->findRight(p->x)->second;
 			else
 				rightVertex = collisionMap->map.begin()->second;
+
+			/* Calculate The Ground */
 
 			slope = ((rightVertex->position.y - leftVertex->position.y) / (rightVertex->position.x - leftVertex->position.x));
 			ground = ((slope * (p->x - leftVertex->position.x)) + (leftVertex->position.y));

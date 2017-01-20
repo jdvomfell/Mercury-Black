@@ -18,6 +18,7 @@ struct World {
 
 };
 
+void cleanWorld(World * world);
 int createEntity(World * world);
 void destroyEntity(World * world, int entityID);
 

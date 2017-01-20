@@ -81,6 +81,8 @@ void MainMenu::handleEvent(GameEngine * engine) {
 
 void MainMenu::update(GameEngine * engine) {
 
+	engine->window.setView(engine->window.getDefaultView());
+
 	title.setPosition(engine->window.getSize().x / 2 - title.getLocalBounds().width / 2, engine->window.getSize().y / 4 - title.getLocalBounds().height / 2);
 
 	newButton.text.setPosition(100.0f + engine->window.getSize().x / 5 * 0, 150.0f + title.getPosition().y + title.getLocalBounds().height);

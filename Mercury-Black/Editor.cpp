@@ -71,10 +71,8 @@ void Editor::handleEvent(GameEngine* engine) {
 
 	case sf::Event::KeyPressed:
 		
-		if (event.key.code == sf::Keyboard::Escape) {
-			engine->window.setView(engine->window.getDefaultView());
+		if (event.key.code == sf::Keyboard::Escape)
 			engine->changeState(MainMenu::instance());
-		}
 
 		if (event.key.code == sf::Keyboard::Delete) {
 			cursor.rect.setOutlineColor(sf::Color::Transparent);
