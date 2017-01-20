@@ -36,7 +36,6 @@ void Game::handleEvent(GameEngine* engine) {
 
 		case sf::Event::Closed:
 
-			clean();
 			engine->quit();
 
 			break;

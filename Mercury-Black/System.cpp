@@ -115,7 +115,6 @@ void movementSystem(World * world) {
 
 void collisionSystem(World * world, CollisionMap * collisionMap) {
 
-	Gravity * g;
 	Position * p;
 	Velocity * v;
 
@@ -129,17 +128,18 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 		if ((world->mask[entityID] & COLLISION_MASK) == COLLISION_MASK) {
 
-			g = &(world->gravity[entityID]);
 			p = &(world->position[entityID]);
 			v = &(world->velocity[entityID]);
 
-			if (collisionMap->findRight(p->x) != collisionMap->map.begin())
+			if (collisionMap->findLeft(p->x) != collisionMap->map.end())
 				leftVertex = collisionMap->findLeft(p->x)->second;
 			else
-				leftVertex = collisionMap->findRight(p->x)->second;
+				leftVertex = collisionMap->map.begin()->second;
 
 			if (collisionMap->findRight(p->x) != collisionMap->map.end())
 				rightVertex = collisionMap->findRight(p->x)->second;
+			else
+				rightVertex = collisionMap->map.begin()->second;
 
 			slope = ((rightVertex->position.y - leftVertex->position.y) / (rightVertex->position.x - leftVertex->position.x));
 			ground = ((slope * (p->x - leftVertex->position.x)) + (leftVertex->position.y));
@@ -167,7 +167,7 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 					v->x = -.005;
 				}
 
-				v->y = GRAVITY_CONST * g->weight;
+				v->y = GRAVITY_CONST;
 				v->onGround = false;
 
 			}
