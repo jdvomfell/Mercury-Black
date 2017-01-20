@@ -40,7 +40,7 @@ void Editor::resume() {
 
 }
 
-void Editor::handleEvent(GameEngine* engine) {
+void Editor::handleEvent() {
 
 	sf::Event event;
 
@@ -72,7 +72,7 @@ void Editor::handleEvent(GameEngine* engine) {
 	case sf::Event::KeyPressed:
 		
 		if (event.key.code == sf::Keyboard::Escape)
-			engine->changeState(MainMenu::instance());
+			engine->changeState(MainMenu::instance(engine));
 
 		if (event.key.code == sf::Keyboard::Delete) {
 			cursor.rect.setOutlineColor(sf::Color::Transparent);
@@ -117,7 +117,7 @@ void Editor::handleEvent(GameEngine* engine) {
 
 }
 
-void Editor::update(GameEngine* engine) {
+void Editor::update() {
 
 	if (doLeft == true)
 		viewVelX = -0.3f;
@@ -143,7 +143,7 @@ void Editor::update(GameEngine* engine) {
 
 }
 
-void Editor::render(GameEngine* engine) {
+void Editor::render() {
 
 	if (showLines)
 		engine->window.draw(collisionMap.lines);

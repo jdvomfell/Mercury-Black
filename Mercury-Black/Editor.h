@@ -37,14 +37,14 @@ public:
 	void pause();
 	void resume();
 
-	void handleEvent(GameEngine* engine);
-	void update(GameEngine* engine);
-	void render(GameEngine* engine);
+	void handleEvent();
+	void update();
+	void render();
 
 	void rotateMode();
 	void rotateTool();
 
-	static Editor* instance() { return &editor; }
+	static Editor* instance(GameEngine * engine) { editor.engine = engine; return &editor; }
 
 	sf::View view;
 

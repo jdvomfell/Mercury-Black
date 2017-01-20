@@ -28,7 +28,7 @@ void Game::resume() {
 
 }
 
-void Game::handleEvent(GameEngine* engine) {
+void Game::handleEvent() {
 
 	sf::Event event;
 
@@ -52,7 +52,7 @@ void Game::handleEvent(GameEngine* engine) {
 		case sf::Event::KeyPressed:
 
 			if (event.key.code == sf::Keyboard::Escape)
-				engine->changeState(MainMenu::instance());
+				engine->changeState(MainMenu::instance(engine));
 
 			if (event.key.code == sf::Keyboard::W)
 				world.input[playerID].up = true;
@@ -96,7 +96,7 @@ void Game::handleEvent(GameEngine* engine) {
 
 }
 
-void Game::update(GameEngine* engine) {
+void Game::update() {
 
 	inputSystem(&world);
 	gravitySystem(&world);
@@ -109,7 +109,7 @@ void Game::update(GameEngine* engine) {
 
 }
 
-void Game::render(GameEngine* engine) {
+void Game::render() {
 
 	engine->window.draw(collisionMap.lines);
 

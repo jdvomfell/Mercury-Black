@@ -164,11 +164,11 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 			if (v->onGround && std::abs(slope) > 1.2) {
 				
 				if (slope > 1.2 && v->x <= 0) {
-					v->x = .005;
+					v->x = 0.005f;
 				}
 				
 				else if (slope < -1.2 && v->x >= 0) {
-					v->x = -.005;
+					v->x = -0.005f;
 				}
 
 				v->y = GRAVITY_CONST;

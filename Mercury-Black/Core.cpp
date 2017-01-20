@@ -7,7 +7,7 @@ int main() {
 
 	engine.init();
 
-	engine.changeState(MainMenu::instance());
+	engine.changeState(MainMenu::instance(&engine));
 
 	while (engine.isRunning()) {
 

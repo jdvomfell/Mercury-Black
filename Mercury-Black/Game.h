@@ -15,11 +15,11 @@ public:
 	void pause();
 	void resume();
 
-	void handleEvent(GameEngine* engine);
-	void update(GameEngine* engine);
-	void render(GameEngine* engine);
+	void handleEvent();
+	void update();
+	void render();
 
-	static Game* instance() { return &game; }
+	static Game* instance(GameEngine * engine) { game.engine = engine; return &game; }
 
 protected:
 

@@ -49,13 +49,13 @@ void GameEngine::popState() {
 
 void GameEngine::handleEvents() {
 
-	states.back()->handleEvent(this);
+	states.back()->handleEvent();
 
 }
 
 void GameEngine::update() {
 
-	states.back()->update(this);
+	states.back()->update();
 
 }
 
@@ -64,7 +64,7 @@ void GameEngine::render() {
 	window.clear(sf::Color::White);
 
 	for (size_t i = 0; i < states.size(); i++)
-		states[i]->render(this);
+		states[i]->render();
 
 	window.display();
 
@@ -83,5 +83,7 @@ void GameEngine::quit() {
 }
 
 void GameEngine::loadAllTextures() {
+
 	textureManager.loadTexture("idleHero1", "Textures/Idle.png");
+
 }

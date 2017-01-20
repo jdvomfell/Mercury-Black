@@ -23,11 +23,15 @@ public:
 	void pause();
 	void resume();
 
-	void handleEvent(GameEngine * engine);
-	void update(GameEngine * engine);
-	void render(GameEngine * engine);
+	void handleEvent();
+	void update();
+	void render();
 
-	static MainMenu * instance() { return &mainMenu; }
+	static MainMenu * instance(GameEngine * engine) { mainMenu.engine = engine; return &mainMenu; }
+
+protected:
+
+	MainMenu() {}
 
 private:
 
