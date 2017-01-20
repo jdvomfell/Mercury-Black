@@ -1,6 +1,7 @@
 #ifndef GAMEENGINE_H
 #define GAMEENGINE_H
 
+#include "textureManager.h"
 #include <SFML\Graphics.hpp>
 #include <vector>
 
@@ -11,6 +12,7 @@ class GameEngine {
 public:
 
 	sf::RenderWindow window;
+	TextureManager textureManager;
 
 	void init();
 	void clean();
@@ -27,7 +29,8 @@ public:
 	void quit();
 
 private:
-
+	
+	void loadAllTextures();
 	std::vector <GameState *> states;
 	bool running;
 

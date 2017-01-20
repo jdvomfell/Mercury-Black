@@ -142,7 +142,7 @@
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="System.cpp" />
-    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buttons.h" />
@@ -156,7 +156,7 @@
     <ClInclude Include="GUI.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="System.h" />
-    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

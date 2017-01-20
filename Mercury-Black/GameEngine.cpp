@@ -5,6 +5,8 @@ void GameEngine::init() {
 
 	window.create(sf::VideoMode(1200, 700, 32), "Project Mercury Black");
 	
+	loadAllTextures();
+
 	running = true;
 
 }
@@ -78,4 +80,8 @@ void GameEngine::quit() {
 	
 	running = false;
 
+}
+
+void GameEngine::loadAllTextures() {
+	textureManager.loadTexture("idleHero1", "Textures/Idle.png");
 }
