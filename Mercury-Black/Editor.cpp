@@ -5,6 +5,7 @@
 #include <string>
 
 #include "MainMenu.h"
+#include "Game.h"
 
 Editor Editor::editor;
 
@@ -23,6 +24,9 @@ void Editor::init() {
 
 	toolText = sf::Text("Tool: Place", font, 60);
 	toolText.setFillColor(sf::Color::Black);
+
+	collisionMap.load();
+	collisionMap.updateVerticies();
 
 }
 
@@ -74,6 +78,9 @@ void Editor::handleEvent() {
 		if (event.key.code == sf::Keyboard::Escape)
 			engine->changeState(MainMenu::instance(engine));
 
+		if (event.key.code == sf::Keyboard::Tab)
+			engine->changeState(Game::instance(engine));
+
 		if (event.key.code == sf::Keyboard::Delete) {
 			cursor.rect.setOutlineColor(sf::Color::Transparent);
 			collisionMap.removeCollisionPoint();
@@ -96,9 +103,9 @@ void Editor::handleEvent() {
 		if (event.key.code == sf::Keyboard::K)
 			collisionMap.load();
 
-		if (event.key.code == sf::Keyboard::Tab)
+		if (event.key.code == sf::Keyboard::M)
 			rotateMode();
-		if (event.key.code == sf::Keyboard::T)
+		if (event.key.code == sf::Keyboard::N)
 			rotateTool();
 
 		break;

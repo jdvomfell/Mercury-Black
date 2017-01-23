@@ -2,6 +2,7 @@
 
 #include "System.h"
 #include "MainMenu.h"
+#include "Editor.h"
 
 Game Game::game;
 
@@ -53,6 +54,9 @@ void Game::handleEvent() {
 
 			if (event.key.code == sf::Keyboard::Escape)
 				engine->changeState(MainMenu::instance(engine));
+
+			if (event.key.code == sf::Keyboard::Tab)
+				engine->changeState(Editor::instance(engine));
 
 			if (event.key.code == sf::Keyboard::W)
 				world.input[playerID].up = true;
