@@ -12,7 +12,7 @@ GUI_NewGame::GUI_NewGame(float x, float y, sf::Color color, int size, sf::Font *
 
 void GUI_NewGame::interact(GameEngine * engine) {
 
-	engine->changeState(Game::instance());
+	engine->changeState(Game::instance(engine));
 
 }
 
@@ -38,7 +38,7 @@ GUI_Editor::GUI_Editor(float x, float y, sf::Color color, int size, sf::Font * f
 
 void GUI_Editor::interact(GameEngine * engine) {
 
-	engine->changeState(Editor::instance());
+	engine->changeState(Editor::instance(engine));
 
 }
 

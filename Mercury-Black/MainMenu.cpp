@@ -37,7 +37,7 @@ void MainMenu::resume() {
 
 }
 
-void MainMenu::handleEvent(GameEngine * engine) {
+void MainMenu::handleEvent() {
 
 	sf::Event event;
 
@@ -79,7 +79,7 @@ void MainMenu::handleEvent(GameEngine * engine) {
 
 }
 
-void MainMenu::update(GameEngine * engine) {
+void MainMenu::update() {
 
 	engine->window.setView(engine->window.getDefaultView());
 
@@ -93,7 +93,7 @@ void MainMenu::update(GameEngine * engine) {
 
 }
 
-void MainMenu::render(GameEngine * engine) {
+void MainMenu::render() {
 
 	engine->window.draw(newButton.text);
 	engine->window.draw(loadButton.text);
