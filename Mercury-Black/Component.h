@@ -63,6 +63,7 @@ struct Velocity {
 	float y;
 	float speed;
 	bool onGround;
+	bool canJump;
 
 };
 

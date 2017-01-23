@@ -51,9 +51,10 @@ void inputSystem(World * world) {
 			if (i->right)
 				v->x = v->speed;
 
-			if (i->jump && v->onGround) {
+			if (i->jump && v->canJump) {
 				v->y = JUMP_CONST;
 				v->onGround = false;
+				v->canJump = false;
 			}
 
 			/* DEACCELERATION MODS */
@@ -120,8 +121,11 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 	float ground = 0.0f;
 	float slope = 0.0f;
+	float slopeCheck = 0.0f;
 	sf::Vertex * leftVertex = NULL;
 	sf::Vertex * rightVertex = NULL;
+	sf::Vertex * leftCheck = NULL;
+	sf::Vertex * rightCheck = NULL;
 
 
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
@@ -133,15 +137,29 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 			/* Find Nearby Collision Points */
 
-			if (collisionMap->findLeft(p->x) != collisionMap->map.end())
+			if (collisionMap->findLeft(p->x) != collisionMap->map.end()) {
 				leftVertex = collisionMap->findLeft(p->x)->second;
-			else
+				if ((--collisionMap->findLeft(p->x)) != collisionMap->map.end())
+					leftCheck = (--collisionMap->findLeft(p->x))->second;
+				else
+					leftCheck = leftVertex;
+			}
+			else {
 				leftVertex = collisionMap->map.begin()->second;
+				leftCheck = collisionMap->map.begin()->second;
+			}
 
-			if (collisionMap->findRight(p->x) != collisionMap->map.end())
+			if (collisionMap->findRight(p->x) != collisionMap->map.end()) {
 				rightVertex = collisionMap->findRight(p->x)->second;
-			else
+				if ((++collisionMap->findRight(p->x)) != collisionMap->map.end())
+					rightCheck = (++collisionMap->findRight(p->x))->second;
+				else
+					rightCheck = rightVertex;
+			}
+			else {
 				rightVertex = collisionMap->map.begin()->second;
+				rightCheck = collisionMap->map.begin()->second;
+			}
 
 			/* Calculate The Ground */
 
@@ -151,28 +169,70 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 			/* Check If On Course To Pass Through The Ground */
 			/* Adjust To Hit The Ground */
 
-			if ((p->y += v->y) > ground) {
-				
-				p->y = ground;
+			if ((p->y + v->y) > ground) {
+
 				v->y = 0;
+				p->y = ground;
 				v->onGround = true;
+				v->canJump = true;
+
+			}
+
+			/* Don't Enter Bad Slopes */
+
+			if (v->onGround == true) {
+
+				if (v->x > 0 && (p->x + v->x) > rightVertex->position.x) {
+
+					printf("1\n");
+
+					slopeCheck = ((rightCheck->position.y - rightVertex->position.y) / (rightCheck->position.x - rightVertex->position.x));
+
+					if (slopeCheck < -1.2) {
+
+						printf("2\n");
+
+						p->x = rightVertex->position.x;
+						v->x = -0.01f;
+
+					}
+
+				}
+
+				else if (v->x < 0 && (p->x + v->x) < leftVertex->position.x) {
+
+					printf("1\n");
+
+					slopeCheck = ((leftVertex->position.y - leftCheck->position.y) / (leftVertex->position.x - leftCheck->position.x));
+
+					if (slopeCheck > 1.2) {
+
+						printf("2\n");
+
+						p->x = leftVertex->position.x;
+						v->x = 0.01f;
+
+					}
+
+				}
 
 			}
 
 			/* Slide Down Step Slopes, Cancel Jump */
 
 			if (v->onGround && std::abs(slope) > 1.2) {
+
+				v->canJump = false;
 				
 				if (slope > 1.2 && v->x <= 0) {
-					v->x = 0.005f;
+					v->x = 0.05f;
 				}
 				
 				else if (slope < -1.2 && v->x >= 0) {
-					v->x = -0.005f;
+					v->x = -0.05f;
 				}
 
 				v->y = GRAVITY_CONST;
-				v->onGround = false;
 
 			}
 
