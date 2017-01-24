@@ -2,9 +2,9 @@
 #include <cmath>
 
 /* Do Not Edit CONSTS Without Discussing Gameplay Implications First */
-#define DEACCELERATION_CONST 0.99f
-#define GRAVITY_CONST 0.0005f
-#define JUMP_CONST -0.4f
+#define DEACCELERATION_CONST 0.75f
+#define GRAVITY_CONST 0.3f
+#define JUMP_CONST -15.0f
 
 #define RENDER_MASK (POSITION | SPRITE)
 
@@ -184,16 +184,12 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 				if (v->x > 0 && (p->x + v->x) > rightVertex->position.x) {
 
-					printf("1\n");
-
 					slopeCheck = ((rightCheck->position.y - rightVertex->position.y) / (rightCheck->position.x - rightVertex->position.x));
 
 					if (slopeCheck < -1.2) {
 
-						printf("2\n");
-
 						p->x = rightVertex->position.x;
-						v->x = -0.01f;
+						v->x = -0.1f;
 
 					}
 
@@ -201,16 +197,12 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 				else if (v->x < 0 && (p->x + v->x) < leftVertex->position.x) {
 
-					printf("1\n");
-
 					slopeCheck = ((leftVertex->position.y - leftCheck->position.y) / (leftVertex->position.x - leftCheck->position.x));
 
 					if (slopeCheck > 1.2) {
 
-						printf("2\n");
-
 						p->x = leftVertex->position.x;
-						v->x = 0.01f;
+						v->x = 0.1f;
 
 					}
 
@@ -225,11 +217,11 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 				v->canJump = false;
 				
 				if (slope > 1.2 && v->x <= 0) {
-					v->x = 0.05f;
+					v->x = 0.5f;
 				}
 				
 				else if (slope < -1.2 && v->x >= 0) {
-					v->x = -0.05f;
+					v->x = -0.5f;
 				}
 
 				v->y = GRAVITY_CONST;

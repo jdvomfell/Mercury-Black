@@ -48,7 +48,7 @@ int createPlayer(World * world, float x, float y) {
 
 	world->velocity[entityID].x = 0.0f;
 	world->velocity[entityID].y = 0.0f;
-	world->velocity[entityID].speed = 0.4f;
+	world->velocity[entityID].speed = 10.0f;
 	world->velocity[entityID].canJump = false;
 	world->velocity[entityID].onGround = false;
 
