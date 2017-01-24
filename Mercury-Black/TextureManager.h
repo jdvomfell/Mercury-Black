@@ -12,8 +12,10 @@ private:
 
 public:
 
-	void loadTexture(std::string id, std::string fileName);
 	sf::Texture * getTexture(std::string id);
+	void loadTexture(std::string id, std::string fileName);
+	void loadAllTextures();
+
 };
 
 

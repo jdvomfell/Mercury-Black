@@ -54,6 +54,9 @@ int createPlayer(World * world, float x, float y) {
 
 	world->gravity[entityID].weight = 1.0f;
 
+	Animation * idleAnimation = new Animation(0.2f);
+	idleAnimation->addFrame(world->textureManager->getTexture("player_jump_1"));
+
 	Animation * runAnimation = new Animation(0.125f);
 	runAnimation->addFrame(world->textureManager->getTexture("player_run_1"));
 	runAnimation->addFrame(world->textureManager->getTexture("player_run_2"));
