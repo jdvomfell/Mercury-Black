@@ -2,6 +2,7 @@
 #define COMPONENT_H
 
 #include <SFML\Graphics.hpp>
+#include "AnimationManager.h"
 
 enum Component {
 
@@ -40,7 +41,8 @@ struct Input {
 
 struct Sprite {
 
-	sf::RectangleShape sprite;
+	AnimationManager animationManager;
+	sf::Sprite sprite;
 
 };
 

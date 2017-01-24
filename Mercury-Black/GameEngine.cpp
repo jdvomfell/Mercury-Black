@@ -85,12 +85,12 @@ void GameEngine::quit() {
 
 void GameEngine::loadAllTextures() {
 
-	textureManager.loadTexture("idleHero1", "Textures/player_idle_1.png");
-	textureManager.loadTexture("idleHero1", "Textures/player_run_1.png");
-	textureManager.loadTexture("idleHero1", "Textures/player_run_2.png");
-	textureManager.loadTexture("idleHero1", "Textures/player_run_3.png");
-	textureManager.loadTexture("idleHero1", "Textures/player_run_4.png");
-	textureManager.loadTexture("idleHero1", "Textures/player_run_5.png");
-	textureManager.loadTexture("idleHero1", "Textures/player_run_6.png");
+	textureManager.loadTexture("player_idle_1", "Textures/player_idle_1.png");
+	textureManager.loadTexture("player_run_1", "Textures/player_run_1.png");
+	textureManager.loadTexture("player_run_2", "Textures/player_run_2.png");
+	textureManager.loadTexture("player_run_3", "Textures/player_run_3.png");
+	textureManager.loadTexture("player_run_4", "Textures/player_run_4.png");
+	textureManager.loadTexture("player_run_5", "Textures/player_run_5.png");
+	textureManager.loadTexture("player_run_6", "Textures/player_run_6.png");
 
 }

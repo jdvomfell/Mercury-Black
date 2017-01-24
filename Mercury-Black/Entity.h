@@ -2,6 +2,7 @@
 #define ENTITY_H
 
 #include "Component.h"
+#include "TextureManager.h"
 
 #define MAX_ENTITIES 100
 
@@ -15,6 +16,8 @@ struct World {
 	Gravity gravity[MAX_ENTITIES];
 	Position position[MAX_ENTITIES];
 	Velocity velocity[MAX_ENTITIES];
+
+	TextureManager * textureManager;
 
 };
 

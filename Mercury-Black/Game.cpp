@@ -8,6 +8,8 @@ Game Game::game;
 
 void Game::init() {
 
+	world.textureManager = &engine->textureManager;
+
 	playerID = createPlayer(&world, 0, 0);
 
 	collisionMap.load();
@@ -106,6 +108,7 @@ void Game::update(const float dt) {
 	gravitySystem(&world);
 	collisionSystem(&world, &collisionMap);
 	movementSystem(&world);
+	animationSystem(&world, dt);
 
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
 	view.setCenter(sf::Vector2f(world.position[playerID].x, world.position[playerID].y));

@@ -5,6 +5,7 @@
 #include <SFML\Graphics.hpp>
 
 class Animation {
+	
 	public: 
 
 		std::vector<sf::Texture *> textures;
@@ -18,6 +19,13 @@ class Animation {
 		}
 
 		Animation() {}
+
+		void addFrame(sf::Texture * texture) {
+
+			textures.push_back(texture);
+
+		}
+
 };
 
 #endif

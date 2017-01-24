@@ -8,21 +8,20 @@
 #include "Animation.h"
 
 class AnimationManager {
-	private: 
+	public:
 
-		std::map<std::string, Animation> animations; 
+		std::map<std::string, Animation *> animations; 
 
 		float currentTime; 
 
 		std::string currentAnimation;
 
-		int currentFrame;
+		int currentFrame;	
 
-	public:		
-
-		void addAnimation(Animation& animation, std::string id);
+		void addAnimation(Animation * animation, std::string id);
 		void updateAnimation(float deltaTime);
 		void changeAnimation(std::string animationID);
+		sf::Texture * getCurrentTexture();
 		AnimationManager();
 };
 

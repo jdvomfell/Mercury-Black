@@ -54,8 +54,16 @@ int createPlayer(World * world, float x, float y) {
 
 	world->gravity[entityID].weight = 1.0f;
 
-	world->sprite[entityID].sprite.setSize(sf::Vector2f(250, 250));
-	world->sprite[entityID].sprite.setFillColor(sf::Color::Black);
+	Animation * runAnimation = new Animation(0.125f);
+	runAnimation->addFrame(world->textureManager->getTexture("player_run_1"));
+	runAnimation->addFrame(world->textureManager->getTexture("player_run_2"));
+	runAnimation->addFrame(world->textureManager->getTexture("player_run_3"));
+	runAnimation->addFrame(world->textureManager->getTexture("player_run_4"));
+	runAnimation->addFrame(world->textureManager->getTexture("player_run_5"));
+	runAnimation->addFrame(world->textureManager->getTexture("player_run_6"));
+
+	world->sprite[entityID].animationManager.addAnimation(runAnimation, "player_run");
+	
 	world->sprite[entityID].sprite.setOrigin(sf::Vector2f(world->sprite[entityID].sprite.getLocalBounds().width / 2, world->sprite[entityID].sprite.getLocalBounds().height));
 
 	return entityID;
