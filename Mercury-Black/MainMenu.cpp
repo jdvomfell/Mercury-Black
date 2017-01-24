@@ -79,7 +79,7 @@ void MainMenu::handleEvent() {
 
 }
 
-void MainMenu::update() {
+void MainMenu::update(const float dt) {
 
 	engine->window.setView(engine->window.getDefaultView());
 
@@ -93,7 +93,7 @@ void MainMenu::update() {
 
 }
 
-void MainMenu::render() {
+void MainMenu::render(const float dt) {
 
 	engine->window.draw(newButton.text);
 	engine->window.draw(loadButton.text);

@@ -16,8 +16,8 @@ public:
 	void resume();
 
 	void handleEvent();
-	void update();
-	void render();
+	void update(const float dt);
+	void render(const float dt);
 
 	static Game* instance(GameEngine * engine) { game.engine = engine; return &game; }
 

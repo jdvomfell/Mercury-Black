@@ -16,8 +16,8 @@ public:
 	virtual void resume() = 0;
 
 	virtual void handleEvent() = 0;
-	virtual void update() = 0;
-	virtual void render() = 0;
+	virtual void update(const float dt) = 0;
+	virtual void render(const float dt) = 0;
 
 	void changeState(GameEngine * engine, GameState * state) { 
 		engine->changeState(state); 

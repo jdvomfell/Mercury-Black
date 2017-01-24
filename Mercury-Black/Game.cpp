@@ -100,7 +100,7 @@ void Game::handleEvent() {
 
 }
 
-void Game::update() {
+void Game::update(const float dt) {
 
 	inputSystem(&world);
 	gravitySystem(&world);
@@ -113,7 +113,7 @@ void Game::update() {
 
 }
 
-void Game::render() {
+void Game::render(const float dt) {
 
 	engine->window.draw(collisionMap.lines);
 

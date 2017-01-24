@@ -4,6 +4,7 @@
 void GameEngine::init() {
 
 	window.create(sf::VideoMode(1200, 700, 32), "Project Mercury Black");
+	window.setFramerateLimit(60);
 	
 	loadAllTextures();
 
@@ -53,18 +54,18 @@ void GameEngine::handleEvents() {
 
 }
 
-void GameEngine::update() {
+void GameEngine::update(const float dt) {
 
-	states.back()->update();
+	states.back()->update(dt);
 
 }
 
-void GameEngine::render() {
+void GameEngine::render(const float dt) {
 
 	window.clear(sf::Color::White);
 
 	for (size_t i = 0; i < states.size(); i++)
-		states[i]->render();
+		states[i]->render(dt);
 
 	window.display();
 
@@ -84,6 +85,12 @@ void GameEngine::quit() {
 
 void GameEngine::loadAllTextures() {
 
-	textureManager.loadTexture("idleHero1", "Textures/Idle.png");
+	textureManager.loadTexture("idleHero1", "Textures/player_idle_1.png");
+	textureManager.loadTexture("idleHero1", "Textures/player_run_1.png");
+	textureManager.loadTexture("idleHero1", "Textures/player_run_2.png");
+	textureManager.loadTexture("idleHero1", "Textures/player_run_3.png");
+	textureManager.loadTexture("idleHero1", "Textures/player_run_4.png");
+	textureManager.loadTexture("idleHero1", "Textures/player_run_5.png");
+	textureManager.loadTexture("idleHero1", "Textures/player_run_6.png");
 
 }

@@ -3,6 +3,7 @@
 
 int main() {
 
+	sf::Clock clock;
 	GameEngine engine;
 
 	engine.init();
@@ -11,9 +12,12 @@ int main() {
 
 	while (engine.isRunning()) {
 
+		sf::Time timePassed = clock.restart();
+		float deltaTime = timePassed.asSeconds();
+
 		engine.handleEvents();
-		engine.update();
-		engine.render();
+		engine.update(deltaTime);
+		engine.render(deltaTime);
 
 	}
 

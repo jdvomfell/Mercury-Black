@@ -124,7 +124,7 @@ void Editor::handleEvent() {
 
 }
 
-void Editor::update() {
+void Editor::update(const float dt) {
 
 	if (doLeft == true)
 		viewVelX = -0.3f;
@@ -150,7 +150,7 @@ void Editor::update() {
 
 }
 
-void Editor::render() {
+void Editor::render(const float dt) {
 
 	if (showLines)
 		engine->window.draw(collisionMap.lines);

@@ -22,8 +22,8 @@ public:
 	void popState();
 
 	void handleEvents();
-	void update();
-	void render();
+	void update(const float dt);
+	void render(const float dt);
 
 	bool isRunning();
 	void quit();

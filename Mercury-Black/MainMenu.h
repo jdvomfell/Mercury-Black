@@ -24,8 +24,8 @@ public:
 	void resume();
 
 	void handleEvent();
-	void update();
-	void render();
+	void update(const float dt);
+	void render(const float dt);
 
 	static MainMenu * instance(GameEngine * engine) { mainMenu.engine = engine; return &mainMenu; }
 
