@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="CollisionMap.cpp" />
     <ClCompile Include="Core.cpp" />
@@ -145,6 +146,8 @@
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="AnimationManager.h" />
     <ClInclude Include="Buttons.h" />
     <ClInclude Include="CollisionMap.h" />
     <ClInclude Include="Component.h" />

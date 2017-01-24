@@ -84,6 +84,6 @@ void GameEngine::quit() {
 
 void GameEngine::loadAllTextures() {
 
-	textureManager.loadTexture("idleHero1", "Textures/Idle.png");
+	textureManager.loadTexture("idleHero1", "Textures/player_idle_1.png");
 
 }
