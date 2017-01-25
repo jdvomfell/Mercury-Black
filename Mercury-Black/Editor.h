@@ -2,9 +2,11 @@
 #define EDITOR_H
 
 #include <SFML/Graphics.hpp>
-#include "CollisionMap.h"
-#include "GameState.h"
 #include <map>
+
+#include "CollisionMap.h"
+#include "ObjectMap.h"
+#include "GameState.h"
 
 /* Editing Types */
 
@@ -57,9 +59,8 @@ private:
 	Cursor cursor;
 	static Editor editor;
 
-	std::multimap<int, sf::Sprite*> objectMap;
-
 	CollisionMap collisionMap;
+	ObjectMap objectMap;
 
 	int mode;
 	int tool;

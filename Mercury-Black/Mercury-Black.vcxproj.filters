@@ -87,6 +87,9 @@
     <ClCompile Include="AnimationManager.cpp">
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectMap.cpp">
+      <Filter>Source Files\GameUtility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -130,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="AnimationManager.h">
       <Filter>Header Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectMap.h">
+      <Filter>Header Files\GameUtility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

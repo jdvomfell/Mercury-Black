@@ -28,6 +28,8 @@ void Editor::init() {
 	collisionMap.load();
 	collisionMap.updateVerticies();
 
+	objectMap = ObjectMap(&engine->textureManager);
+
 }
 
 void Editor::clean() {

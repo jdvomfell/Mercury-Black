@@ -142,6 +142,7 @@
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="ObjectMap.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
@@ -158,6 +159,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="ObjectMap.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>

@@ -6,17 +6,16 @@
 #include <map>
 
 class TextureManager {
-private:
-
-	std::map<std::string, sf::Texture> textures;
 
 public:
 
+	std::map<std::string, sf::Texture> textures;
+	
 	sf::Texture * getTexture(std::string id);
+	
 	void loadTexture(std::string id, std::string fileName);
 	void loadAllTextures();
 
 };
-
 
 #endif 
