@@ -50,6 +50,8 @@ void inputSystem(World * world) {
 				v->x = -v->speed;
 			if (i->right)
 				v->x = v->speed;
+			if (i->left && i->right)
+				v->x = 0.0f;
 
 			if (i->jump && v->canJump) {
 				v->y = JUMP_CONST;
