@@ -65,19 +65,25 @@ int createPlayer(World * world, float x, float y) {
 	runAnimation->addFrame(world->textureManager->getTexture("player_run_5"));
 	runAnimation->addFrame(world->textureManager->getTexture("player_run_6"));
 
-	Animation * jumpAnimation = new Animation(0.2f);
-	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_1"));
-	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_2"));
-	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_3"));
-	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_4"));
-	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_5"));
-	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_6"));
-	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_7"));
-	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_8"));
+	Animation * jumpAnimation = new Animation(0.1f);
+	jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_1"));
+	jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_2"));
+	jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_3"));
+	jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_4"));
+	jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_5"));
+	jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_6"));
+	jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_7"));
+	//jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_8"));
+
+	Animation * inAirAnimation = new Animation(0.1f);
+	inAirAnimation->addFrame(world->textureManager->getTexture("player_jump_8"));
 
 	world->sprite[entityID].animationManager.addAnimation(runAnimation, "run");
 	world->sprite[entityID].animationManager.addAnimation(idleAnimation, "idle");
 	world->sprite[entityID].animationManager.addAnimation(jumpAnimation, "jump");
+	world->sprite[entityID].animationManager.addAnimation(inAirAnimation, "inAir");
+
+	world->sprite[entityID].animationManager.changeAnimation("idle");
 	
 	world->sprite[entityID].sprite.setOrigin(sf::Vector2f(world->sprite[entityID].sprite.getLocalBounds().width / 2, world->sprite[entityID].sprite.getLocalBounds().height));
 

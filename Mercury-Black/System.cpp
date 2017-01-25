@@ -2,8 +2,8 @@
 #include <cmath>
 
 /* Do Not Edit CONSTS Without Discussing Gameplay Implications First */
-#define DEACCELERATION_CONST 0.75f
-#define GRAVITY_CONST 0.3f
+#define DEACCELERATION_CONST 0.90f
+#define GRAVITY_CONST 0.5f
 #define JUMP_CONST -15.0f
 
 #define RENDER_MASK (POSITION | SPRITE)
@@ -62,7 +62,7 @@ void inputSystem(World * world) {
 			if (v->x != 0)
 				v->x *= DEACCELERATION_CONST;
 
-			if ((v->x < 0 && v->x > -0.01f) || (v->x > 0 && v->x < 0.01f))
+			if ((v->x < 0 && v->x > -0.5f) || (v->x > 0 && v->x < 0.5f))
 				v->x = 0;
 
 		}
@@ -112,14 +112,46 @@ void movementSystem(World * world) {
 
 }
 
-void animationSystem(World * world, float dt) {
+#define ANIMATION_MASK (VELOCITY | SPRITE)
 
-	for (int entityID = 0; entityID < 1; entityID++) {
+void animationSystem(World * world, float dt, int player) {
 
-		world->sprite[entityID].animationManager.changeAnimation("run");
-		world->sprite[entityID].animationManager.updateAnimation(dt);
-		world->sprite[entityID].sprite.setTexture(*world->sprite[entityID].animationManager.getCurrentTexture());
-		world->sprite[entityID].sprite.setOrigin(sf::Vector2f(world->sprite[entityID].sprite.getLocalBounds().width / 2, world->sprite[entityID].sprite.getLocalBounds().height));
+	Sprite * s;
+	Velocity * v;
+
+	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
+
+		if ((world->mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
+
+			s = &(world->sprite[entityID]);
+			v = &(world->velocity[entityID]);
+
+			if (v->onGround) {
+			
+				if (v->x != 0)
+					s->animationManager.changeAnimation("run");
+				else
+					s->animationManager.changeAnimation("idle");
+
+			}
+			
+			else {
+			
+				//s->animationManager.changeAnimation("jump");
+				s->animationManager.changeAnimation("inAir");
+			
+			}
+
+			if (v->x < 0)
+				s->sprite.setTextureRect(sf::IntRect(s->sprite.getLocalBounds().width, 0, -s->sprite.getLocalBounds().width, s->sprite.getLocalBounds().height));
+			if (v->x > 0)
+				s->sprite.setTextureRect(sf::IntRect(0, 0, s->sprite.getLocalBounds().width, s->sprite.getLocalBounds().height));
+
+			s->animationManager.updateAnimation(dt);
+			s->sprite.setTexture(*s->animationManager.getCurrentTexture());
+			s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height));
+
+		}
 
 	}
 

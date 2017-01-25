@@ -32,9 +32,9 @@ void AnimationManager::updateAnimation(float deltaTime) {
 
 	currentTime += deltaTime;
 
-	if (currentTime > animationTime * animations[currentAnimation]->textures.size()) {			
+	if (currentTime > animationTime * animations[currentAnimation]->textures.size())		
 		currentTime = 0.0f;	
-	}
+
 }
 
 
@@ -44,7 +44,7 @@ void AnimationManager::changeAnimation(std::string animationID)	{
 		return;
 
 	currentAnimation = animationID;
-
+	currentFrame = 0;
 	currentTime = 0.0f;
 
 }

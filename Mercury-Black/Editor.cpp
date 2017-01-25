@@ -127,16 +127,16 @@ void Editor::handleEvent() {
 void Editor::update(const float dt) {
 
 	if (doLeft == true)
-		viewVelX = -0.3f;
+		viewVelX = -15.0f;
 	else if (doRight == true)
-		viewVelX = 0.3f;
+		viewVelX = 15.0f;
 	else
 		viewVelX = 0.0f;
 
 	if (doUp == true)
-		viewVelY = -0.3f;
+		viewVelY = -15.0f;
 	else if (doDown == true)
-		viewVelY = 0.3f;
+		viewVelY = 15.0f;
 	else
 		viewVelY = 0.0f;
 
