@@ -48,14 +48,14 @@ int createPlayer(World * world, float x, float y) {
 
 	world->velocity[entityID].x = 0.0f;
 	world->velocity[entityID].y = 0.0f;
-	world->velocity[entityID].speed = 10.0f;
+	world->velocity[entityID].speed = 15.0f;
 	world->velocity[entityID].canJump = false;
 	world->velocity[entityID].onGround = false;
 
 	world->gravity[entityID].weight = 1.0f;
 
 	Animation * idleAnimation = new Animation(0.2f);
-	idleAnimation->addFrame(world->textureManager->getTexture("player_jump_1"));
+	idleAnimation->addFrame(world->textureManager->getTexture("player_idle_1"));
 
 	Animation * runAnimation = new Animation(0.125f);
 	runAnimation->addFrame(world->textureManager->getTexture("player_run_1"));
@@ -65,7 +65,19 @@ int createPlayer(World * world, float x, float y) {
 	runAnimation->addFrame(world->textureManager->getTexture("player_run_5"));
 	runAnimation->addFrame(world->textureManager->getTexture("player_run_6"));
 
-	world->sprite[entityID].animationManager.addAnimation(runAnimation, "player_run");
+	Animation * jumpAnimation = new Animation(0.2f);
+	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_1"));
+	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_2"));
+	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_3"));
+	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_4"));
+	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_5"));
+	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_6"));
+	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_7"));
+	jumpAnimation->addFrame(world->textureManager->getTexture("playr_jump_8"));
+
+	world->sprite[entityID].animationManager.addAnimation(runAnimation, "run");
+	world->sprite[entityID].animationManager.addAnimation(idleAnimation, "idle");
+	world->sprite[entityID].animationManager.addAnimation(jumpAnimation, "jump");
 	
 	world->sprite[entityID].sprite.setOrigin(sf::Vector2f(world->sprite[entityID].sprite.getLocalBounds().width / 2, world->sprite[entityID].sprite.getLocalBounds().height));
 

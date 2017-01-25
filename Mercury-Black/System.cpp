@@ -116,7 +116,7 @@ void animationSystem(World * world, float dt) {
 
 	for (int entityID = 0; entityID < 1; entityID++) {
 
-		world->sprite[entityID].animationManager.changeAnimation("player_run");
+		world->sprite[entityID].animationManager.changeAnimation("run");
 		world->sprite[entityID].animationManager.updateAnimation(dt);
 		world->sprite[entityID].sprite.setTexture(*world->sprite[entityID].animationManager.getCurrentTexture());
 		world->sprite[entityID].sprite.setOrigin(sf::Vector2f(world->sprite[entityID].sprite.getLocalBounds().width / 2, world->sprite[entityID].sprite.getLocalBounds().height));
