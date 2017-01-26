@@ -90,6 +90,9 @@
     <ClCompile Include="ObjectMap.cpp">
       <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
+    <ClCompile Include="PlatformMap.cpp">
+      <Filter>Source Files\GameUtility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -135,6 +138,9 @@
       <Filter>Header Files\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ObjectMap.h">
+      <Filter>Header Files\GameUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="PlatformMap.h">
       <Filter>Header Files\GameUtility</Filter>
     </ClInclude>
   </ItemGroup>
