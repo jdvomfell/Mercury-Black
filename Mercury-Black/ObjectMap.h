@@ -7,11 +7,10 @@
 
 struct Object {
 
-	float x;
-	float y;
-	float rotation;
 	float scale;
+	float rotation;
 	std::string type;
+	sf::Vector2f position;
 
 };
 

@@ -58,6 +58,16 @@ void Editor::handleEvent() {
 		engine->quit();
 		break;
 
+	case sf::Event::MouseMoved:
+
+		if (mode == OBJECT) {
+
+			objectMap.object.position.x = (float) event.mouseMove.x;
+			objectMap.object.position.y = (float) event.mouseMove.y;
+			cursor.sprite.setPosition(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y)));
+
+		}
+
 	case sf::Event::MouseButtonPressed:
 
 		if (event.mouseButton.button == sf::Mouse::Left)
@@ -110,6 +120,13 @@ void Editor::handleEvent() {
 		if (event.key.code == sf::Keyboard::N)
 			rotateTool();
 
+		if (mode == OBJECT) {
+			if (event.key.code == sf::Keyboard::T)
+				objectMap.changeObject();
+			cursor.sprite.setTexture(engine->textureManager.textures.find(objectMap.object.type)->second);
+			cursor.sprite.setOrigin(cursor.sprite.getLocalBounds().width / 2, cursor.sprite.getLocalBounds().height / 2);
+		}
+
 		break;
 
 	case sf::Event::KeyReleased:
@@ -157,7 +174,10 @@ void Editor::render(const float dt) {
 	if (showLines)
 		engine->window.draw(collisionMap.lines);
 
-	engine->window.draw(cursor.rect);
+	if (mode == OBJECT)
+		engine->window.draw(cursor.sprite);
+	else
+		engine->window.draw(cursor.rect);
 
 	engine->window.draw(modeText);
 	engine->window.draw(toolText);
@@ -205,5 +225,7 @@ Cursor::Cursor() {
 	rect.setOutlineThickness(3);
 	rect.setOrigin(rect.getLocalBounds().width / 2, rect.getLocalBounds().height / 2);
 	rect.setPosition(0, 0);
+
+	sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
 
 }

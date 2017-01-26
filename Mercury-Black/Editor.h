@@ -26,6 +26,7 @@ public:
 	Cursor();
 
 	sf::RectangleShape rect;
+	sf::Sprite sprite;
 
 };
 
