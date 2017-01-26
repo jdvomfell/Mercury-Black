@@ -9,8 +9,9 @@ struct Object {
 
 	float scale;
 	float rotation;
-	std::string type;
+	sf::Sprite sprite;
 	sf::Vector2f position;
+	std::string textureName;
 
 };
 
@@ -20,12 +21,13 @@ public:
 
 	void save();
 	void load();
+	void clean();
 
-	void add();
-	void remove();
+	void insert(sf::Vector2f position);
+	void remove(float xPos);
 
 	void changeObject();
-	void selectObject();
+	void selectObject(std::string textureName);
 
 	ObjectMap() {}
 	ObjectMap(TextureManager *);
@@ -33,7 +35,8 @@ public:
 	TextureManager * textureManager;
 
 	Object object;
-	std::map<float, Object> objectMap;
+	std::map<float, Object *> map;
+	std::map<float, Object *>::iterator selected;
 
 };
 

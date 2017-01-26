@@ -10,30 +10,62 @@ void ObjectMap::load() {
 
 }
 
-void ObjectMap::add() {
+void ObjectMap::clean() {
+
+	for (selected = map.begin(); selected != map.end(); selected++) {
+
+		delete(selected->second);
+		map.erase(selected++);
+
+	}
 
 }
 
-void ObjectMap::remove() {
+void ObjectMap::insert(sf::Vector2f position) {
+
+	this->object.position = position;
+
+	this->object.sprite.setPosition(position);
+	this->object.sprite.setTexture(textureManager->textures.find(this->object.textureName)->second);
+
+	Object * object = new Object(this->object);
+
+	map.insert(std::make_pair(object->position.x, object));
+
+}
+
+void ObjectMap::remove(float xPos) {
+
+	if (map.find(xPos) != map.end()) {
+
+		delete(map.find(xPos)->second);
+		map.erase(xPos);
+	
+	}
 
 }
 
 void ObjectMap::changeObject() {
 	
-	if (textureManager->textures.find(object.type) == --textureManager->textures.end())
-		object.type = textureManager->textures.begin()->first;
+	if (textureManager->textures.find(object.textureName) == --textureManager->textures.end())
+		object.textureName = textureManager->textures.begin()->first;
 	else
-		object.type = (++textureManager->textures.find(object.type))->first;
+		object.textureName = (++textureManager->textures.find(object.textureName))->first;
 
 }
 
-void ObjectMap::selectObject() {
+void ObjectMap::selectObject(std::string textureName) {
+
+	if (textureManager->textures.find(textureName) != textureManager->textures.end())
+		object.textureName = textureName;
+	else
+		object.textureName = textureManager->textures.begin()->first;
 
 }
 
 ObjectMap::ObjectMap(TextureManager * textureManager) {
 
 	this->textureManager = textureManager;
-	object.type = this->textureManager->textures.begin()->first;
+	object.textureName = this->textureManager->textures.begin()->first;
 
 }

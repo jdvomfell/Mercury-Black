@@ -15,7 +15,7 @@ void CollisionMap::clean() {
 
 }
 
-void CollisionMap::insertCollisionPoint(sf::Vector2f position) {
+void CollisionMap::insert(sf::Vector2f position) {
 
 	sf::Vertex * tempVertex;
 
@@ -27,7 +27,7 @@ void CollisionMap::insertCollisionPoint(sf::Vector2f position) {
 
 }
 
-void CollisionMap::removeCollisionPoint() {
+void CollisionMap::remove() {
 
 	if (selected == map.end() || selected->second == NULL)
 		return;
@@ -74,7 +74,7 @@ std::map <float, sf::Vertex *>::iterator CollisionMap::findClosest(float x) {
 
 }
 
-void CollisionMap::moveCollisionPoint() {
+void CollisionMap::move() {
 
 	if (selected->second == NULL)
 		return;
@@ -82,8 +82,6 @@ void CollisionMap::moveCollisionPoint() {
 }
 
 void CollisionMap::save() {
-
-	// Save Points for collision map
 
 	std::ofstream ofstream;
 
@@ -94,18 +92,6 @@ void CollisionMap::save() {
 		ofstream.write((char*)it->second, sizeof(sf::Vertex));
 
 	ofstream.close();
-
-	// Save objects for object map
-
-	/*std::string objectFilename = "object.dat";
-	ofstream.open(objectFilename);
-
-	std::multimap<int, sf::Sprite*>::iterator oit;
-	for (oit = objectMap.begin(); oit != objectMap.end(); oit++) {
-	ofstream << oit->second;
-	}
-
-	ofstream.close();*/
 
 }
 

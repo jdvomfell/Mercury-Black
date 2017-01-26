@@ -9,16 +9,15 @@ class CollisionMap {
 public:
 
 	void clean();
+	void save();
+	void load();
 
 	std::map <float, sf::Vertex *>::iterator findClosest(float x);
 	std::map <float, sf::Vertex *>::iterator findRight(float x);
 	std::map <float, sf::Vertex *>::iterator findLeft(float x);
-	void insertCollisionPoint(sf::Vector2f position);
-	void removeCollisionPoint();
-	void moveCollisionPoint();
-
-	void save();
-	void load();
+	void insert(sf::Vector2f position);
+	void remove();
+	void move();
 
 	void updateVerticies();
 
