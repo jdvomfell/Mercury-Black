@@ -104,10 +104,11 @@ void Game::handleEvent() {
 
 void Game::update(const float dt) {
 
+	aiSystem(&world, dt);
 	inputSystem(&world);
 	gravitySystem(&world);
 	collisionSystem(&world, &collisionMap);
-	animationSystem(&world, dt, playerID);
+	//animationSystem(&world, dt, playerID);
 	movementSystem(&world);
 
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));

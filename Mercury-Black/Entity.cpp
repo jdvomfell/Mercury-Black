@@ -14,7 +14,7 @@ int createEntity(World * world){
 
 	int entityID;
 	
-	for (entityID = 0; entityID < MAX_ENTITIES; entityID++){
+	for (entityID = 1; entityID < MAX_ENTITIES; entityID++){
 
 		if (world->mask[entityID] == EMPTY)
 			return entityID;
@@ -37,11 +37,11 @@ void destroyEntity(World * world, int entityID) {
 
 int createPlayer(World * world, float x, float y) {
 
-	int entityID = createEntity(world);
+	int entityID = 0;
 
-	world->mask[entityID] = NAME | INPUT | POSITION | VELOCITY | SPRITE | COLLISION | GRAVITY;
+	world->mask[entityID] = NAME | INPUT | POSITION | VELOCITY | SPRITE | COLLISION | GRAVITY | SCRIPT;
 
-	world->name[entityID].name = "Player";
+	world->name[entityID].name = "player";
 
 	world->position[entityID].x = x;
 	world->position[entityID].y = y;

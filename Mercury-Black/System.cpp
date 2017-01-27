@@ -6,6 +6,29 @@
 #define GRAVITY_CONST 0.5f
 #define JUMP_CONST -15.0f
 
+#define SCRIPT_MASK (NAME | SCRIPT)
+
+void aiSystem(World * world, float dt) {
+	
+	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
+
+		if ((world->mask[entityID] & SCRIPT_MASK) == SCRIPT_MASK) {
+			
+			if (world->name[entityID].name == "player") {
+				printf("YO\n");
+				scriptPlayer(world, dt);
+			}
+
+			else if (world->name[entityID].name == "enemy") {
+
+			}
+		}
+	}
+	
+}
+
+
+
 #define RENDER_MASK (POSITION | SPRITE)
 
 void renderSystem(World * world, sf::RenderWindow * window) {
@@ -115,7 +138,7 @@ void movementSystem(World * world) {
 }
 
 #define ANIMATION_MASK (VELOCITY | SPRITE)
-
+/*
 void animationSystem(World * world, float dt, int player) {
 
 	Sprite * s;
@@ -158,7 +181,7 @@ void animationSystem(World * world, float dt, int player) {
 	}
 
 }
-
+*/
 #define COLLISION_MASK (POSITION | VELOCITY | COLLISION | GRAVITY)
 
 void collisionSystem(World * world, CollisionMap * collisionMap) {
