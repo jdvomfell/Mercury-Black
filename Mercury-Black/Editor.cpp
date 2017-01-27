@@ -125,8 +125,6 @@ void Editor::handleEvent() {
 		if (mode == OBJECT) {
 			if (event.key.code == sf::Keyboard::T)
 				objectMap.changeObject();
-			cursor.sprite.setTexture(engine->textureManager.textures.find(objectMap.object.textureName)->second);
-			cursor.sprite.setOrigin(cursor.sprite.getLocalBounds().width / 2, cursor.sprite.getLocalBounds().height / 2);
 		}
 
 		break;
