@@ -100,3 +100,42 @@ int createPlayer(World * world, float x, float y) {
 	return entityID;
 
 }
+
+int createCeilingPlant(World * world, float x, float y) {
+	int entityID = createEntity(world);
+
+	world->mask[entityID] = NAME | INPUT | POSITION | SPRITE | SCRIPT;
+
+	world->name[entityID].name = "ceiling_plant";
+
+	world->position[entityID].x = x;
+	world->position[entityID].y = y;
+	
+	Animation * idleAnimation = new Animation(0.2f);
+		idleAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_15"));
+
+	Animation * spawnAnimation = new Animation(0.1f);
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_1"));
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_2"));
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_3"));
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_4"));
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_5"));
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_6"));
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_7"));
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_8"));
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_9"));
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_10"));
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_11"));
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_12"));
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_13"));
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_14"));
+		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_15"));
+	
+	world->sprite[entityID].animationManager.addAnimation(spawnAnimation, "spawn");
+	world->sprite[entityID].animationManager.addAnimation(idleAnimation, "idle");
+	
+	world->sprite[entityID].animationManager.changeAnimation("spawn");
+	//world->sprite[entityID].sprite.setOrigin(sf::Vector2f(world->sprite[entityID].sprite.getLocalBounds().width / 2, world->sprite[entityID].sprite.getLocalBounds().height));
+	
+	return entityID;
+}

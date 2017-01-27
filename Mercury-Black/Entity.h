@@ -27,5 +27,5 @@ int createEntity(World * world);
 void destroyEntity(World * world, int entityID);
 
 int createPlayer(World * world, float x, float y);
-
+int createCeilingPlant(World * world, float x, float y);
 #endif

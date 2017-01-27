@@ -39,3 +39,13 @@ void scriptPlayer(World *world, float dt) {
 	s->sprite.setTexture(*s->animationManager.getCurrentTexture());
 	s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height));
 }
+
+void scriptPlant(World * world, int entityID, float dt) {
+	Sprite *s;
+
+	s = &world->sprite[entityID];
+	
+	s->animationManager.updateAnimation(dt);
+	s->sprite.setTexture(*s->animationManager.getCurrentTexture());
+	s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height));
+}

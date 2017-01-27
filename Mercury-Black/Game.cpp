@@ -12,6 +12,8 @@ void Game::init() {
 
 	createPlayer(&world, 0, 0);
 
+	createCeilingPlant(&world, 100, 1000);
+
 	collisionMap.load();
 
 }
