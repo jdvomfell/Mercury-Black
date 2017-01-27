@@ -4,7 +4,7 @@
 #include "Entity.h"
 #include "CollisionMap.h"
 
-void aiSystem(World * world, int playerID);
+void aiSystem(World * world, int playerID, int entityID);
 void inputSystem(World * world);
 void renderSystem(World * world, sf::RenderWindow * window);
 void gravitySystem(World * world);

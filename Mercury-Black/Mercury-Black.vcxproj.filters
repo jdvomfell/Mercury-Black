@@ -93,6 +93,9 @@
     <ClCompile Include="PlatformMap.cpp">
       <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
+    <ClCompile Include="AIScript.cpp">
+      <Filter>Source Files\Entity Component System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -142,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="PlatformMap.h">
       <Filter>Header Files\GameUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="AIScript.h">
+      <Filter>Header Files\Entity Component System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

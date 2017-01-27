@@ -6,6 +6,28 @@
 #define GRAVITY_CONST 0.5f
 #define JUMP_CONST -15.0f
 
+#define SCRIPT_MASK(NAME)
+
+void aiSystem(World * world, int playerID, int entityID) {
+	
+	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
+
+		if ((world->mask[entityID] & SCRIPT_MASK) == SCRIPT_MASK) {
+			
+			if (world->name[entityID].name == "player") {
+
+			}
+
+			else if (world->name[entityID].name == "enemy") {
+
+			}
+		}
+	}
+	
+}
+
+
+
 #define RENDER_MASK (POSITION | SPRITE)
 
 void renderSystem(World * world, sf::RenderWindow * window) {
