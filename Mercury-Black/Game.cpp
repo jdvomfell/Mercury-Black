@@ -45,13 +45,6 @@ void Game::handleEvent() {
 
 			break;
 
-		case sf::Event::MouseButtonPressed:
-
-			if (event.mouseButton.button == sf::Mouse::Left)
-				world.input[PLAYER].attack = true;
-			
-			break;
-
 		case sf::Event::KeyPressed:
 
 			if (event.key.code == sf::Keyboard::Escape)
@@ -61,7 +54,7 @@ void Game::handleEvent() {
 				engine->changeState(Editor::instance(engine));
 
 			if (event.key.code == sf::Keyboard::W)
-				world.input[PLAYER].up = true;
+				world.input[PLAYER].jump = true;
 			if (event.key.code == sf::Keyboard::S)
 				world.input[PLAYER].down = true;
 			if (event.key.code == sf::Keyboard::A)
@@ -70,7 +63,7 @@ void Game::handleEvent() {
 				world.input[PLAYER].right = true;
 
 			if (event.key.code == sf::Keyboard::Space)
-				world.input[PLAYER].jump = true;
+				world.input[PLAYER].attack = true;
 
 			if (event.key.code == sf::Keyboard::LShift)
 				world.input[PLAYER].special = true;
@@ -80,7 +73,7 @@ void Game::handleEvent() {
 		case sf::Event::KeyReleased:
 
 			if (event.key.code == sf::Keyboard::W)
-				world.input[PLAYER].up = false;
+				world.input[PLAYER].jump = false;
 			if (event.key.code == sf::Keyboard::S)
 				world.input[PLAYER].down = false;
 			if (event.key.code == sf::Keyboard::A)
@@ -89,7 +82,7 @@ void Game::handleEvent() {
 				world.input[PLAYER].right = false;
 
 			if (event.key.code == sf::Keyboard::Space)
-				world.input[PLAYER].jump = false;
+				world.input[PLAYER].attack = false;
 
 			if (event.key.code == sf::Keyboard::LShift)
 				world.input[PLAYER].special = false;

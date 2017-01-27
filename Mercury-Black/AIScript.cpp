@@ -7,17 +7,23 @@ void scriptFollow(World * world, int entityID, sf::Vector2f position) {
 void scriptPlayer(World *world, float dt) {
 	Sprite * s;
 	Velocity * v;
-
+	Input *in;
+	
 	s = &(world->sprite[0]);
 	v = &(world->velocity[0]);
-
+	in = &(world->input[0]);
+	
 	if (v->onGround) {
 
 		if (v->x != 0)
 			s->animationManager.changeAnimation("run");
-		else
-			s->animationManager.changeAnimation("idle");
-
+		else {
+			if (in->attack)
+				s->animationManager.changeAnimation("idleAttack");
+			else
+				s->animationManager.changeAnimation("idle");
+		}
+		
 	} else {
 		//s->animationManager.changeAnimation("jump");
 		s->animationManager.changeAnimation("inAir");

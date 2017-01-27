@@ -5,7 +5,7 @@
 #include "Entity.h"
 #include "CollisionMap.h"
 
-#define PLAYER 0
+#define PLAYER (0)
 
 class Game : public GameState {
 

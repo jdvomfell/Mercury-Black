@@ -57,6 +57,15 @@ int createPlayer(World * world, float x, float y) {
 	Animation * idleAnimation = new Animation(0.2f);
 	idleAnimation->addFrame(world->textureManager->getTexture("player_idle_1"));
 
+	Animation * idleAttackAnimation = new Animation(0.1f);
+	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_1"));
+	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_2"));
+	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_3"));
+	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_4"));
+	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_5"));
+	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_6"));
+	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_7"));
+	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_8"));
 	Animation * runAnimation = new Animation(0.125f);
 	runAnimation->addFrame(world->textureManager->getTexture("player_run_1"));
 	runAnimation->addFrame(world->textureManager->getTexture("player_run_2"));
@@ -82,6 +91,7 @@ int createPlayer(World * world, float x, float y) {
 	world->sprite[entityID].animationManager.addAnimation(idleAnimation, "idle");
 	world->sprite[entityID].animationManager.addAnimation(jumpAnimation, "jump");
 	world->sprite[entityID].animationManager.addAnimation(inAirAnimation, "inAir");
+	world->sprite[entityID].animationManager.addAnimation(idleAttackAnimation, "idleAttack");
 
 	world->sprite[entityID].animationManager.changeAnimation("idle");
 	

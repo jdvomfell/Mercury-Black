@@ -43,5 +43,15 @@ void TextureManager::loadAllTextures() {
 	loadTexture("player_jump_6", "Textures/player_jump_6.png");
 	loadTexture("player_jump_7", "Textures/player_jump_7.png");
 	loadTexture("player_jump_8", "Textures/player_jump_8.png");
+	
+	/* Idle Attack */
+	loadTexture("player_idle_attack_1", "Textures/Attack/Idle-Attack/player_attack_1.png");
+	loadTexture("player_idle_attack_2", "Textures/Attack/Idle-Attack/player_attack_2.png");
+	loadTexture("player_idle_attack_3", "Textures/Attack/Idle-Attack/player_attack_3.png");
+	loadTexture("player_idle_attack_4", "Textures/Attack/Idle-Attack/player_attack_4.png");
+	loadTexture("player_idle_attack_5", "Textures/Attack/Idle-Attack/player_attack_5.png");
+	loadTexture("player_idle_attack_6", "Textures/Attack/Idle-Attack/player_attack_6.png");
+	loadTexture("player_idle_attack_7", "Textures/Attack/Idle-Attack/player_attack_7.png");
+	loadTexture("player_idle_attack_8", "Textures/Attack/Idle-Attack/player_attack_8.png");
 
 }
