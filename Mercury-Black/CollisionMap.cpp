@@ -54,20 +54,28 @@ std::map <float, sf::Vertex *>::iterator CollisionMap::findLeft(float x) {
 
 }
 
-std::map <float, sf::Vertex *>::iterator CollisionMap::findClosest(float x) {
+std::map <float, sf::Vertex *>::iterator CollisionMap::findClosest(sf::Vector2f position) {
 
-	if (findLeft(x) != map.end() && findRight(x) != map.end()) {
-		if ((x - findLeft(x)->first) < (findRight(x)->first - x))
-			return findLeft(x);
+	float distanceLeft;
+	float distanceRight;
+
+	std::map<float, sf::Vertex *>::iterator left = findLeft(position.x);
+	std::map<float, sf::Vertex *>::iterator right = findRight(position.x);
+
+	if (left != map.end() && right != map.end()) {
+		distanceLeft = sqrt(pow((position.x - left->second->position.x), 2) + pow((position.y - left->second->position.y), 2));
+		distanceRight = sqrt(pow((right->second->position.x - position.x), 2) + pow((right->second->position.y - position.y), 2));
+		if (distanceLeft < distanceRight)
+			return left;
 		else
-			return findRight(x);
+			return right;
 	}
 	
-	else if (findLeft(x) == map.end())
-		return findRight(x);
+	else if (left == map.end())
+		return right;
 	
-	else if (findRight(x) == map.end())
-		return findLeft(x);
+	else if (right == map.end())
+		return left;
 	
 	else
 		return map.end();

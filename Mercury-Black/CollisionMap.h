@@ -12,7 +12,7 @@ public:
 	void save();
 	void load();
 
-	std::map <float, sf::Vertex *>::iterator findClosest(float x);
+	std::map <float, sf::Vertex *>::iterator findClosest(sf::Vector2f);
 	std::map <float, sf::Vertex *>::iterator findRight(float x);
 	std::map <float, sf::Vertex *>::iterator findLeft(float x);
 	void insert(sf::Vector2f position);
