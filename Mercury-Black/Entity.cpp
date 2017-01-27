@@ -114,14 +114,18 @@ int createTest(World * world, sf::Vector2f position) {
 
 	world->velocity[entityID].x = 0.0f;
 	world->velocity[entityID].y = 0.0f;
-	world->velocity[entityID].speed = 10.0f;
+	world->velocity[entityID].speed = 8.0f;
 	world->velocity[entityID].canJump = false;
 	world->velocity[entityID].onGround = false;
 
 	world->gravity[entityID].weight = 1.0f;
 
-	world->scriptParameter[entityID].followDistMin = 20.0f;
-	world->scriptParameter[entityID].followDistMax = 150.0f;
+	world->scriptParameter[entityID].followDistMin = 250.0f;
+	world->scriptParameter[entityID].followDistMax = 1500.0f;
 
+	world->scriptParameter[entityID].attackRangeMin = 0.0f;
+	world->scriptParameter[entityID].attackRangeMax = 250.0f;
+	
 	return entityID;
+
 }
