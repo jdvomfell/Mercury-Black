@@ -25,7 +25,7 @@ struct World {
 void cleanWorld(World * world);
 int createEntity(World * world);
 void destroyEntity(World * world, int entityID);
-
+int createTest(World * world, sf::Vector2f);
 int createPlayer(World * world, float x, float y);
 int createCeilingPlant(World * world, float x, float y);
 #endif

@@ -16,9 +16,13 @@ void aiSystem(World * world, float dt) {
 
 			if (world->name[entityID].name == "player")
 				scriptPlayer(world, dt);
-			//else if (world->name[entityID].name == "enemy")
-			if (world->name[entityID].name == "ceiling_plant")
+
+			else if (world->name[entityID].name == "ceiling_plant")
 				scriptPlant(world, entityID, dt);
+
+			else if (world->name[entityID].name == "test")
+				scriptTest(world, entityID);
+
 		}
 	
 	}
@@ -254,7 +258,7 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 					slopeCheck = ((rightCheck->position.y - rightVertex->position.y) / (rightCheck->position.x - rightVertex->position.x));
 
-					if (slopeCheck < -1.2) {
+					if (slopeCheck < -1.4) {
 
 						p->x = rightVertex->position.x;
 						v->x = -0.1f;
@@ -267,7 +271,7 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 					slopeCheck = ((leftVertex->position.y - leftCheck->position.y) / (leftVertex->position.x - leftCheck->position.x));
 
-					if (slopeCheck > 1.2) {
+					if (slopeCheck > 1.4) {
 
 						p->x = leftVertex->position.x;
 						v->x = 0.1f;
@@ -280,15 +284,15 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 			/* Slide Down Step Slopes, Cancel Jump */
 
-			if (v->onGround && std::abs(slope) > 1.2) {
+			if (v->onGround && std::abs(slope) > 1.4) {
 
 				v->canJump = false;
 				
-				if (slope > 1.2 && v->x <= 0) {
+				if (slope > 1.4 && v->x <= 0) {
 					v->x = 0.5f;
 				}
 				
-				else if (slope < -1.2 && v->x >= 0) {
+				else if (slope < -1.4 && v->x >= 0) {
 					v->x = -0.5f;
 				}
 

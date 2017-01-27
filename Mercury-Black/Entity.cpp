@@ -139,3 +139,32 @@ int createCeilingPlant(World * world, float x, float y) {
 	
 	return entityID;
 }
+
+int createTest(World * world, sf::Vector2f position) {
+	
+	int entityID = createEntity(world);
+
+	world->mask[entityID] = NAME | INPUT | POSITION | VELOCITY | SPRITE | COLLISION | GRAVITY | SCRIPT;
+
+	world->name[entityID].name = "test";
+
+	world->position[entityID].x = position.x;
+	world->position[entityID].y = position.y;
+
+	world->velocity[entityID].x = 0.0f;
+	world->velocity[entityID].y = 0.0f;
+	world->velocity[entityID].speed = 8.0f;
+	world->velocity[entityID].canJump = false;
+	world->velocity[entityID].onGround = false;
+
+	world->gravity[entityID].weight = 1.0f;
+
+	world->scriptParameter[entityID].followDistMin = 250.0f;
+	world->scriptParameter[entityID].followDistMax = 1500.0f;
+
+	world->scriptParameter[entityID].attackRangeMin = 0.0f;
+	world->scriptParameter[entityID].attackRangeMax = 250.0f;
+	
+	return entityID;
+
+}

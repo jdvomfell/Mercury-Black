@@ -73,9 +73,11 @@ struct Velocity {
 
 struct ScriptParameters {
 
-	float followdist;
+	float followDistMin;
+	float followDistMax;
 	float attackFrequency;
-	
+	float attackRangeMin;
+	float attackRangeMax;
 };
 
 #endif
