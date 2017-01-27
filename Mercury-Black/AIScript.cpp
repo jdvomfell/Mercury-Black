@@ -38,5 +38,4 @@ void scriptPlayer(World *world, float dt) {
 	s->animationManager.updateAnimation(dt);
 	s->sprite.setTexture(*s->animationManager.getCurrentTexture());
 	s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height));
-
 }

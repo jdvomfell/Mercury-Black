@@ -55,37 +55,37 @@ int createPlayer(World * world, float x, float y) {
 	world->gravity[entityID].weight = 1.0f;
 
 	Animation * idleAnimation = new Animation(0.2f);
-	idleAnimation->addFrame(world->textureManager->getTexture("player_idle_1"));
+		idleAnimation->addFrame(world->textureManager->getTexture("player_idle_1"));
 
 	Animation * idleAttackAnimation = new Animation(0.1f);
-	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_1"));
-	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_2"));
-	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_3"));
-	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_4"));
-	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_5"));
-	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_6"));
-	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_7"));
-	idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_8"));
+		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_1"));
+		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_2"));
+		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_3"));
+		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_4"));
+		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_5"));
+		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_6"));
+		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_7"));
+		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_8"));
+	
 	Animation * runAnimation = new Animation(0.125f);
-	runAnimation->addFrame(world->textureManager->getTexture("player_run_1"));
-	runAnimation->addFrame(world->textureManager->getTexture("player_run_2"));
-	runAnimation->addFrame(world->textureManager->getTexture("player_run_3"));
-	runAnimation->addFrame(world->textureManager->getTexture("player_run_4"));
-	runAnimation->addFrame(world->textureManager->getTexture("player_run_5"));
-	runAnimation->addFrame(world->textureManager->getTexture("player_run_6"));
+		runAnimation->addFrame(world->textureManager->getTexture("player_run_1"));
+		runAnimation->addFrame(world->textureManager->getTexture("player_run_2"));
+		runAnimation->addFrame(world->textureManager->getTexture("player_run_3"));
+		runAnimation->addFrame(world->textureManager->getTexture("player_run_5"));
+		runAnimation->addFrame(world->textureManager->getTexture("player_run_4"));
+		runAnimation->addFrame(world->textureManager->getTexture("player_run_6"));
 
 	Animation * jumpAnimation = new Animation(0.1f);
-	jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_1"));
-	jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_2"));
-	jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_3"));
-	jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_4"));
-	jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_5"));
-	jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_6"));
-	jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_7"));
-	//jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_8"));
+		jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_1"));
+		jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_2"));
+		jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_3"));
+		jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_4"));
+		jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_5"));
+		jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_6"));
+		jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_7"));
 
 	Animation * inAirAnimation = new Animation(0.1f);
-	inAirAnimation->addFrame(world->textureManager->getTexture("player_jump_8"));
+		inAirAnimation->addFrame(world->textureManager->getTexture("player_jump_8"));
 
 	world->sprite[entityID].animationManager.addAnimation(runAnimation, "run");
 	world->sprite[entityID].animationManager.addAnimation(idleAnimation, "idle");
