@@ -13,16 +13,13 @@ void aiSystem(World * world, float dt) {
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
 		if ((world->mask[entityID] & SCRIPT_MASK) == SCRIPT_MASK) {
-			
-			if (world->name[entityID].name == "player") {
-				printf("YO\n");
+
+			if (world->name[entityID].name == "player")
 				scriptPlayer(world, dt);
-			}
+			//else if (world->name[entityID].name == "enemy")
 
-			else if (world->name[entityID].name == "enemy") {
-
-			}
 		}
+	
 	}
 	
 }
