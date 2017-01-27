@@ -11,7 +11,7 @@ void Game::init() {
 	world.textureManager = &engine->textureManager;
 
 	playerID = createPlayer(&world, 0, 0);
-
+	createTest(&world, sf::Vector2f(200, 0));
 	collisionMap.load();
 
 }
