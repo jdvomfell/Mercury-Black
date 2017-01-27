@@ -6,15 +6,17 @@
 
 enum Component {
 
-	EMPTY =		0,
+	EMPTY = 0,
 
-	NAME =		1 << 0,
-	INPUT =		1 << 1,
-	SPRITE =	1 << 2,
-	GRAVITY =	1 << 3,
-	POSITION =	1 << 4,
-	VELOCITY =	1 << 5,
-	COLLISION =	1 << 6,
+	NAME = 1 << 0,
+	INPUT = 1 << 1,
+	SPRITE = 1 << 2,
+	GRAVITY = 1 << 3,
+	POSITION = 1 << 4,
+	VELOCITY = 1 << 5,
+	COLLISION = 1 << 6,
+	SCRIPT = 1 << 7,
+
 
 };
 
@@ -67,6 +69,13 @@ struct Velocity {
 	bool onGround;
 	bool canJump;
 
+};
+
+struct ScriptParameters {
+
+	float followdist;
+	float attackFrequency;
+	
 };
 
 #endif

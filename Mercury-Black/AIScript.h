@@ -7,6 +7,9 @@
 void scriptPlayer();
 void scriptPlant();
 
-void scriptFollow(World * world, int entityID, sf::Vector2f position);
+void scriptFollow(World * world, int entityID, sf::Vector2f position) {
+	 
+
+}
 
 #endif

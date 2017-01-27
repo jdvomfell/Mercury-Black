@@ -6,7 +6,7 @@
 #define GRAVITY_CONST 0.5f
 #define JUMP_CONST -15.0f
 
-#define SCRIPT_MASK(NAME)
+#define SCRIPT_MASK (NAME | SCRIPT)
 
 void aiSystem(World * world, int playerID, int entityID) {
 	
