@@ -10,8 +10,10 @@ void Game::init() {
 
 	world.textureManager = &engine->textureManager;
 
-	playerID = createPlayer(&world, 0, 0);
+
 	createTest(&world, sf::Vector2f(200, 0));
+	createPlayer(&world, 0, 0);
+
 	collisionMap.load();
 
 }
@@ -45,13 +47,6 @@ void Game::handleEvent() {
 
 			break;
 
-		case sf::Event::MouseButtonPressed:
-
-			if (event.mouseButton.button == sf::Mouse::Left)
-				world.input[playerID].attack = true;
-			
-			break;
-
 		case sf::Event::KeyPressed:
 
 			if (event.key.code == sf::Keyboard::Escape)
@@ -61,38 +56,38 @@ void Game::handleEvent() {
 				engine->changeState(Editor::instance(engine));
 
 			if (event.key.code == sf::Keyboard::W)
-				world.input[playerID].up = true;
+				world.input[PLAYER].jump = true;
 			if (event.key.code == sf::Keyboard::S)
-				world.input[playerID].down = true;
+				world.input[PLAYER].down = true;
 			if (event.key.code == sf::Keyboard::A)
-				world.input[playerID].left = true;
+				world.input[PLAYER].left = true;
 			if (event.key.code == sf::Keyboard::D)
-				world.input[playerID].right = true;
+				world.input[PLAYER].right = true;
 
 			if (event.key.code == sf::Keyboard::Space)
-				world.input[playerID].jump = true;
+				world.input[PLAYER].attack = true;
 
 			if (event.key.code == sf::Keyboard::LShift)
-				world.input[playerID].special = true;
+				world.input[PLAYER].special = true;
 
 			break;
 
 		case sf::Event::KeyReleased:
 
 			if (event.key.code == sf::Keyboard::W)
-				world.input[playerID].up = false;
+				world.input[PLAYER].jump = false;
 			if (event.key.code == sf::Keyboard::S)
-				world.input[playerID].down = false;
+				world.input[PLAYER].down = false;
 			if (event.key.code == sf::Keyboard::A)
-				world.input[playerID].left = false;
+				world.input[PLAYER].left = false;
 			if (event.key.code == sf::Keyboard::D)
-				world.input[playerID].right = false;
+				world.input[PLAYER].right = false;
 
 			if (event.key.code == sf::Keyboard::Space)
-				world.input[playerID].jump = false;
+				world.input[PLAYER].attack = false;
 
 			if (event.key.code == sf::Keyboard::LShift)
-				world.input[playerID].special = false;
+				world.input[PLAYER].special = false;
 
 			break;
 
@@ -104,14 +99,15 @@ void Game::handleEvent() {
 
 void Game::update(const float dt) {
 
+	aiSystem(&world, dt);
 	inputSystem(&world);
 	gravitySystem(&world);
 	collisionSystem(&world, &collisionMap);
-	animationSystem(&world, dt, playerID);
+	//animationSystem(&world, dt, PLAYER);
 	movementSystem(&world);
 
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
-	view.setCenter(sf::Vector2f(world.position[playerID].x, world.position[playerID].y));
+	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y));
 	engine->window.setView(view);
 
 }

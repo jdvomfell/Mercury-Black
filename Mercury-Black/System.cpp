@@ -8,20 +8,18 @@
 
 #define SCRIPT_MASK (NAME | SCRIPT)
 
-void aiSystem(World * world, int playerID, int entityID) {
+void aiSystem(World * world, float dt) {
 	
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
 		if ((world->mask[entityID] & SCRIPT_MASK) == SCRIPT_MASK) {
-			
-			if (world->name[entityID].name == "player") {
 
-			}
+			if (world->name[entityID].name == "player")
+				scriptPlayer(world, dt);
+			//else if (world->name[entityID].name == "enemy")
 
-			else if (world->name[entityID].name == "enemy") {
-
-			}
 		}
+	
 	}
 	
 }
@@ -137,7 +135,7 @@ void movementSystem(World * world) {
 }
 
 #define ANIMATION_MASK (VELOCITY | SPRITE)
-
+/*
 void animationSystem(World * world, float dt, int player) {
 
 	Sprite * s;
@@ -180,7 +178,7 @@ void animationSystem(World * world, float dt, int player) {
 	}
 
 }
-
+*/
 #define COLLISION_MASK (POSITION | VELOCITY | COLLISION | GRAVITY)
 
 void collisionSystem(World * world, CollisionMap * collisionMap) {

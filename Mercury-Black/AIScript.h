@@ -4,7 +4,7 @@
 #include "Entity.h"
 #include <SFML/Graphics.hpp>
 
-void scriptPlayer();
+void scriptPlayer(World *world, float dt);
 void scriptPlant();
 void scriptTest();
 

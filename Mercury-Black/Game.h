@@ -5,6 +5,8 @@
 #include "Entity.h"
 #include "CollisionMap.h"
 
+#define PLAYER (0)
+
 class Game : public GameState {
 
 public:
@@ -34,8 +36,6 @@ private:
 	CollisionMap collisionMap;
 	
 	World world;
-
-	int playerID;
 
 };
 
