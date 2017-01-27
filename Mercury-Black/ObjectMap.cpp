@@ -15,7 +15,9 @@ void ObjectMap::clean() {
 	for (selected = map.begin(); selected != map.end(); selected++) {
 
 		delete(selected->second);
-		map.erase(selected++);
+		map.erase(selected);
+
+		selected = map.begin();
 
 	}
 
