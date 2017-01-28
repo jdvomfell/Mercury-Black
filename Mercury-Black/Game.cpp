@@ -109,6 +109,7 @@ void Game::update(const float dt) {
 	inputSystem(&world);
 	gravitySystem(&world);
 	collisionSystem(&world, &collisionMap);
+	//PUT shapeCollisionSystem here
 	//animationSystem(&world, dt, PLAYER);
 	movementSystem(&world);
 
