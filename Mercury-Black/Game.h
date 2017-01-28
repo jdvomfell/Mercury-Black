@@ -6,6 +6,8 @@
 #include "CollisionMap.h"
 #include "PlatformMap.h"
 
+#define PLAYER (0)
+
 class Game : public GameState {
 
 public:
@@ -37,8 +39,6 @@ private:
 	PlatformMap platformMap; 
 	
 	World world;
-
-	int playerID;
 
 };
 

@@ -34,6 +34,8 @@ class Editor : public GameState {
 
 public:
 
+	sf::View view;
+
 	void init();
 	void clean();
 
@@ -44,12 +46,16 @@ public:
 	void update(const float dt);
 	void render(const float dt);
 
+	static Editor* instance(GameEngine * engine) { editor.engine = engine; return &editor; }
+
+	/* Utility Functions */
+
 	void rotateMode();
 	void rotateTool();
 
-	static Editor* instance(GameEngine * engine) { editor.engine = engine; return &editor; }
+	/* Object */
 
-	sf::View view;
+	/* Point */
 
 protected:
 

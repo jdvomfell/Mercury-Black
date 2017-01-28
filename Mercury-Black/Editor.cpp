@@ -35,6 +35,7 @@ void Editor::init() {
 void Editor::clean() {
 
 	collisionMap.clean();
+	objectMap.clean();
 
 }
 
@@ -55,31 +56,30 @@ void Editor::handleEvent() {
 	switch (event.type) {
 
 	case sf::Event::Closed:
+		
 		engine->quit();
+		
 		break;
-
-	case sf::Event::MouseMoved:
-
-		if (mode == OBJECT) {
-
-			objectMap.object.position.x = (float) event.mouseMove.x;
-			objectMap.object.position.y = (float) event.mouseMove.y;
-			cursor.sprite.setPosition(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y)));
-
-		}
 
 	case sf::Event::MouseButtonPressed:
 
-		if (event.mouseButton.button == sf::Mouse::Left)
-			collisionMap.insertCollisionPoint(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
-		
+		if (event.mouseButton.button == sf::Mouse::Left) {
+			if(mode == POINT)
+				collisionMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+			if (mode == OBJECT)
+				objectMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+		}
+
 		if (event.mouseButton.button == sf::Mouse::Right) {
-			cursor.rect.setOutlineColor(sf::Color::Black);
-			collisionMap.selected = collisionMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)).x);
-			
-			if (collisionMap.selected != collisionMap.map.end()) {
-				cursor.rect.setPosition(collisionMap.selected->second->position);
-				cursor.rect.setOutlineColor(sf::Color::Red);
+
+			if (mode == POINT) {
+				cursor.rect.setOutlineColor(sf::Color::Black);
+				collisionMap.selected = collisionMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+
+				if (collisionMap.selected != collisionMap.map.end()) {
+					cursor.rect.setPosition(collisionMap.selected->second->position);
+					cursor.rect.setOutlineColor(sf::Color::Red);
+				}
 			}
 		}
 
@@ -94,8 +94,10 @@ void Editor::handleEvent() {
 			engine->changeState(Game::instance(engine));
 
 		if (event.key.code == sf::Keyboard::Delete) {
-			cursor.rect.setOutlineColor(sf::Color::Transparent);
-			collisionMap.removeCollisionPoint();
+			if (mode == POINT) {
+				cursor.rect.setOutlineColor(sf::Color::Transparent);
+				collisionMap.remove();
+			}
 		}
 
 		if (event.key.code == sf::Keyboard::A)
@@ -123,8 +125,6 @@ void Editor::handleEvent() {
 		if (mode == OBJECT) {
 			if (event.key.code == sf::Keyboard::T)
 				objectMap.changeObject();
-			cursor.sprite.setTexture(engine->textureManager.textures.find(objectMap.object.type)->second);
-			cursor.sprite.setOrigin(cursor.sprite.getLocalBounds().width / 2, cursor.sprite.getLocalBounds().height / 2);
 		}
 
 		break;
@@ -159,11 +159,11 @@ void Editor::update(const float dt) {
 	else
 		viewVelY = 0.0f;
 
-	view.setSize(sf::Vector2f(engine->window.getSize()));
+	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
 	engine->window.setView(view);
 
-	modeText.setPosition(view.getCenter().x - engine->window.getSize().x / 2 + 50, view.getCenter().y - engine->window.getSize().y / 2 + 50);
-	toolText.setPosition(view.getCenter().x - engine->window.getSize().x / 2 + 50, view.getCenter().y - engine->window.getSize().y / 2 + 200);
+	modeText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 50);
+	toolText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 200);
 
 	view.move(viewVelX, viewVelY);
 
@@ -171,12 +171,13 @@ void Editor::update(const float dt) {
 
 void Editor::render(const float dt) {
 
+	for (objectMap.selected = objectMap.map.begin(); objectMap.selected != objectMap.map.end(); objectMap.selected++)
+		engine->window.draw(objectMap.selected->second->sprite);
+
 	if (showLines)
 		engine->window.draw(collisionMap.lines);
 
-	if (mode == OBJECT)
-		engine->window.draw(cursor.sprite);
-	else
+	if(mode == POINT)
 		engine->window.draw(cursor.rect);
 
 	engine->window.draw(modeText);

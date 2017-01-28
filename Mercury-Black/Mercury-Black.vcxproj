@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AIScript.cpp" />
     <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="Buttons.cpp" />
     <ClCompile Include="CollisionMap.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AIScript.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationManager.h" />
     <ClInclude Include="Buttons.h" />

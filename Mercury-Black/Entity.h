@@ -16,6 +16,7 @@ struct World {
 	Gravity gravity[MAX_ENTITIES];
 	Position position[MAX_ENTITIES];
 	Velocity velocity[MAX_ENTITIES];
+	ScriptParameters scriptParameter[MAX_ENTITIES];
 
 	TextureManager * textureManager;
 
@@ -24,7 +25,7 @@ struct World {
 void cleanWorld(World * world);
 int createEntity(World * world);
 void destroyEntity(World * world, int entityID);
-
+int createTest(World * world, sf::Vector2f);
 int createPlayer(World * world, float x, float y);
-
+int createCeilingPlant(World * world, float x, float y);
 #endif

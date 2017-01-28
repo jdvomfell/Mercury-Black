@@ -15,7 +15,7 @@ void CollisionMap::clean() {
 
 }
 
-void CollisionMap::insertCollisionPoint(sf::Vector2f position) {
+void CollisionMap::insert(sf::Vector2f position) {
 
 	sf::Vertex * tempVertex;
 
@@ -27,7 +27,7 @@ void CollisionMap::insertCollisionPoint(sf::Vector2f position) {
 
 }
 
-void CollisionMap::removeCollisionPoint() {
+void CollisionMap::remove() {
 
 	if (selected == map.end() || selected->second == NULL)
 		return;
@@ -54,27 +54,35 @@ std::map <float, sf::Vertex *>::iterator CollisionMap::findLeft(float x) {
 
 }
 
-std::map <float, sf::Vertex *>::iterator CollisionMap::findClosest(float x) {
+std::map <float, sf::Vertex *>::iterator CollisionMap::findClosest(sf::Vector2f position) {
 
-	if (findLeft(x) != map.end() && findRight(x) != map.end()) {
-		if ((x - findLeft(x)->first) < (findRight(x)->first - x))
-			return findLeft(x);
+	float distanceLeft;
+	float distanceRight;
+
+	std::map<float, sf::Vertex *>::iterator left = findLeft(position.x);
+	std::map<float, sf::Vertex *>::iterator right = findRight(position.x);
+
+	if (left != map.end() && right != map.end()) {
+		distanceLeft = sqrt(pow((position.x - left->second->position.x), 2) + pow((position.y - left->second->position.y), 2));
+		distanceRight = sqrt(pow((right->second->position.x - position.x), 2) + pow((right->second->position.y - position.y), 2));
+		if (distanceLeft < distanceRight)
+			return left;
 		else
-			return findRight(x);
+			return right;
 	}
 	
-	else if (findLeft(x) == map.end())
-		return findRight(x);
+	else if (left == map.end())
+		return right;
 	
-	else if (findRight(x) == map.end())
-		return findLeft(x);
+	else if (right == map.end())
+		return left;
 	
 	else
 		return map.end();
 
 }
 
-void CollisionMap::moveCollisionPoint() {
+void CollisionMap::move() {
 
 	if (selected->second == NULL)
 		return;
@@ -82,8 +90,6 @@ void CollisionMap::moveCollisionPoint() {
 }
 
 void CollisionMap::save() {
-
-	// Save Points for collision map
 
 	std::ofstream ofstream;
 
@@ -94,18 +100,6 @@ void CollisionMap::save() {
 		ofstream.write((char*)it->second, sizeof(sf::Vertex));
 
 	ofstream.close();
-
-	// Save objects for object map
-
-	/*std::string objectFilename = "object.dat";
-	ofstream.open(objectFilename);
-
-	std::multimap<int, sf::Sprite*>::iterator oit;
-	for (oit = objectMap.begin(); oit != objectMap.end(); oit++) {
-	ofstream << oit->second;
-	}
-
-	ofstream.close();*/
 
 }
 
