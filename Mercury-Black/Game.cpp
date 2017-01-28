@@ -20,6 +20,8 @@ void Game::init() {
 
 	collisionMap.load();
 
+	platformMap.add(sf::Vector2f(0, 500), 3);
+
 }
 
 void Game::clean() {
@@ -107,6 +109,7 @@ void Game::update(const float dt) {
 	inputSystem(&world);
 	gravitySystem(&world);
 	collisionSystem(&world, &collisionMap);
+	//PUT shapeCollisionSystem here
 	//animationSystem(&world, dt, PLAYER);
 	movementSystem(&world);
 
@@ -122,4 +125,6 @@ void Game::render(const float dt) {
 
 	renderSystem(&world, &engine->window);
 
+	for (platformMap.pit = platformMap.platformMap.begin(); platformMap.pit != platformMap.platformMap.end(); platformMap.pit++)
+		engine->window.draw(*(platformMap.pit->second->shape));
 }
