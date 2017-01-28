@@ -4,6 +4,7 @@
 #include "GameState.h"
 #include "Entity.h"
 #include "CollisionMap.h"
+#include "PlatformMap.h"
 
 class Game : public GameState {
 
@@ -32,6 +33,8 @@ private:
 	sf::View view;
 
 	CollisionMap collisionMap;
+
+	PlatformMap platformMap; 
 	
 	World world;
 

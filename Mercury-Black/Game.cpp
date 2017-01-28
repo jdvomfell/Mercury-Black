@@ -14,6 +14,8 @@ void Game::init() {
 
 	collisionMap.load();
 
+	platformMap.add(sf::Vector2f(0, 500), 3);
+
 }
 
 void Game::clean() {
@@ -122,4 +124,6 @@ void Game::render(const float dt) {
 
 	renderSystem(&world, &engine->window);
 
+	for (platformMap.pit = platformMap.platformMap.begin(); platformMap.pit != platformMap.platformMap.end(); platformMap.pit++)
+		engine->window.draw(*(platformMap.pit->second->shape));
 }
