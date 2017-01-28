@@ -34,8 +34,3 @@ void PlatformMap::remove()
 {
 
 }
-
-void PlatformMap::clean()
-{
-
-}
