@@ -11,7 +11,7 @@ Editor Editor::editor;
 
 void Editor::init() {
 	
-	cursor = Cursor();
+	selector = Selector();
 
 	showLines = true;
 	mode = POINT;
@@ -29,6 +29,8 @@ void Editor::init() {
 	collisionMap.updateVerticies();
 
 	objectMap = ObjectMap(&engine->textureManager);
+
+	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
 
 }
 
@@ -64,23 +66,40 @@ void Editor::handleEvent() {
 	case sf::Event::MouseButtonPressed:
 
 		if (event.mouseButton.button == sf::Mouse::Left) {
+			
 			if(mode == POINT)
 				collisionMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 			if (mode == OBJECT)
 				objectMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+		
 		}
 
 		if (event.mouseButton.button == sf::Mouse::Right) {
 
 			if (mode == POINT) {
-				cursor.rect.setOutlineColor(sf::Color::Black);
 				collisionMap.selected = collisionMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
 				if (collisionMap.selected != collisionMap.map.end()) {
-					cursor.rect.setPosition(collisionMap.selected->second->position);
-					cursor.rect.setOutlineColor(sf::Color::Red);
+					selector.rect.setSize(sf::Vector2f(15, 15));
+					selector.rect.setOrigin(selector.rect.getSize() * 0.5f);
+					selector.rect.setPosition(collisionMap.selected->second->position);
+					selector.rect.setOutlineColor(sf::Color::Blue);
 				}
 			}
+
+			if (mode == OBJECT) {
+				
+				objectMap.selected = objectMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+
+				if (objectMap.selected != objectMap.map.end()) {
+					selector.rect.setSize(sf::Vector2f(objectMap.selected->second->sprite.getLocalBounds().width, objectMap.selected->second->sprite.getLocalBounds().height));
+					selector.rect.setOrigin(selector.rect.getSize() * 0.5f);
+					selector.rect.setPosition(objectMap.selected->second->position.x, objectMap.selected->second->position.y);
+					selector.rect.setOutlineColor(sf::Color::Blue);
+				}
+
+			}
+
 		}
 
 		break;
@@ -94,10 +113,15 @@ void Editor::handleEvent() {
 			engine->changeState(Game::instance(engine));
 
 		if (event.key.code == sf::Keyboard::Delete) {
-			if (mode == POINT) {
-				cursor.rect.setOutlineColor(sf::Color::Transparent);
+			
+			if (mode == POINT)
 				collisionMap.remove();
-			}
+
+			else if (mode == OBJECT)
+				objectMap.remove();
+
+			selector.rect.setOutlineColor(sf::Color::Transparent);
+
 		}
 
 		if (event.key.code == sf::Keyboard::A)
@@ -159,7 +183,6 @@ void Editor::update(const float dt) {
 	else
 		viewVelY = 0.0f;
 
-	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
 	engine->window.setView(view);
 
 	modeText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 50);
@@ -171,14 +194,14 @@ void Editor::update(const float dt) {
 
 void Editor::render(const float dt) {
 
-	for (objectMap.selected = objectMap.map.begin(); objectMap.selected != objectMap.map.end(); objectMap.selected++)
-		engine->window.draw(objectMap.selected->second->sprite);
+	std::map<float, Object *>::iterator it;
+	for (it = objectMap.map.begin(); it != objectMap.map.end(); it++)
+		engine->window.draw(it->second->sprite);
 
 	if (showLines)
 		engine->window.draw(collisionMap.lines);
 
-	if(mode == POINT)
-		engine->window.draw(cursor.rect);
+	engine->window.draw(selector.rect);
 
 	engine->window.draw(modeText);
 	engine->window.draw(toolText);
@@ -218,15 +241,10 @@ void Editor::rotateTool() {
 
 }
 
-Cursor::Cursor() {
+Selector::Selector() {
 
 	rect.setOutlineColor(sf::Color::Transparent);
 	rect.setFillColor(sf::Color::Transparent);
-	rect.setSize(sf::Vector2f(15, 15));
-	rect.setOutlineThickness(3);
-	rect.setOrigin(rect.getLocalBounds().width / 2, rect.getLocalBounds().height / 2);
-	rect.setPosition(0, 0);
-
-	sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
+	rect.setOutlineThickness(5);
 
 }

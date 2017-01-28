@@ -19,14 +19,13 @@
 #define DELETE 2
 #define MOVE 3
 
-class Cursor {
+class Selector {
 
 public:
 
-	Cursor();
+	Selector();
 
 	sf::RectangleShape rect;
-	sf::Sprite sprite;
 
 };
 
@@ -63,7 +62,7 @@ protected:
 
 private:
 
-	Cursor cursor;
+	Selector selector;
 	static Editor editor;
 
 	CollisionMap collisionMap;

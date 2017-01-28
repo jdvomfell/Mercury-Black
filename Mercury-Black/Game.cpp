@@ -11,7 +11,7 @@ void Game::init() {
 	world.textureManager = &engine->textureManager;
 
 	int test = createTest(&world, sf::Vector2f(1000, 0));
-	createPlayer(&world, 400, 0);
+	createPlayer(&world, 900, 0);
 
 	world.sprite[test].sprite.setTexture(*engine->textureManager.getTexture("player_run_1"));
 	world.sprite[test].sprite.setOrigin(world.sprite[test].sprite.getLocalBounds().width / 2, world.sprite[test].sprite.getLocalBounds().height);
