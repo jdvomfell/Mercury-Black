@@ -12,9 +12,6 @@ public:
 	virtual void init() = 0;
 	virtual void clean() = 0;
 
-	virtual void pause() = 0;
-	virtual void resume() = 0;
-
 	virtual void handleEvent() = 0;
 	virtual void update(const float dt) = 0;
 	virtual void render(const float dt) = 0;

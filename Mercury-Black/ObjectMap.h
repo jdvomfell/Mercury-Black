@@ -7,11 +7,11 @@
 
 struct Object {
 
-	float scale;
 	float rotation;
-	sf::Sprite sprite;
 	sf::Vector2f position;
 	std::string textureName;
+
+	sf::Sprite sprite;
 
 };
 

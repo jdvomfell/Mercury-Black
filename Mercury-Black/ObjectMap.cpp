@@ -1,12 +1,68 @@
 #include "ObjectMap.h"
 
+#include <fstream>
+
 #include "TextureManager.h"
 
 void ObjectMap::save() {
 
+	std::ofstream ofstream;
+
+	std::string objectFilename = "object.dat";
+	ofstream.open(objectFilename, std::ios::out | std::ios::binary);
+
+	for (std::map<float, Object *>::iterator it = map.begin(); it != map.end(); it++) {
+		
+		ofstream
+			<< it->second->position.x << std::endl
+			<< it->second->position.y << std::endl
+			<< it->second->rotation << std::endl
+			<< it->second->textureName << std::endl;
+
+	}
+
+	ofstream.close();
+
 }
 
 void ObjectMap::load() {
+
+	std::string objectFilename = "object.dat";
+	std::ifstream ifstream;
+
+	Object * tempObject = NULL;
+
+	std::string n;
+	float x;
+	float y;
+	float r;
+	std::map<float, Object *>::iterator it;
+
+	map.clear();
+
+	ifstream.open(objectFilename, std::ios::in | std::ios::binary);
+
+	if (!ifstream.is_open()) {
+		printf("ERROR: Cannot Open Object File (Possibly No File To Load)\n");
+		return;
+	}
+
+	while (ifstream >> x >> y >> r >> n) {
+
+		if (ifstream.eof())
+			return;
+
+		tempObject = new Object;
+
+		object.position = sf::Vector2f(x, y);
+		object.textureName = n;
+		object.rotation = r;
+
+		insert(object.position);
+
+	}
+
+	ifstream.close();
 
 }
 
@@ -25,26 +81,22 @@ void ObjectMap::clean() {
 
 void ObjectMap::insert(sf::Vector2f position) {
 
-	this->object.sprite.setTexture(textureManager->textures.find(this->object.textureName)->second);
+	object.sprite.setTexture(textureManager->textures.find(object.textureName)->second);
 	object.sprite.setOrigin(object.sprite.getLocalBounds().width / 2, object.sprite.getLocalBounds().height / 2);
 	
-	this->object.position = position;
-	this->object.sprite.setPosition(position);
+	object.position = position;
+	object.sprite.setPosition(position);
 
-	Object * object = new Object(this->object);
+	Object * tempObject = new Object(object);
 
-	map.insert(std::make_pair(object->position.x, object));
+	map.insert(std::make_pair(tempObject->position.x, tempObject));
 
 }
 
 void ObjectMap::remove() {
 
-	printf("ENTRY\n");
-
 	if (selected == map.end() || selected->second == NULL)
 		return;
-
-	printf("HI\n");
 
 	delete(selected->second);
 	map.erase(selected);
@@ -117,5 +169,7 @@ ObjectMap::ObjectMap(TextureManager * textureManager) {
 
 	this->textureManager = textureManager;
 	object.textureName = this->textureManager->textures.begin()->first;
+	object.position = sf::Vector2f(0, 0);
+	object.rotation = 0.0f;
 
 }

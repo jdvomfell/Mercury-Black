@@ -18,6 +18,8 @@ void Game::init() {
 
 	createCeilingPlant(&world, 100, 1000);
 
+	objectMap = ObjectMap(&engine->textureManager);
+	objectMap.load();
 	collisionMap.load();
 
 	platformMap.add(sf::Vector2f(0, 500), 3);
@@ -28,14 +30,6 @@ void Game::clean() {
 
 	cleanWorld(&world);
 	collisionMap.clean();
-
-}
-
-void Game::pause() {
-
-}
-
-void Game::resume() {
 
 }
 
@@ -120,6 +114,10 @@ void Game::update(const float dt) {
 }
 
 void Game::render(const float dt) {
+
+	std::map<float, Object *>::iterator it;
+	for (it = objectMap.map.begin(); it != objectMap.map.end(); it++)
+		engine->window.draw(it->second->sprite);
 
 	engine->window.draw(collisionMap.lines);
 

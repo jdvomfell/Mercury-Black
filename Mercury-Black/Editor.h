@@ -38,9 +38,6 @@ public:
 	void init();
 	void clean();
 
-	void pause();
-	void resume();
-
 	void handleEvent();
 	void update(const float dt);
 	void render(const float dt);

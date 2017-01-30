@@ -29,6 +29,7 @@ void Editor::init() {
 	collisionMap.updateVerticies();
 
 	objectMap = ObjectMap(&engine->textureManager);
+	objectMap.load();
 
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
 
@@ -38,14 +39,6 @@ void Editor::clean() {
 
 	collisionMap.clean();
 	objectMap.clean();
-
-}
-
-void Editor::pause() {
-
-}
-
-void Editor::resume() {
 
 }
 
@@ -136,20 +129,23 @@ void Editor::handleEvent() {
 		if (event.key.code == sf::Keyboard::L)
 			showLines = !showLines;
 
-		if (event.key.code == sf::Keyboard::J)
+		if (event.key.code == sf::Keyboard::J) {
 			collisionMap.save();
-		if (event.key.code == sf::Keyboard::K)
+			objectMap.save();
+		}
+		if (event.key.code == sf::Keyboard::K) {
 			collisionMap.load();
+			objectMap.load();
+		}
 
 		if (event.key.code == sf::Keyboard::M)
 			rotateMode();
 		if (event.key.code == sf::Keyboard::N)
 			rotateTool();
 
-		if (mode == OBJECT) {
+		if (mode == OBJECT)
 			if (event.key.code == sf::Keyboard::T)
 				objectMap.changeObject();
-		}
 
 		break;
 

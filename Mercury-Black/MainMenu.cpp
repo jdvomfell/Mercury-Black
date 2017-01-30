@@ -29,14 +29,6 @@ void MainMenu::clean() {
 
 }
 
-void MainMenu::pause() {
-
-}
-
-void MainMenu::resume() {
-
-}
-
 void MainMenu::handleEvent() {
 
 	sf::Event event;
