@@ -145,6 +145,7 @@
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="ObjectMap.cpp" />
     <ClCompile Include="PlatformMap.cpp" />
+    <ClCompile Include="ShapeCollisionSystem.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
@@ -164,6 +165,7 @@
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="ObjectMap.h" />
     <ClInclude Include="PlatformMap.h" />
+    <ClInclude Include="ShapeCollisionSystem.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>
