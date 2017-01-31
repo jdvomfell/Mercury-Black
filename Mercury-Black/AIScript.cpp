@@ -6,7 +6,7 @@ void scriptTest(World * world, int entityID) {
 
 	//world->sprite[entityID].sprite.setColor(sf::Color::Black);
 
-	scriptAttack(world, entityID,sf::Vector2f(world->position[0].x, world->position[0].y));
+	scriptFollow(world, entityID,sf::Vector2f(world->position[0].x, world->position[0].y));
 
 }
 

@@ -7,11 +7,11 @@
 
 struct Object {
 
-	float scale;
 	float rotation;
-	sf::Sprite sprite;
 	sf::Vector2f position;
 	std::string textureName;
+
+	sf::Sprite sprite;
 
 };
 
@@ -24,7 +24,11 @@ public:
 	void clean();
 
 	void insert(sf::Vector2f position);
-	void remove(float xPos);
+	void remove();
+
+	std::map <float, Object *>::iterator findClosest(sf::Vector2f);
+	std::map <float, Object *>::iterator findRight(float x);
+	std::map <float, Object *>::iterator findLeft(float x);
 
 	void changeObject();
 	void selectObject(std::string textureName);

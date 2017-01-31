@@ -140,8 +140,8 @@ void movementSystem(World * world) {
 }
 
 #define ANIMATION_MASK (VELOCITY | SPRITE)
-/*
-void animationSystem(World * world, float dt, int player) {
+
+void animationSystem(World * world, float dt) {
 
 	Sprite * s;
 	Velocity * v;
@@ -150,40 +150,12 @@ void animationSystem(World * world, float dt, int player) {
 
 		if ((world->mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
 
-			s = &(world->sprite[entityID]);
-			v = &(world->velocity[entityID]);
-
-			if (v->onGround) {
-			
-				if (v->x != 0)
-					s->animationManager.changeAnimation("run");
-				else
-					s->animationManager.changeAnimation("idle");
-
-			}
-			
-			else {
-			
-				//s->animationManager.changeAnimation("jump");
-				s->animationManager.changeAnimation("inAir");
-			
-			}
-
-			if (v->x < 0)
-				s->sprite.setTextureRect(sf::IntRect(s->sprite.getLocalBounds().width, 0, -s->sprite.getLocalBounds().width, s->sprite.getLocalBounds().height));
-			if (v->x > 0)
-				s->sprite.setTextureRect(sf::IntRect(0, 0, s->sprite.getLocalBounds().width, s->sprite.getLocalBounds().height));
-
-			s->animationManager.updateAnimation(dt);
-			s->sprite.setTexture(*s->animationManager.getCurrentTexture());
-			s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height));
-
 		}
 
 	}
 
 }
-*/
+
 #define COLLISION_MASK (POSITION | VELOCITY | COLLISION | GRAVITY)
 
 void collisionSystem(World * world, CollisionMap * collisionMap) {
@@ -258,7 +230,7 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 					slopeCheck = ((rightCheck->position.y - rightVertex->position.y) / (rightCheck->position.x - rightVertex->position.x));
 
-					if (slopeCheck < -1.4) {
+					if (slopeCheck < -1.8) {
 
 						p->x = rightVertex->position.x;
 						v->x = -0.1f;
@@ -271,7 +243,7 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 					slopeCheck = ((leftVertex->position.y - leftCheck->position.y) / (leftVertex->position.x - leftCheck->position.x));
 
-					if (slopeCheck > 1.4) {
+					if (slopeCheck > 1.8) {
 
 						p->x = leftVertex->position.x;
 						v->x = 0.1f;
@@ -284,15 +256,15 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 			/* Slide Down Step Slopes, Cancel Jump */
 
-			if (v->onGround && std::abs(slope) > 1.4) {
+			if (v->onGround && std::abs(slope) > 1.8) {
 
 				v->canJump = false;
 				
-				if (slope > 1.4 && v->x <= 0) {
+				if (slope > 1.8 && v->x <= 0) {
 					v->x = 0.5f;
 				}
 				
-				else if (slope < -1.4 && v->x >= 0) {
+				else if (slope < -1.8 && v->x >= 0) {
 					v->x = -0.5f;
 				}
 
