@@ -108,7 +108,7 @@ void Game::update(const float dt) {
 	movementSystem(&world);
 
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
-	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y));
+	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y - view.getSize().y / 5));
 	engine->window.setView(view);
 
 }

@@ -10,18 +10,37 @@ void MainMenu::init() {
 	hText = sf::Color::Black;
 	uText = sf::Color(100, 100, 100, 255);
 
+	title = sf::Text("Mercury Black", menuFont, MENU_TITLE_SIZE);
+	title.setFillColor(sf::Color::Black);
+	title.setOutlineThickness(5);
+	title.setOutlineColor(uText);
+	title.setOrigin(title.getGlobalBounds().width / 2, title.getGlobalBounds().height / 2);
+
 	newButton = GUI_NewGame(0, 0, uText, MENU_FONT_SIZE, &menuFont);
 	loadButton = GUI_LoadGame(0, 0, uText, MENU_FONT_SIZE, &menuFont);
 	editorButton = GUI_Editor(0, 0, uText, MENU_FONT_SIZE, &menuFont);
 	optionsButton = GUI_Options(0, 0, uText, MENU_FONT_SIZE, &menuFont);
 	quitButton = GUI_Quit(0, 0, uText, MENU_FONT_SIZE, &menuFont);
 
+	newButton.text.setOrigin(newButton.text.getLocalBounds().width / 2, newButton.text.getLocalBounds().height / 2);
+	loadButton.text.setOrigin(loadButton.text.getLocalBounds().width / 2, loadButton.text.getLocalBounds().height / 2);
+	editorButton.text.setOrigin(editorButton.text.getLocalBounds().width / 2, editorButton.text.getLocalBounds().height / 2);
+	optionsButton.text.setOrigin(optionsButton.text.getLocalBounds().width / 2, optionsButton.text.getLocalBounds().height / 2);
+	quitButton.text.setOrigin(quitButton.text.getLocalBounds().width / 2, quitButton.text.getLocalBounds().height / 2);
+
 	buttons.resize(5);
 	buttons = { &newButton, &loadButton, &editorButton, &optionsButton, &quitButton };
 
-	title = sf::Text("Ink", menuFont, MENU_TITLE_SIZE);
+	view = engine->window.getDefaultView();
+	engine->window.setView(view);
 
-	title.setFillColor(sf::Color::Black);
+	title.setPosition(view.getCenter().x, view.getCenter().y - (view.getSize().y / 5));
+
+	newButton.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 1/3, title.getPosition().y + (view.getSize().y / 2) * 2/3);
+	loadButton.text.setPosition(view.getCenter().x, title.getPosition().y + (view.getSize().y / 2) * 2/3);
+	editorButton.text.setPosition(view.getCenter().x + (view.getSize().x / 2) * 1/3, title.getPosition().y + (view.getSize().y / 2) * 2/3);
+	optionsButton.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 1/2, title.getPosition().y + (view.getSize().y / 2));
+	quitButton.text.setPosition(view.getCenter().x + (view.getSize().x / 2) * 1/2, title.getPosition().y + (view.getSize().y / 2));
 
 }
 
@@ -38,9 +57,10 @@ void MainMenu::handleEvent() {
 		switch (event.type) {
 
 		case sf::Event::MouseMoved:
+			
 			for (size_t i = 0; i < buttons.size(); i++) {
 				
-				if (buttons[i]->isSelected(event.mouseMove.x, event.mouseMove.y))
+				if (buttons[i]->isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y))))
 					buttons[i]->text.setFillColor(hText);
 				else
 					buttons[i]->text.setFillColor(uText);
@@ -49,11 +69,12 @@ void MainMenu::handleEvent() {
 			break;
 
 		case sf::Event::MouseButtonPressed:
+			
 			if (event.mouseButton.button == sf::Mouse::Left) {
 
 				for (size_t i = 0; i < buttons.size(); i++) {
 
-					if (buttons[i]->isSelected(event.mouseButton.x, event.mouseButton.y))
+					if (buttons[i]->isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))))
 						buttons[i]->interact(engine);
 
 				}
@@ -73,15 +94,7 @@ void MainMenu::handleEvent() {
 
 void MainMenu::update(const float dt) {
 
-	engine->window.setView(engine->window.getDefaultView());
 
-	title.setPosition(engine->window.getSize().x / 2 - title.getLocalBounds().width / 2, engine->window.getSize().y / 4 - title.getLocalBounds().height / 2);
-
-	newButton.text.setPosition(100.0f + engine->window.getSize().x / 5 * 0, 150.0f + title.getPosition().y + title.getLocalBounds().height);
-	loadButton.text.setPosition(100.0f + engine->window.getSize().x / 5 * 1, 150.0f + title.getPosition().y + title.getLocalBounds().height);
-	editorButton.text.setPosition(100.0f + engine->window.getSize().x / 5 * 2, 150.0f + title.getPosition().y + title.getLocalBounds().height);
-	optionsButton.text.setPosition(100.0f + engine->window.getSize().x / 5 * 3, 150.0f + title.getPosition().y + title.getLocalBounds().height);
-	quitButton.text.setPosition(100.0f + engine->window.getSize().x / 5 * 4, 150.0f + title.getPosition().y + title.getLocalBounds().height);
 
 }
 

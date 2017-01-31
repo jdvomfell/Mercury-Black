@@ -1,8 +1,8 @@
 #include "GUI.h"
 
-bool GUI::isSelected(int mouseX, int mouseY) {
+bool GUI::isSelected(sf::Vector2f position) {
 
-	if (text.getGlobalBounds().contains(sf::Vector2f(mouseX, mouseY))) {
+	if (text.getGlobalBounds().contains(position)) {
 
 		return true;
 

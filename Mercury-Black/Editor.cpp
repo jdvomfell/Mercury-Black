@@ -25,11 +25,15 @@ void Editor::init() {
 	toolText = sf::Text("Tool: Place", font, 60);
 	toolText.setFillColor(sf::Color::Black);
 
+	textureText = sf::Text("", font, 60);
+	textureText.setFillColor(sf::Color::Black);
+
 	collisionMap.load();
 	collisionMap.updateVerticies();
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
+	textureText.setString(objectMap.object.textureName);
 
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
 
@@ -91,6 +95,9 @@ void Editor::handleEvent() {
 					selector.rect.setOutlineColor(sf::Color::Blue);
 				}
 
+				else
+					selector.rect.setOutlineColor(sf::Color::Transparent);
+
 			}
 
 		}
@@ -144,8 +151,10 @@ void Editor::handleEvent() {
 			rotateTool();
 
 		if (mode == OBJECT)
-			if (event.key.code == sf::Keyboard::T)
+			if (event.key.code == sf::Keyboard::T) {
 				objectMap.changeObject();
+				textureText.setString(objectMap.object.textureName);
+			}
 
 		break;
 
@@ -183,6 +192,7 @@ void Editor::update(const float dt) {
 
 	modeText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 50);
 	toolText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 200);
+	textureText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 350);
 
 	view.move(viewVelX, viewVelY);
 
@@ -201,6 +211,7 @@ void Editor::render(const float dt) {
 
 	engine->window.draw(modeText);
 	engine->window.draw(toolText);
+	engine->window.draw(textureText);
 }
 
 void Editor::rotateMode() {

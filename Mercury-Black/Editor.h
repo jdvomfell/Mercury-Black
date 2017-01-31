@@ -80,6 +80,7 @@ private:
 
 	sf::Text modeText;
 	sf::Text toolText;
+	sf::Text textureText;
 
 	sf::Font font;
 

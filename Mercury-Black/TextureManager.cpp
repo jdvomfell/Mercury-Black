@@ -72,4 +72,14 @@ void TextureManager::loadAllTextures() {
 	loadTexture("ceilingplant_spawn_13", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_13.png");
 	loadTexture("ceilingplant_spawn_14", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_14.png");
 	loadTexture("ceilingplant_spawn_15", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_15.png");
+
+	/////PLAY//////
+
+	loadTexture("toriiGate_1", "Textures/Test/ToriiGate1.png");
+	loadTexture("toriiGate_2", "Textures/Test/ToriiGate2.png");
+	loadTexture("toriiGate_3", "Textures/Test/ToriiGate3.png");
+	loadTexture("toriiGate_4", "Textures/Test/ToriiGate4.png");
+	loadTexture("toriiGate_5", "Textures/Test/ToriiGate5.png");
+	loadTexture("treeTest_1", "Textures/Test/TreeTest1.png");
+
 }

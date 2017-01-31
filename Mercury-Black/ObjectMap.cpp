@@ -68,12 +68,13 @@ void ObjectMap::load() {
 
 void ObjectMap::clean() {
 
-	for (selected = map.begin(); selected != map.end(); selected++) {
+	selected = map.begin();
+
+	while(selected != map.end()) {
 
 		delete(selected->second);
+		
 		map.erase(selected++);
-
-		selected = map.begin();
 
 	}
 
@@ -81,13 +82,19 @@ void ObjectMap::clean() {
 
 void ObjectMap::insert(sf::Vector2f position) {
 
+	Object * tempObject = new Object;
+
 	object.sprite.setTexture(textureManager->textures.find(object.textureName)->second);
 	object.sprite.setOrigin(object.sprite.getLocalBounds().width / 2, object.sprite.getLocalBounds().height / 2);
 	
 	object.position = position;
 	object.sprite.setPosition(position);
 
-	Object * tempObject = new Object(object);
+	tempObject->sprite.setTexture(textureManager->textures.find(object.textureName)->second);
+	tempObject->sprite.setOrigin(tempObject->sprite.getLocalBounds().width / 2, tempObject->sprite.getLocalBounds().height / 2);
+
+	tempObject->position = position;
+	tempObject->sprite.setPosition(position);
 
 	map.insert(std::make_pair(tempObject->position.x, tempObject));
 

@@ -5,7 +5,7 @@
 #include "Buttons.h"
 
 #define MENU_FONT_SIZE 70
-#define MENU_TITLE_SIZE 250
+#define MENU_TITLE_SIZE 200
 
 #define NEW_GAME 1
 #define LOAD_GAME 2
@@ -48,6 +48,8 @@ private:
 	GUI_Quit quitButton;
 
 	sf::Text title;
+
+	sf::View view;
 
 };
 
