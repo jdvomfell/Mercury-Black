@@ -73,6 +73,17 @@ void TextureManager::loadAllTextures() {
 	loadTexture("ceilingplant_spawn_14", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_14.png");
 	loadTexture("ceilingplant_spawn_15", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_15.png");
 
+	/////PLAY//////
+
+	loadTexture("toriiGate_1", "Textures/Test/ToriiGate1.png");
+	loadTexture("toriiGate_2", "Textures/Test/ToriiGate2.png");
+	loadTexture("toriiGate_3", "Textures/Test/ToriiGate3.png");
+	loadTexture("toriiGate_4", "Textures/Test/ToriiGate4.png");
+	loadTexture("toriiGate_5", "Textures/Test/ToriiGate5.png");
+	loadTexture("treeTest_1", "Textures/Test/TreeTest1.png");
+
+}
+
 	/* Idle */
 	loadTexture("ceilingplant_idle_1", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_1.png");
 	loadTexture("ceilingplant_idle_2", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_2.png");
@@ -115,14 +126,5 @@ void TextureManager::loadAllTextures() {
 	loadTexture("ceilingplant_triple_attack_24", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_24.png");
 	loadTexture("ceilingplant_triple_attack_25", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_25.png");
 	loadTexture("ceilingplant_triple_attack_26", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_26.png");
-
-	/////PLAY//////
-
-	loadTexture("toriiGate_1", "Textures/Test/ToriiGate1.png");
-	loadTexture("toriiGate_2", "Textures/Test/ToriiGate2.png");
-	loadTexture("toriiGate_3", "Textures/Test/ToriiGate3.png");
-	loadTexture("toriiGate_4", "Textures/Test/ToriiGate4.png");
-	loadTexture("toriiGate_5", "Textures/Test/ToriiGate5.png");
-	loadTexture("treeTest_1", "Textures/Test/TreeTest1.png");
-
-}
+	
+	}
