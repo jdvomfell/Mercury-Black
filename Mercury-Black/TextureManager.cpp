@@ -82,8 +82,6 @@ void TextureManager::loadAllTextures() {
 	loadTexture("toriiGate_5", "Textures/Test/ToriiGate5.png");
 	loadTexture("treeTest_1", "Textures/Test/TreeTest1.png");
 
-}
-
 	/* Idle */
 	loadTexture("ceilingplant_idle_1", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_1.png");
 	loadTexture("ceilingplant_idle_2", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_2.png");
@@ -127,4 +125,4 @@ void TextureManager::loadAllTextures() {
 	loadTexture("ceilingplant_triple_attack_25", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_25.png");
 	loadTexture("ceilingplant_triple_attack_26", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_26.png");
 	
-	}
+}
