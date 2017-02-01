@@ -115,8 +115,6 @@ void TextureManager::loadAllTextures() {
 	loadTexture("ceilingplant_triple_attack_24", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_24.png");
 	loadTexture("ceilingplant_triple_attack_25", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_25.png");
 	loadTexture("ceilingplant_triple_attack_26", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_26.png");
-	
-	}
 
 	/////PLAY//////
 
