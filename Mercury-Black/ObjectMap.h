@@ -7,7 +7,6 @@
 
 struct Object {
 
-	float rotation;
 	sf::Vector2f position;
 	std::string textureName;
 

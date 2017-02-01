@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 #include "MainMenu.h"
+#include "Fade.h"
 
 int main() {
 
@@ -8,7 +9,8 @@ int main() {
 
 	engine.init();
 
-	engine.changeState(MainMenu::instance(&engine));
+	engine.pushState(TransitionState::instance(&engine));
+	engine.pushState(FadeOut::instance(&engine));
 
 	while (engine.isRunning()) {
 

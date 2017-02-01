@@ -13,10 +13,11 @@ void ObjectMap::save() {
 
 	for (std::map<float, Object *>::iterator it = map.begin(); it != map.end(); it++) {
 		
+		printf("%f, %f, %s\n", it->second->position.x, it->second->position.y, it->second->textureName.c_str());
+
 		ofstream
 			<< it->second->position.x << std::endl
 			<< it->second->position.y << std::endl
-			<< it->second->rotation << std::endl
 			<< it->second->textureName << std::endl;
 
 	}
@@ -35,32 +36,35 @@ void ObjectMap::load() {
 	std::string n;
 	float x;
 	float y;
-	float r;
-	std::map<float, Object *>::iterator it;
 
-	map.clear();
+	int numObjects = 0;
+
+	clean();
 
 	ifstream.open(objectFilename, std::ios::in | std::ios::binary);
 
 	if (!ifstream.is_open()) {
-		printf("ERROR: Cannot Open Object File (Possibly No File To Load)\n");
+		//printf("ERROR: Cannot Open Object File (Possibly No File To Load)\n");
 		return;
 	}
 
-	while (ifstream >> x >> y >> r >> n) {
+	while (ifstream >> x >> y >> n) {
 
 		if (ifstream.eof())
 			return;
 
-		tempObject = new Object;
+		//printf("%f %f %s\n", x, y, n.c_str());
+
+		numObjects++;
 
 		object.position = sf::Vector2f(x, y);
 		object.textureName = n;
-		object.rotation = r;
 
 		insert(object.position);
 
 	}
+
+	printf("Loaded %d Objects\n", numObjects);
 
 	ifstream.close();
 
@@ -68,28 +72,31 @@ void ObjectMap::load() {
 
 void ObjectMap::clean() {
 
-	selected = map.begin();
+	std::map<float, Object *>::iterator it;
+	it = map.begin();
 
-	while(selected != map.end()) {
+	while(it != map.end()) {
 
-		delete(selected->second);
+		delete(it->second);
 		
-		map.erase(selected++);
+		map.erase(it++);
 
 	}
+
+	selected = map.end();
 
 }
 
 void ObjectMap::insert(sf::Vector2f position) {
 
+	if (textureManager->textures.find(object.textureName) == textureManager->textures.end()) {
+		printf("Error: Could Not Insert Object To Map, Unidentified Texture Name: %s\n", object.textureName.c_str());
+		return;
+	}
+
 	Object * tempObject = new Object;
 
-	object.sprite.setTexture(textureManager->textures.find(object.textureName)->second);
-	object.sprite.setOrigin(object.sprite.getLocalBounds().width / 2, object.sprite.getLocalBounds().height / 2);
-	
-	object.position = position;
-	object.sprite.setPosition(position);
-
+	tempObject->textureName = object.textureName;
 	tempObject->sprite.setTexture(textureManager->textures.find(object.textureName)->second);
 	tempObject->sprite.setOrigin(tempObject->sprite.getLocalBounds().width / 2, tempObject->sprite.getLocalBounds().height / 2);
 
@@ -158,6 +165,8 @@ void ObjectMap::changeObject() {
 	
 	if (textureManager->textures.find(object.textureName) == --textureManager->textures.end())
 		object.textureName = textureManager->textures.begin()->first;
+	else if (textureManager->textures.find(object.textureName) == textureManager->textures.end())
+		object.textureName = textureManager->textures.begin()->first;
 	else
 		object.textureName = (++textureManager->textures.find(object.textureName))->first;
 
@@ -177,6 +186,5 @@ ObjectMap::ObjectMap(TextureManager * textureManager) {
 	this->textureManager = textureManager;
 	object.textureName = this->textureManager->textures.begin()->first;
 	object.position = sf::Vector2f(0, 0);
-	object.rotation = 0.0f;
 
 }
