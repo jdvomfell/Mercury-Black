@@ -103,37 +103,43 @@ int createPlayer(World * world, float x, float y) {
 
 int createCeilingPlant(World * world, float x, float y) {
 	int entityID = createEntity(world);
+	int i;
+	std::string plantName, temp;
 
 	world->mask[entityID] = NAME | INPUT | POSITION | SPRITE | SCRIPT;
 
-	world->name[entityID].name = "ceiling_plant";
+	world->name[entityID].name = "ceilingplant";
 
 	world->position[entityID].x = x;
 	world->position[entityID].y = y;
+
+	world->scriptParameter[entityID].attackRangeMax = 1000.0f;
+	world->scriptParameter[entityID].attackRangeMin = 0.0f;
 	
 	Animation * idleAnimation = new Animation(0.2f);
-		idleAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_15"));
+		for (i = 1; i <= 12; i++) {
+			temp = world->name[entityID].name;
+			temp += "_idle_" + std::to_string(i);
+			idleAnimation->addFrame(world->textureManager->getTexture(temp));
+		}
 
 	Animation * spawnAnimation = new Animation(0.1f);
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_1"));
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_2"));
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_3"));
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_4"));
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_5"));
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_6"));
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_7"));
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_8"));
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_9"));
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_10"));
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_11"));
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_12"));
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_13"));
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_14"));
-		spawnAnimation->addFrame(world->textureManager->getTexture("ceilingplant_spawn_15"));
-	
+		for (i = 1; i <= 15; i++) {
+			temp = world->name[entityID].name;
+			temp +=  "_spawn_" + std::to_string(i);
+			spawnAnimation->addFrame(world->textureManager->getTexture(temp));
+		}
+	Animation * tripleAttackAnimation = new Animation(0.1f);
+		for (i = 1; i < 27; i++) {
+			temp = world->name[entityID].name;
+			temp += "_triple_attack_" + std::to_string(i);
+			tripleAttackAnimation->addFrame(world->textureManager->getTexture(temp));
+		}
+
 	world->sprite[entityID].animationManager.addAnimation(spawnAnimation, "spawn");
 	world->sprite[entityID].animationManager.addAnimation(idleAnimation, "idle");
-	
+	world->sprite[entityID].animationManager.addAnimation(tripleAttackAnimation, "tripleAttack");
+
 	world->sprite[entityID].animationManager.changeAnimation("spawn");
 	//world->sprite[entityID].sprite.setOrigin(sf::Vector2f(world->sprite[entityID].sprite.getLocalBounds().width / 2, world->sprite[entityID].sprite.getLocalBounds().height));
 	

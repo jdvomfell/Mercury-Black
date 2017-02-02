@@ -6,7 +6,7 @@ void scriptTest(World * world, int entityID) {
 
 	//world->sprite[entityID].sprite.setColor(sf::Color::Black);
 
-	scriptAttack(world, entityID,sf::Vector2f(world->position[0].x, world->position[0].y));
+	scriptFollow(world, entityID,sf::Vector2f(world->position[0].x, world->position[0].y));
 
 }
 
@@ -107,9 +107,19 @@ void scriptPlayer(World *world, float dt) {
 }
 
 void scriptPlant(World * world, int entityID, float dt) {
+	
 	Sprite *s;
 
 	s = &world->sprite[entityID];
+
+	scriptAttack(world, entityID, sf::Vector2f(world->position[0].x, world->position[0].y));
+
+	if (world->input[entityID].attack) {
+		s->animationManager.changeAnimation("tripleAttack");
+	}
+	else {
+		s->animationManager.changeAnimation("idle");
+	}
 	
 	s->animationManager.updateAnimation(dt);
 	s->sprite.setTexture(*s->animationManager.getCurrentTexture());

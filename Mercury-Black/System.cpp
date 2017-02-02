@@ -17,7 +17,7 @@ void aiSystem(World * world, float dt) {
 			if (world->name[entityID].name == "player")
 				scriptPlayer(world, dt);
 
-			else if (world->name[entityID].name == "ceiling_plant")
+			else if (world->name[entityID].name == "ceilingplant")
 				scriptPlant(world, entityID, dt);
 
 			else if (world->name[entityID].name == "test")
