@@ -11,7 +11,7 @@ Editor Editor::editor;
 
 void Editor::init() {
 	
-	cursor = Cursor();
+	selector = Selector();
 
 	showLines = true;
 	mode = POINT;
@@ -25,10 +25,17 @@ void Editor::init() {
 	toolText = sf::Text("Tool: Place", font, 60);
 	toolText.setFillColor(sf::Color::Black);
 
+	textureText = sf::Text("", font, 60);
+	textureText.setFillColor(sf::Color::Black);
+
 	collisionMap.load();
 	collisionMap.updateVerticies();
 
 	objectMap = ObjectMap(&engine->textureManager);
+	objectMap.load();
+	textureText.setString(objectMap.object.textureName);
+
+	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
 
 }
 
@@ -36,14 +43,6 @@ void Editor::clean() {
 
 	collisionMap.clean();
 	objectMap.clean();
-
-}
-
-void Editor::pause() {
-
-}
-
-void Editor::resume() {
 
 }
 
@@ -64,23 +63,43 @@ void Editor::handleEvent() {
 	case sf::Event::MouseButtonPressed:
 
 		if (event.mouseButton.button == sf::Mouse::Left) {
+			
 			if(mode == POINT)
 				collisionMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 			if (mode == OBJECT)
 				objectMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+		
 		}
 
 		if (event.mouseButton.button == sf::Mouse::Right) {
 
 			if (mode == POINT) {
-				cursor.rect.setOutlineColor(sf::Color::Black);
 				collisionMap.selected = collisionMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
 				if (collisionMap.selected != collisionMap.map.end()) {
-					cursor.rect.setPosition(collisionMap.selected->second->position);
-					cursor.rect.setOutlineColor(sf::Color::Red);
+					selector.rect.setSize(sf::Vector2f(15, 15));
+					selector.rect.setOrigin(selector.rect.getSize() * 0.5f);
+					selector.rect.setPosition(collisionMap.selected->second->position);
+					selector.rect.setOutlineColor(sf::Color::Blue);
 				}
 			}
+
+			if (mode == OBJECT) {
+				
+				objectMap.selected = objectMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+
+				if (objectMap.selected != objectMap.map.end()) {
+					selector.rect.setSize(sf::Vector2f(objectMap.selected->second->sprite.getLocalBounds().width, objectMap.selected->second->sprite.getLocalBounds().height));
+					selector.rect.setOrigin(selector.rect.getSize() * 0.5f);
+					selector.rect.setPosition(objectMap.selected->second->position.x, objectMap.selected->second->position.y);
+					selector.rect.setOutlineColor(sf::Color::Blue);
+				}
+
+				else
+					selector.rect.setOutlineColor(sf::Color::Transparent);
+
+			}
+
 		}
 
 		break;
@@ -94,10 +113,15 @@ void Editor::handleEvent() {
 			engine->changeState(Game::instance(engine));
 
 		if (event.key.code == sf::Keyboard::Delete) {
-			if (mode == POINT) {
-				cursor.rect.setOutlineColor(sf::Color::Transparent);
+			
+			if (mode == POINT)
 				collisionMap.remove();
-			}
+
+			else if (mode == OBJECT)
+				objectMap.remove();
+
+			selector.rect.setOutlineColor(sf::Color::Transparent);
+
 		}
 
 		if (event.key.code == sf::Keyboard::A)
@@ -112,20 +136,25 @@ void Editor::handleEvent() {
 		if (event.key.code == sf::Keyboard::L)
 			showLines = !showLines;
 
-		if (event.key.code == sf::Keyboard::J)
+		if (event.key.code == sf::Keyboard::J) {
 			collisionMap.save();
-		if (event.key.code == sf::Keyboard::K)
+			objectMap.save();
+		}
+		if (event.key.code == sf::Keyboard::K) {
 			collisionMap.load();
+			objectMap.load();
+		}
 
 		if (event.key.code == sf::Keyboard::M)
 			rotateMode();
 		if (event.key.code == sf::Keyboard::N)
 			rotateTool();
 
-		if (mode == OBJECT) {
-			if (event.key.code == sf::Keyboard::T)
+		if (mode == OBJECT)
+			if (event.key.code == sf::Keyboard::T) {
 				objectMap.changeObject();
-		}
+				textureText.setString(objectMap.object.textureName);
+			}
 
 		break;
 
@@ -159,11 +188,11 @@ void Editor::update(const float dt) {
 	else
 		viewVelY = 0.0f;
 
-	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
 	engine->window.setView(view);
 
 	modeText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 50);
 	toolText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 200);
+	textureText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 350);
 
 	view.move(viewVelX, viewVelY);
 
@@ -171,17 +200,18 @@ void Editor::update(const float dt) {
 
 void Editor::render(const float dt) {
 
-	for (objectMap.selected = objectMap.map.begin(); objectMap.selected != objectMap.map.end(); objectMap.selected++)
-		engine->window.draw(objectMap.selected->second->sprite);
+	std::map<float, Object *>::iterator it;
+	for (it = objectMap.map.begin(); it != objectMap.map.end(); it++)
+		engine->window.draw(it->second->sprite);
 
 	if (showLines)
 		engine->window.draw(collisionMap.lines);
 
-	if(mode == POINT)
-		engine->window.draw(cursor.rect);
+	engine->window.draw(selector.rect);
 
 	engine->window.draw(modeText);
 	engine->window.draw(toolText);
+	engine->window.draw(textureText);
 }
 
 void Editor::rotateMode() {
@@ -218,15 +248,10 @@ void Editor::rotateTool() {
 
 }
 
-Cursor::Cursor() {
+Selector::Selector() {
 
 	rect.setOutlineColor(sf::Color::Transparent);
 	rect.setFillColor(sf::Color::Transparent);
-	rect.setSize(sf::Vector2f(15, 15));
-	rect.setOutlineThickness(3);
-	rect.setOrigin(rect.getLocalBounds().width / 2, rect.getLocalBounds().height / 2);
-	rect.setPosition(0, 0);
-
-	sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
+	rect.setOutlineThickness(5);
 
 }

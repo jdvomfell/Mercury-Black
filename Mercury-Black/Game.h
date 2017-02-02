@@ -2,9 +2,11 @@
 #define GAME_H
 
 #include "GameState.h"
+
 #include "Entity.h"
-#include "CollisionMap.h"
+#include "ObjectMap.h"
 #include "PlatformMap.h"
+#include "CollisionMap.h"
 
 #define PLAYER (0)
 
@@ -14,9 +16,6 @@ public:
 
 	void init();
 	void clean();
-
-	void pause();
-	void resume();
 
 	void handleEvent();
 	void update(const float dt);
@@ -34,9 +33,9 @@ private:
 
 	sf::View view;
 
+	ObjectMap objectMap;
+	PlatformMap platformMap;
 	CollisionMap collisionMap;
-
-	PlatformMap platformMap; 
 	
 	World world;
 

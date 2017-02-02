@@ -11,13 +11,15 @@ void Game::init() {
 	world.textureManager = &engine->textureManager;
 
 	int test = createTest(&world, sf::Vector2f(1000, 0));
-	createPlayer(&world, 400, 0);
+	createPlayer(&world, 900, 0);
 
 	world.sprite[test].sprite.setTexture(*engine->textureManager.getTexture("player_run_1"));
 	world.sprite[test].sprite.setOrigin(world.sprite[test].sprite.getLocalBounds().width / 2, world.sprite[test].sprite.getLocalBounds().height);
 
 	createCeilingPlant(&world, 100, 1000);
 
+	objectMap = ObjectMap(&engine->textureManager);
+	objectMap.load();
 	collisionMap.load();
 
 	platformMap.add(sf::Vector2f(0, 500), 3);
@@ -28,14 +30,6 @@ void Game::clean() {
 
 	cleanWorld(&world);
 	collisionMap.clean();
-
-}
-
-void Game::pause() {
-
-}
-
-void Game::resume() {
 
 }
 
@@ -114,12 +108,16 @@ void Game::update(const float dt) {
 	movementSystem(&world);
 
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
-	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y));
+	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y - view.getSize().y / 5));
 	engine->window.setView(view);
 
 }
 
 void Game::render(const float dt) {
+
+	std::map<float, Object *>::iterator it;
+	for (it = objectMap.map.begin(); it != objectMap.map.end(); it++)
+		engine->window.draw(it->second->sprite);
 
 	engine->window.draw(collisionMap.lines);
 

@@ -9,7 +9,6 @@ struct Platform {
 	sf::ConvexShape * shape; 
 	sf::Vector2f position; 
 	std::string type;
-
 };
 
 class PlatformMap {

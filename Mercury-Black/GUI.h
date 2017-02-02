@@ -8,7 +8,7 @@ class GUI {
 
 public:
 	
-	bool isSelected(int mouseX, int mouseY);
+	bool isSelected(sf::Vector2f position);
 
 	virtual void interact(GameEngine * engine) {};
 
