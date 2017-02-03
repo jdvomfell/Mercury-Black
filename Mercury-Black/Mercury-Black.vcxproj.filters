@@ -99,9 +99,6 @@
     <ClCompile Include="Fade.cpp">
       <Filter>Source Files\GameStates</Filter>
     </ClCompile>
-    <ClCompile Include="ShapeCollisionSystem.cpp">
-      <Filter>Source Files\GameUtility</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -154,9 +151,6 @@
     </ClInclude>
     <ClInclude Include="AIScript.h">
       <Filter>Header Files\Entity Component System</Filter>
-    </ClInclude>
-    <ClInclude Include="ShapeCollisionSystem.h">
-      <Filter>Header Files\GameUtility</Filter>
     </ClInclude>
     <ClInclude Include="Fade.h">
       <Filter>Header Files\GameStates</Filter>
