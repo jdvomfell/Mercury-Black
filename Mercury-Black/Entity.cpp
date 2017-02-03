@@ -90,29 +90,14 @@ int createCeilingPlant(World * world, float x, float y) {
 	world->scriptParameters[entityID].attackRangeMax = 1000.0f;
 	world->scriptParameters[entityID].attackRangeMin = 0.0f;
 
-	Animation * idleAnimation = new Animation(0.2f);
-		for (i = 1; i <= 11; i++) {
-			temp = world->name[entityID].name;
-			temp += "_idle_" + std::to_string(i);
-			idleAnimation->addFrame(world->textureManager->getTexture(temp));
-		}
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "idle", 11, 0.2f);
 
-	Animation * spawnAnimation = new Animation(0.1f);
-		for (i = 1; i <= 20; i++) {
-			temp = world->name[entityID].name;
-			temp +=  "_spawn_" + std::to_string(i);
-			spawnAnimation->addFrame(world->textureManager->getTexture(temp));
-		}
-	Animation * tripleAttackAnimation = new Animation(0.1f);
-		for (i = 1; i <= 25; i++) {
-			temp = world->name[entityID].name;
-			temp += "_tripleAttack_" + std::to_string(i);
-			tripleAttackAnimation->addFrame(world->textureManager->getTexture(temp));
-		}
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "spawn", 20, 0.1f);
 
-	world->sprite[entityID].animationManager.addAnimation(spawnAnimation, "spawn");
-	world->sprite[entityID].animationManager.addAnimation(idleAnimation, "idle");
-	world->sprite[entityID].animationManager.addAnimation(tripleAttackAnimation, "tripleAttack");
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "tripleAttack", 25, 0.1f);
 
 	return entityID;
 }

@@ -180,7 +180,8 @@ void scriptPlant(World * world, int entityID, float dt) {
 		s->animationManager.changeAnimation("tripleAttack");
 	}
 	else {
-		s->animationManager.changeAnimation("idle");
+		//s->animationManager.changeAnimation("idle");
+		s->animationManager.changeAnimation("spawn");
 	}
 	
 	s->animationManager.updateAnimation(dt);
