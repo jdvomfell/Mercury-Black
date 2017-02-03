@@ -14,10 +14,10 @@ void AnimationManager::addAnimation(Animation * animation, std::string id) {
 
 }
 
-void AnimationManager::updateAnimation(float deltaTime) {
+int AnimationManager::updateAnimation(float deltaTime) {
 
 	if (animations.find(currentAnimation) == animations.end())
-		return;
+		return -1;
 
 	float animationTime = animations[currentAnimation]->animationTime;
 
@@ -32,9 +32,11 @@ void AnimationManager::updateAnimation(float deltaTime) {
 
 	currentTime += deltaTime;
 
-	if (currentTime > animationTime * animations[currentAnimation]->textures.size())		
-		currentTime = 0.0f;	
-
+	if (currentTime > animationTime * animations[currentAnimation]->textures.size()) {
+		currentTime = 0.0f;
+		return 1;
+	}
+	return 0;
 }
 
 

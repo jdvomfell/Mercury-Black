@@ -1,5 +1,10 @@
 #include "AIScript.h"
 #include <cmath>
+#define NO_STATE 0
+#define ATTACK_STATE 1
+#define DEFENCE_STATE 2
+#define JUMP_STATE 3
+#define SPAWN_STATE 4
 
 
 void scriptTest(World * world, int entityID) {
