@@ -16,7 +16,7 @@ struct World {
 	Gravity gravity[MAX_ENTITIES];
 	Position position[MAX_ENTITIES];
 	Velocity velocity[MAX_ENTITIES];
-	ScriptParameters scriptParameter[MAX_ENTITIES];
+	ScriptParameters scriptParameters[MAX_ENTITIES];
 
 	TextureManager * textureManager;
 

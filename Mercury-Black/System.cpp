@@ -17,11 +17,14 @@ void aiSystem(World * world, float dt) {
 			if (world->name[entityID].name == "player")
 				scriptPlayer(world, dt);
 
-			else if (world->name[entityID].name == "ceilingplant")
+			else if (world->name[entityID].name == "ceilingPlant")
 				scriptPlant(world, entityID, dt);
 
 			else if (world->name[entityID].name == "test")
 				scriptTest(world, entityID);
+
+			else
+				printf("ERROR: Could Not Find Entity AI: %s\n", world->name[entityID].name.c_str());
 
 		}
 	
@@ -271,6 +274,9 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 				v->y = GRAVITY_CONST;
 
 			}
+
+			if (p->y < ground -30)
+				v->onGround = false;
 
 		}
 

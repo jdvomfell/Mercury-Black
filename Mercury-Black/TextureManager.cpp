@@ -2,6 +2,9 @@
 
 sf::Texture * TextureManager::getTexture(std::string id) {
 
+	if (textures.find(id) == textures.end())
+		printf("Error: Could Not Find Texture: %s\n", id.c_str());
+	
 	return &textures[id];
 
 }
@@ -10,7 +13,8 @@ void TextureManager::loadTexture(std::string id, std::string fileName) {
 	
 	sf::Texture texture;
 
-	texture.loadFromFile(fileName);
+	if (!texture.loadFromFile(fileName))
+		printf("Could Not Load Texture: %s\n", fileName.c_str());
 
 	textures[id] = texture;
 
@@ -42,37 +46,87 @@ void TextureManager::loadAllTextures() {
 	loadTexture("player_jump_5", "Textures/player_jump_5.png");
 	loadTexture("player_jump_6", "Textures/player_jump_6.png");
 	loadTexture("player_jump_7", "Textures/player_jump_7.png");
-	loadTexture("player_jump_8", "Textures/player_jump_8.png");
+
+	/* In Air */
+
+	loadTexture("player_inAir_1", "Textures/player_inAir_1.png");
 	
 	/* Idle Attack */
-	loadTexture("player_idle_attack_1", "Textures/Attack/Idle-Attack/player_attack_1.png");
-	loadTexture("player_idle_attack_2", "Textures/Attack/Idle-Attack/player_attack_2.png");
-	loadTexture("player_idle_attack_3", "Textures/Attack/Idle-Attack/player_attack_3.png");
-	loadTexture("player_idle_attack_4", "Textures/Attack/Idle-Attack/player_attack_4.png");
-	loadTexture("player_idle_attack_5", "Textures/Attack/Idle-Attack/player_attack_5.png");
-	loadTexture("player_idle_attack_6", "Textures/Attack/Idle-Attack/player_attack_6.png");
-	loadTexture("player_idle_attack_7", "Textures/Attack/Idle-Attack/player_attack_7.png");
-	loadTexture("player_idle_attack_8", "Textures/Attack/Idle-Attack/player_attack_8.png");
+	loadTexture("player_idleAttack_1", "Textures/Attack/Idle-Attack/player_attack_1.png");
+	loadTexture("player_idleAttack_2", "Textures/Attack/Idle-Attack/player_attack_2.png");
+	loadTexture("player_idleAttack_3", "Textures/Attack/Idle-Attack/player_attack_3.png");
+	loadTexture("player_idleAttack_4", "Textures/Attack/Idle-Attack/player_attack_4.png");
+	loadTexture("player_idleAttack_5", "Textures/Attack/Idle-Attack/player_attack_5.png");
+	loadTexture("player_idleAttack_6", "Textures/Attack/Idle-Attack/player_attack_6.png");
+	loadTexture("player_idleAttack_7", "Textures/Attack/Idle-Attack/player_attack_7.png");
+	loadTexture("player_idleAttack_8", "Textures/Attack/Idle-Attack/player_attack_8.png");
 	
 	///Ceiling Plant///
 
 	/* Spawn */
-	loadTexture("ceilingplant_spawn_1", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_1.png");
-	loadTexture("ceilingplant_spawn_2", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_2.png");
-	loadTexture("ceilingplant_spawn_3", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_3.png");
-	loadTexture("ceilingplant_spawn_4", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_4.png");
-	loadTexture("ceilingplant_spawn_5", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_5.png");
-	loadTexture("ceilingplant_spawn_6", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_6.png");
-	loadTexture("ceilingplant_spawn_7", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_7.png");
-	loadTexture("ceilingplant_spawn_8", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_8.png");
-	loadTexture("ceilingplant_spawn_9", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_9.png");
-	loadTexture("ceilingplant_spawn_10", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_10.png");
-	loadTexture("ceilingplant_spawn_11", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_11.png");
-	loadTexture("ceilingplant_spawn_12", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_12.png");
-	loadTexture("ceilingplant_spawn_13", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_13.png");
-	loadTexture("ceilingplant_spawn_14", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_14.png");
-	loadTexture("ceilingplant_spawn_15", "Textures/Enemies/CeilingPlant/Spawn/ceilingplant_spawn_15.png");
+	loadTexture("ceilingPlant_spawn_1", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_1.png");
+	loadTexture("ceilingPlant_spawn_2", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_2.png");
+	loadTexture("ceilingPlant_spawn_3", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_3.png");
+	loadTexture("ceilingPlant_spawn_4", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_4.png");
+	loadTexture("ceilingPlant_spawn_5", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_5.png");
+	loadTexture("ceilingPlant_spawn_6", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_6.png");
+	loadTexture("ceilingPlant_spawn_7", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_7.png");
+	loadTexture("ceilingPlant_spawn_8", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_8.png");
+	loadTexture("ceilingPlant_spawn_9", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_9.png");
+	loadTexture("ceilingPlant_spawn_10", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_10.png");
+	loadTexture("ceilingPlant_spawn_11", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_11.png");
+	loadTexture("ceilingPlant_spawn_12", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_12.png");
+	loadTexture("ceilingPlant_spawn_13", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_13.png");
+	loadTexture("ceilingPlant_spawn_14", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_14.png");
+	loadTexture("ceilingPlant_spawn_15", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_15.png");
+	loadTexture("ceilingPlant_spawn_16", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_16.png");
+	loadTexture("ceilingPlant_spawn_17", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_17.png");
+	loadTexture("ceilingPlant_spawn_18", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_18.png");
+	loadTexture("ceilingPlant_spawn_19", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_19.png");
+	loadTexture("ceilingPlant_spawn_20", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_20.png");
 
+	/* Idle */
+
+	loadTexture("ceilingPlant_idle_1", "Textures/Enemies/CeilingPlant/Idle/ceilingPlant_Idle_1.png");
+	loadTexture("ceilingPlant_idle_2", "Textures/Enemies/CeilingPlant/Idle/ceilingPlant_Idle_2.png");
+	loadTexture("ceilingPlant_idle_3", "Textures/Enemies/CeilingPlant/Idle/ceilingPlant_Idle_3.png");
+	loadTexture("ceilingPlant_idle_4", "Textures/Enemies/CeilingPlant/Idle/ceilingPlant_Idle_4.png");
+	loadTexture("ceilingPlant_idle_5", "Textures/Enemies/CeilingPlant/Idle/ceilingPlant_Idle_5.png");
+	loadTexture("ceilingPlant_idle_6", "Textures/Enemies/CeilingPlant/Idle/ceilingPlant_Idle_6.png");
+	loadTexture("ceilingPlant_idle_7", "Textures/Enemies/CeilingPlant/Idle/ceilingPlant_Idle_7.png");
+	loadTexture("ceilingPlant_idle_8", "Textures/Enemies/CeilingPlant/Idle/ceilingPlant_Idle_8.png");
+	loadTexture("ceilingPlant_idle_9", "Textures/Enemies/CeilingPlant/Idle/ceilingPlant_Idle_9.png");
+	loadTexture("ceilingPlant_idle_10", "Textures/Enemies/CeilingPlant/Idle/ceilingPlant_Idle_10.png");
+	loadTexture("ceilingPlant_idle_11", "Textures/Enemies/CeilingPlant/Idle/ceilingPlant_Idle_11.png");
+
+	/* Triple Attack */
+
+	loadTexture("ceilingPlant_tripleAttack_1", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_1.png");
+	loadTexture("ceilingPlant_tripleAttack_2", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_2.png");
+	loadTexture("ceilingPlant_tripleAttack_3", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_3.png");
+	loadTexture("ceilingPlant_tripleAttack_4", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_4.png");
+	loadTexture("ceilingPlant_tripleAttack_5", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_5.png");
+	loadTexture("ceilingPlant_tripleAttack_6", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_6.png");
+	loadTexture("ceilingPlant_tripleAttack_7", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_7.png");
+	loadTexture("ceilingPlant_tripleAttack_8", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_8.png");
+	loadTexture("ceilingPlant_tripleAttack_9", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_9.png");
+	loadTexture("ceilingPlant_tripleAttack_10", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_10.png");
+	loadTexture("ceilingPlant_tripleAttack_11", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_11.png");
+	loadTexture("ceilingPlant_tripleAttack_12", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_12.png");
+	loadTexture("ceilingPlant_tripleAttack_13", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_13.png");
+	loadTexture("ceilingPlant_tripleAttack_14", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_14.png");
+	loadTexture("ceilingPlant_tripleAttack_15", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_15.png");
+	loadTexture("ceilingPlant_tripleAttack_16", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_16.png");
+	loadTexture("ceilingPlant_tripleAttack_17", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_17.png");
+	loadTexture("ceilingPlant_tripleAttack_18", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_18.png");
+	loadTexture("ceilingPlant_tripleAttack_19", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_19.png");
+	loadTexture("ceilingPlant_tripleAttack_20", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_20.png");
+	loadTexture("ceilingPlant_tripleAttack_21", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_21.png");
+	loadTexture("ceilingPlant_tripleAttack_22", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_22.png");
+	loadTexture("ceilingPlant_tripleAttack_23", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_23.png");
+	loadTexture("ceilingPlant_tripleAttack_24", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_24.png");
+	loadTexture("ceilingPlant_tripleAttack_25", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_25.png");
+	
 	/////PLAY//////
 
 	loadTexture("toriiGate_1", "Textures/Test/ToriiGate1.png");
@@ -82,47 +136,4 @@ void TextureManager::loadAllTextures() {
 	loadTexture("toriiGate_5", "Textures/Test/ToriiGate5.png");
 	loadTexture("treeTest_1", "Textures/Test/TreeTest1.png");
 
-	/* Idle */
-	loadTexture("ceilingplant_idle_1", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_1.png");
-	loadTexture("ceilingplant_idle_2", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_2.png");
-	loadTexture("ceilingplant_idle_3", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_3.png");
-	loadTexture("ceilingplant_idle_4", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_4.png");
-	loadTexture("ceilingplant_idle_5", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_5.png");
-	loadTexture("ceilingplant_idle_6", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_6.png");
-	loadTexture("ceilingplant_idle_7", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_7.png");
-	loadTexture("ceilingplant_idle_8", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_8.png");
-	loadTexture("ceilingplant_idle_9", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_9.png");
-	loadTexture("ceilingplant_idle_10", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_10.png");
-	loadTexture("ceilingplant_idle_11", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_11.png");
-	loadTexture("ceilingplant_idle_12", "Textures/Enemies/CeilingPlant/Idle/ceilingplant_idle_12.png");
-	
-	/* Triple Attack */
-	
-	loadTexture("ceilingplant_triple_attack_1", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_1.png");
-	loadTexture("ceilingplant_triple_attack_2", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_2.png");
-	loadTexture("ceilingplant_triple_attack_3", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_3.png");
-	loadTexture("ceilingplant_triple_attack_4", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_4.png");
-	loadTexture("ceilingplant_triple_attack_5", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_5.png");
-	loadTexture("ceilingplant_triple_attack_6", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_6.png");
-	loadTexture("ceilingplant_triple_attack_7", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_7.png");
-	loadTexture("ceilingplant_triple_attack_8", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_8.png");
-	loadTexture("ceilingplant_triple_attack_9", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_9.png");
-	loadTexture("ceilingplant_triple_attack_10", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_10.png");
-	loadTexture("ceilingplant_triple_attack_11", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_11.png");
-	loadTexture("ceilingplant_triple_attack_12", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_12.png");
-	loadTexture("ceilingplant_triple_attack_13", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_13.png");
-	loadTexture("ceilingplant_triple_attack_14", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_14.png");
-	loadTexture("ceilingplant_triple_attack_15", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_15.png");
-	loadTexture("ceilingplant_triple_attack_16", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_16.png");
-	loadTexture("ceilingplant_triple_attack_17", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_17.png");
-	loadTexture("ceilingplant_triple_attack_18", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_18.png");
-	loadTexture("ceilingplant_triple_attack_19", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_19.png");
-	loadTexture("ceilingplant_triple_attack_20", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_20.png");
-	loadTexture("ceilingplant_triple_attack_21", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_21.png");
-	loadTexture("ceilingplant_triple_attack_22", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_22.png");
-	loadTexture("ceilingplant_triple_attack_23", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_23.png");
-	loadTexture("ceilingplant_triple_attack_24", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_24.png");
-	loadTexture("ceilingplant_triple_attack_25", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_25.png");
-	loadTexture("ceilingplant_triple_attack_26", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingplant_triple_attack_26.png");
-	
 }

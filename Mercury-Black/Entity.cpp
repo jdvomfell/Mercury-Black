@@ -54,49 +54,23 @@ int createPlayer(World * world, float x, float y) {
 
 	world->gravity[entityID].weight = 1.0f;
 
-	Animation * idleAnimation = new Animation(0.2f);
-		idleAnimation->addFrame(world->textureManager->getTexture("player_idle_1"));
+	world->scriptParameters[entityID].currentState = 0;
 
-	Animation * idleAttackAnimation = new Animation(0.1f);
-		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_1"));
-		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_2"));
-		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_3"));
-		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_4"));
-		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_5"));
-		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_6"));
-		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_7"));
-		idleAttackAnimation->addFrame(world->textureManager->getTexture("player_idle_attack_8"));
+	world->sprite->animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "idle", 1, 0.2f);
+
+	world->sprite->animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "idleAttack", 8, 0.1f);
+
+	world->sprite->animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "run", 6, 0.125f);
+
+	world->sprite->animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "jump", 7, 0.05f);
+
+	world->sprite->animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "inAir", 1, 0.001f);
 	
-	Animation * runAnimation = new Animation(0.125f);
-		runAnimation->addFrame(world->textureManager->getTexture("player_run_1"));
-		runAnimation->addFrame(world->textureManager->getTexture("player_run_2"));
-		runAnimation->addFrame(world->textureManager->getTexture("player_run_3"));
-		runAnimation->addFrame(world->textureManager->getTexture("player_run_5"));
-		runAnimation->addFrame(world->textureManager->getTexture("player_run_4"));
-		runAnimation->addFrame(world->textureManager->getTexture("player_run_6"));
-
-	Animation * jumpAnimation = new Animation(0.1f);
-		jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_1"));
-		jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_2"));
-		jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_3"));
-		jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_4"));
-		jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_5"));
-		jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_6"));
-		jumpAnimation->addFrame(world->textureManager->getTexture("player_jump_7"));
-
-	Animation * inAirAnimation = new Animation(0.1f);
-		inAirAnimation->addFrame(world->textureManager->getTexture("player_jump_8"));
-
-	world->sprite[entityID].animationManager.addAnimation(runAnimation, "run");
-	world->sprite[entityID].animationManager.addAnimation(idleAnimation, "idle");
-	world->sprite[entityID].animationManager.addAnimation(jumpAnimation, "jump");
-	world->sprite[entityID].animationManager.addAnimation(inAirAnimation, "inAir");
-	world->sprite[entityID].animationManager.addAnimation(idleAttackAnimation, "idleAttack");
-
-	world->sprite[entityID].animationManager.changeAnimation("idle");
-	
-	world->sprite[entityID].sprite.setOrigin(sf::Vector2f(world->sprite[entityID].sprite.getLocalBounds().width / 2, world->sprite[entityID].sprite.getLocalBounds().height));
-
 	return entityID;
 
 }
@@ -108,31 +82,31 @@ int createCeilingPlant(World * world, float x, float y) {
 
 	world->mask[entityID] = NAME | INPUT | POSITION | SPRITE | SCRIPT;
 
-	world->name[entityID].name = "ceilingplant";
+	world->name[entityID].name = "ceilingPlant";
 
 	world->position[entityID].x = x;
 	world->position[entityID].y = y;
 
-	world->scriptParameter[entityID].attackRangeMax = 1000.0f;
-	world->scriptParameter[entityID].attackRangeMin = 0.0f;
-	
+	world->scriptParameters[entityID].attackRangeMax = 1000.0f;
+	world->scriptParameters[entityID].attackRangeMin = 0.0f;
+
 	Animation * idleAnimation = new Animation(0.2f);
-		for (i = 1; i <= 12; i++) {
+		for (i = 1; i <= 11; i++) {
 			temp = world->name[entityID].name;
 			temp += "_idle_" + std::to_string(i);
 			idleAnimation->addFrame(world->textureManager->getTexture(temp));
 		}
 
 	Animation * spawnAnimation = new Animation(0.1f);
-		for (i = 1; i <= 15; i++) {
+		for (i = 1; i <= 20; i++) {
 			temp = world->name[entityID].name;
 			temp +=  "_spawn_" + std::to_string(i);
 			spawnAnimation->addFrame(world->textureManager->getTexture(temp));
 		}
 	Animation * tripleAttackAnimation = new Animation(0.1f);
-		for (i = 1; i < 27; i++) {
+		for (i = 1; i <= 25; i++) {
 			temp = world->name[entityID].name;
-			temp += "_triple_attack_" + std::to_string(i);
+			temp += "_tripleAttack_" + std::to_string(i);
 			tripleAttackAnimation->addFrame(world->textureManager->getTexture(temp));
 		}
 
@@ -140,9 +114,6 @@ int createCeilingPlant(World * world, float x, float y) {
 	world->sprite[entityID].animationManager.addAnimation(idleAnimation, "idle");
 	world->sprite[entityID].animationManager.addAnimation(tripleAttackAnimation, "tripleAttack");
 
-	world->sprite[entityID].animationManager.changeAnimation("spawn");
-	//world->sprite[entityID].sprite.setOrigin(sf::Vector2f(world->sprite[entityID].sprite.getLocalBounds().width / 2, world->sprite[entityID].sprite.getLocalBounds().height));
-	
 	return entityID;
 }
 
@@ -165,11 +136,11 @@ int createTest(World * world, sf::Vector2f position) {
 
 	world->gravity[entityID].weight = 1.0f;
 
-	world->scriptParameter[entityID].followDistMin = 250.0f;
-	world->scriptParameter[entityID].followDistMax = 1500.0f;
+	world->scriptParameters[entityID].followDistMin = 250.0f;
+	world->scriptParameters[entityID].followDistMax = 1500.0f;
 
-	world->scriptParameter[entityID].attackRangeMin = 0.0f;
-	world->scriptParameter[entityID].attackRangeMax = 250.0f;
+	world->scriptParameters[entityID].attackRangeMin = 0.0f;
+	world->scriptParameters[entityID].attackRangeMax = 250.0f;
 	
 	return entityID;
 

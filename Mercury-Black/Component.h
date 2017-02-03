@@ -80,6 +80,7 @@ struct ScriptParameters {
 	float attackRangeMax;
 	float secondsRemaining;
 	int currentState;
+
 };
 
 #endif

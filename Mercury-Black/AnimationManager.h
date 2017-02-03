@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "Animation.h"
+#include "TextureManager.h"
 
 class AnimationManager {
 	public:
@@ -16,13 +17,15 @@ class AnimationManager {
 
 		std::string currentAnimation;
 
-		int currentFrame;	
+		int currentFrame;
 
-		void addAnimation(Animation * animation, std::string id);
-		void updateAnimation(float deltaTime);
-		void changeAnimation(std::string animationID);
-		sf::Texture * getCurrentTexture();
 		AnimationManager();
+		sf::Texture * getCurrentTexture();
+		int updateAnimation(float deltaTime);
+		void changeAnimation(std::string animationID);
+		void addAnimation(Animation * animation, std::string id);
+		void createAnimation(TextureManager * textureManager, std::string entityName, std::string animationName, int numFrames, float animationSpeed);
+
 };
 
 #endif 
