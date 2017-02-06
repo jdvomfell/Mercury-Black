@@ -37,8 +37,6 @@ private:
 
 	static MainMenu mainMenu;
 
-	sf::Font menuFont;
-
 	std::vector <GUI *> buttons;
 
 	GUI_NewGame newButton;

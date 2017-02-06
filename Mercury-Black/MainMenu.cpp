@@ -5,22 +5,20 @@ MainMenu MainMenu::mainMenu;
 
 void MainMenu::init() {
 
-	menuFont.loadFromFile("ZenzaiItachi.ttf");
-
 	hText = sf::Color::Black;
 	uText = sf::Color(100, 100, 100, 255);
 
-	title = sf::Text("Mercury Black", menuFont, MENU_TITLE_SIZE);
+	title = sf::Text("Mercury Black", engine->textureManager.font, MENU_TITLE_SIZE);
 	title.setFillColor(sf::Color::Black);
 	title.setOutlineThickness(5);
 	title.setOutlineColor(uText);
 	title.setOrigin(title.getGlobalBounds().width / 2, title.getGlobalBounds().height / 2);
 
-	newButton = GUI_NewGame(0, 0, uText, MENU_FONT_SIZE, &menuFont);
-	loadButton = GUI_LoadGame(0, 0, uText, MENU_FONT_SIZE, &menuFont);
-	editorButton = GUI_Editor(0, 0, uText, MENU_FONT_SIZE, &menuFont);
-	optionsButton = GUI_Options(0, 0, uText, MENU_FONT_SIZE, &menuFont);
-	quitButton = GUI_Quit(0, 0, uText, MENU_FONT_SIZE, &menuFont);
+	newButton = GUI_NewGame(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
+	loadButton = GUI_LoadGame(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
+	editorButton = GUI_Editor(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
+	optionsButton = GUI_Options(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
+	quitButton = GUI_Quit(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
 
 	newButton.text.setOrigin(newButton.text.getLocalBounds().width / 2, newButton.text.getLocalBounds().height / 2);
 	loadButton.text.setOrigin(loadButton.text.getLocalBounds().width / 2, loadButton.text.getLocalBounds().height / 2);

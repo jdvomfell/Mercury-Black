@@ -8,9 +8,30 @@
 #define SPAWN_STATE 4
 
 
-void scriptTest(World * world, int entityID) {
+void scriptTest(World * world, int entityID, float dt) {
+
+	Velocity * v;
+	Sprite * s;
+
+	v = &(world->velocity[entityID]);
+	s = &(world->sprite[entityID]);
 
 	scriptFollow(world, entityID,sf::Vector2f(world->position[0].x, world->position[0].y));
+
+	if (v->x != 0)
+		s->animationManager.changeAnimation("run");
+	else
+		s->animationManager.changeAnimation("idle");
+
+	if (v->x < 0)
+		s->sprite.setTextureRect(sf::IntRect(s->sprite.getLocalBounds().width, 0, -s->sprite.getLocalBounds().width, s->sprite.getLocalBounds().height));
+	if (v->x > 0)
+		s->sprite.setTextureRect(sf::IntRect(0, 0, s->sprite.getLocalBounds().width, s->sprite.getLocalBounds().height));
+
+	s->animationManager.updateAnimation(dt);
+
+	s->sprite.setTexture(*s->animationManager.getCurrentTexture());
+	s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height));
 
 }
 
@@ -96,9 +117,9 @@ void scriptPlayer(World *world, float dt) {
 				sp->currentState = JUMP_STATE;
 			}
 			/* Attack */
-			else if (i->attack) {
+			//else if (i->attack) {
 				//TODO
-			}
+			//}
 			/* No Input */
 			else {
 				s->animationManager.changeAnimation("run");
@@ -129,28 +150,28 @@ void scriptPlayer(World *world, float dt) {
 		/* Moving */
 		if (v->x != 0) {
 			/* Attack */
-			if (i->attack) {
+			//if (i->attack) {
 				//TODO
-			}
+			//}
 			/* No Input */
-			else {
+			//else {
 				if (sp->currentState == NO_STATE) {
 					s->animationManager.changeAnimation("inAir");
 				}
-			}
+			//}
 		}
 		/* Not Moving  (Might Be Able To Remove)*/
 		else {
 			/* Attack */
-			if (i->attack) {
+			//if (i->attack) {
 				//TODO
-			}
+			//}
 			/* No Input */
-			else {
+			//else {
 				if (sp->currentState == NO_STATE) {
 					s->animationManager.changeAnimation("inAir");
 				}
-			}
+			//}
 		}
 	}
 	
@@ -180,7 +201,6 @@ void scriptPlant(World * world, int entityID, float dt) {
 		s->animationManager.changeAnimation("tripleAttack");
 	}
 	else {
-		//s->animationManager.changeAnimation("idle");
 		s->animationManager.changeAnimation("spawn");
 	}
 	

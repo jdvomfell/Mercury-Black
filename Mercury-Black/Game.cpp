@@ -10,19 +10,97 @@ void Game::init() {
 
 	world.textureManager = &engine->textureManager;
 
-	int test = createTest(&world, sf::Vector2f(1000, 0));
+	//int test = createTest(&world, sf::Vector2f(1000, 0));
 	createPlayer(&world, 900, 0);
 
-	world.sprite[test].sprite.setTexture(*engine->textureManager.getTexture("player_run_1"));
-	world.sprite[test].sprite.setOrigin(world.sprite[test].sprite.getLocalBounds().width / 2, world.sprite[test].sprite.getLocalBounds().height);
+	//world.sprite[test].sprite.setTexture(*engine->textureManager.getTexture("player_run_1"));
+	//world.sprite[test].sprite.setOrigin(world.sprite[test].sprite.getLocalBounds().width / 2, world.sprite[test].sprite.getLocalBounds().height);
 
-	createCeilingPlant(&world, 100, 1000);
+	//createCeilingPlant(&world, 100, 1000);
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	collisionMap.load();
 
-	platformMap.add(sf::Vector2f(0, 500), 3);
+	//platformMap.add(sf::Vector2f(0, 500), 3);
+
+	slide1.setFont(engine->textureManager.slideFont);
+	slide1.setStyle(sf::Text::Bold);
+	slide1.setCharacterSize(150);
+	slide1.setFillColor(sf::Color::Black);
+	slide1.setPosition(0, 0);
+	slide1.setString("DiaLog Studio\n");
+
+	slide2 = sf::Text(slide1);
+	slide2.setCharacterSize(100);
+	slide2.setString("\n\n - Jesse Vomfell\n - Alex Bahna\n - Adriano Santos\n - Todd Selwitz\n");
+
+	slide3 = sf::Text(slide1);
+	slide3.setString("The Project\n");
+	slide3.setPosition(4000, 0);
+	
+	slide4 = sf::Text(slide2);
+	slide4.setString("\n\n - 2D Action Adventure Platformer\n - SFML Libraries\n - Hand Drawn Animations\n - An Orginal Soundtrack\n - A World of Ink Art\n - Inspiration...");
+	slide4.setPosition(4000, 0);
+
+	slide5 = sf::Text(slide1);
+	slide5.setString("Approaching The Project...\n");
+	slide5.setPosition(8000, -300);
+
+	slide6 = sf::Text(slide2);
+	slide6.setString("\n\n - Level Editor\n - Entity Component System\n - Convex Collision System\n - Animators / Composer\n");
+	slide6.setPosition(8000, -300);
+	platformMap.add(sf::Vector2f(8700, -400), 3);
+
+	slide7 = sf::Text(slide1);
+	slide7.setString("Jesse Vomfell - Lead Developer\n");
+	slide7.setPosition(10800, -900);
+
+	slide8 = sf::Text(slide2);
+	slide8.setString("\n\n -SFML\n - C/C++/JAVA\n - Game Development\n");
+	slide8.setPosition(10800, -900);
+
+	slide9 = sf::Text(slide1);
+	slide9.setString("Adriano Santos\n");
+	slide9.setPosition(14800, 0);
+
+	slide10 = sf::Text(slide2);
+	slide10.setString("\n\n - C/C++\n - AI Development\n - Level Editor Development\n");
+	slide10.setPosition(14800, 0);
+	createCeilingPlant(&world, 12800, 0);
+
+	slide11 = sf::Text(slide1);
+	slide11.setString("Todd Selwitz ;D\n");
+	slide11.setPosition(18800, 0);
+	int test = createTest(&world, sf::Vector2f(19000, 0));
+	
+	slide12 = sf::Text(slide2);
+	slide12.setString("\n\n - C/C++\n - Physics & Collision Development\n - AI Development\n");
+	slide12.setPosition(18800, 0);
+
+	slide13 = sf::Text(slide1);
+	slide13.setString("Alex Bahna\n");
+	slide13.setPosition(22800, 0);
+
+	slide14 = sf::Text(slide2);
+	slide14.setString("\n\n - C/C++\n - Sound Design\n - Collision & Physics Development\n - Level Design\n");
+	slide14.setPosition(22800, 0);
+
+	slide15 = sf::Text(slide1);
+	slide15.setString("Market Value\n");
+	slide15.setPosition(26800, 0);
+	
+	slide16 = sf::Text(slide2);
+	slide16.setString("\n\n - Market for 2D Games\n - Developed for PC\n - Unique Animations and Music\n");
+	slide16.setPosition(26800, 0);
+
+	slide17 = sf::Text(slide1);
+	slide17.setString("Stretch Goals\n");
+	slide17.setPosition(30800, -700);
+
+	slide18 = sf::Text(slide2);
+	slide18.setString("\n\n - Story Line\n - Polished Editor\n - Postprocessing Effects\n   - Sunrays\n   - Metaballs (INK)\n   - Canvas Texture\n");
+	slide18.setPosition(30800, -700);
 
 }
 
@@ -107,8 +185,8 @@ void Game::update(const float dt) {
 	//animationSystem(&world, dt, PLAYER);
 	movementSystem(&world);
 
-	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
-	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y - view.getSize().y / 5));
+	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2.5, engine->window.getDefaultView().getSize().y * 2.5));
+	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y - view.getSize().y / 4));
 	engine->window.setView(view);
 
 }
@@ -120,6 +198,25 @@ void Game::render(const float dt) {
 		engine->window.draw(it->second->sprite);
 
 	engine->window.draw(collisionMap.lines);
+
+	engine->window.draw(slide1);
+	engine->window.draw(slide2);
+	engine->window.draw(slide3);
+	engine->window.draw(slide4);
+	engine->window.draw(slide5);
+	engine->window.draw(slide6);
+	engine->window.draw(slide7);
+	engine->window.draw(slide8);
+	engine->window.draw(slide9);
+	engine->window.draw(slide10);
+	engine->window.draw(slide11);
+	engine->window.draw(slide12);
+	engine->window.draw(slide13);
+	engine->window.draw(slide14);
+	engine->window.draw(slide15);
+	engine->window.draw(slide16);
+	engine->window.draw(slide17);
+	engine->window.draw(slide18);
 
 	renderSystem(&world, &engine->window);
 

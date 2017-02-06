@@ -82,8 +82,6 @@ private:
 	sf::Text toolText;
 	sf::Text textureText;
 
-	sf::Font font;
-
 };
 
 #endif

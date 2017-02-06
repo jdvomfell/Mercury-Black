@@ -22,6 +22,11 @@ void TextureManager::loadTexture(std::string id, std::string fileName) {
 
 void TextureManager::loadAllTextures() {
 
+	//////Font///////
+
+	font.loadFromFile("ZenzaiItachi.ttf");
+	slideFont.loadFromFile("GOTHIC.TTF");
+
 	/////Player//////
 
 	/* Idle */
@@ -135,5 +140,7 @@ void TextureManager::loadAllTextures() {
 	loadTexture("toriiGate_4", "Textures/Test/ToriiGate4.png");
 	loadTexture("toriiGate_5", "Textures/Test/ToriiGate5.png");
 	loadTexture("treeTest_1", "Textures/Test/TreeTest1.png");
+	loadTexture("Background", "Textures/Test/Background.png");
+	loadTexture("tree", "Textures/Test/tree.png");
 
 }

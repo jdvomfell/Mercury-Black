@@ -17,15 +17,13 @@ void Editor::init() {
 	mode = POINT;
 	tool = PLACE;
 
-	font.loadFromFile("ZenzaiItachi.ttf");
-
-	modeText = sf::Text("Mode: Point", font, 60);
+	modeText = sf::Text("Mode: Point", engine->textureManager.font, 60);
 	modeText.setFillColor(sf::Color::Black);
 
-	toolText = sf::Text("Tool: Place", font, 60);
+	toolText = sf::Text("Tool: Place", engine->textureManager.font, 60);
 	toolText.setFillColor(sf::Color::Black);
 
-	textureText = sf::Text("", font, 60);
+	textureText = sf::Text("", engine->textureManager.font, 60);
 	textureText.setFillColor(sf::Color::Black);
 
 	collisionMap.load();

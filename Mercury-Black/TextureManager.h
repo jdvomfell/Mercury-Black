@@ -9,6 +9,9 @@ class TextureManager {
 
 public:
 
+	sf::Font font;
+	sf::Font slideFont;
+
 	std::map<std::string, sf::Texture> textures;
 	
 	sf::Texture * getTexture(std::string id);

@@ -13,6 +13,9 @@ void AnimationManager::createAnimation(TextureManager * textureManager, std::str
 	std::string frameName;
 
 	Animation * animation = new Animation(animationSpeed);
+	
+	if (entityName == "test")
+		entityName = "player";
 
 	for (int i = 0; i < numFrames; i++) {
 		frameName = entityName;
@@ -26,6 +29,10 @@ void AnimationManager::createAnimation(TextureManager * textureManager, std::str
 
 void AnimationManager::addAnimation(Animation * animation, std::string id) {
 	
+	if (animations.find(id) != animations.end()) {
+		printf("Error: Adding Existing Animation: %s\n", id.c_str());
+	}
+
 	animations.insert(std::make_pair(id, animation));
 
 }
