@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <SFML\Audio.hpp>
+
 #include "GameState.h"
 
 #include "Entity.h"
@@ -61,6 +63,8 @@ private:
 	sf::Text slide20;
 	sf::Text slide21;
 	sf::Text slide22;
+
+	sf::Music music;
 
 };
 

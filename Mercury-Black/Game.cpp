@@ -50,7 +50,7 @@ void Game::init() {
 	slide6 = sf::Text(slide2);
 	slide6.setString("\n\n - Level Editor\n - Entity Component System\n - Convex Collision System\n - Animators / Composer\n");
 	slide6.setPosition(8000, -300);
-	platformMap.add(sf::Vector2f(8700, -400), 3);
+	platformMap.add(sf::Vector2f(9600, 200), 3);
 
 	slide7 = sf::Text(slide1);
 	slide7.setString("Jesse Vomfell - Lead Developer\n");
@@ -67,7 +67,7 @@ void Game::init() {
 	slide10 = sf::Text(slide2);
 	slide10.setString("\n\n - C/C++\n - AI Development\n - Level Editor Development\n");
 	slide10.setPosition(14800, 0);
-	createCeilingPlant(&world, 12800, 0);
+	createCeilingPlant(&world, 13300, 500);
 
 	slide11 = sf::Text(slide1);
 	slide11.setString("Todd Selwitz ;D\n");
@@ -101,6 +101,11 @@ void Game::init() {
 	slide18 = sf::Text(slide2);
 	slide18.setString("\n\n - Story Line\n - Polished Editor\n - Postprocessing Effects\n   - Sunrays\n   - Metaballs (INK)\n   - Canvas Texture\n");
 	slide18.setPosition(30800, -700);
+
+	music.openFromFile("");
+	music.play();
+	music.setLoop(true);
+	music.setPosition(22800, 0, 0);
 
 }
 
