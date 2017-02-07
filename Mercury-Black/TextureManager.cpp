@@ -31,40 +31,47 @@ void TextureManager::loadAllTextures() {
 
 	/* Idle */
 
-	loadTexture("player_idle_1", "Textures/player_idle_1.png");
+	loadTexture("player_idleUnsheathed_1", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_1.png");
+	loadTexture("player_idleUnsheathed_2", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_2.png");
+	loadTexture("player_idleUnsheathed_3", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_3.png");
+	loadTexture("player_idleUnsheathed_4", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_4.png");
+	loadTexture("player_idleUnsheathed_5", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_5.png");
+	loadTexture("player_idleUnsheathed_6", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_6.png");
+	loadTexture("player_idleUnsheathed_7", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_7.png");
+	loadTexture("player_idleUnsheathed_8", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_8.png");
 
 	/* Run */
 
-	loadTexture("player_run_1", "Textures/player_run_1.png");
-	loadTexture("player_run_2", "Textures/player_run_2.png");
-	loadTexture("player_run_3", "Textures/player_run_3.png");
-	loadTexture("player_run_4", "Textures/player_run_4.png");
-	loadTexture("player_run_5", "Textures/player_run_5.png");
-	loadTexture("player_run_6", "Textures/player_run_6.png");
+	loadTexture("player_run_1", "Textures/Player/Run/player_run_1.png");
+	loadTexture("player_run_2", "Textures/Player/Run/player_run_2.png");
+	loadTexture("player_run_3", "Textures/Player/Run/player_run_3.png");
+	loadTexture("player_run_4", "Textures/Player/Run/player_run_4.png");
+	loadTexture("player_run_5", "Textures/Player/Run/player_run_5.png");
+	loadTexture("player_run_6", "Textures/Player/Run/player_run_6.png");
 
 	/* Jump */
 
-	loadTexture("player_jump_1", "Textures/player_jump_1.png");
-	loadTexture("player_jump_2", "Textures/player_jump_2.png");
-	loadTexture("player_jump_3", "Textures/player_jump_3.png");
-	loadTexture("player_jump_4", "Textures/player_jump_4.png");
-	loadTexture("player_jump_5", "Textures/player_jump_5.png");
-	loadTexture("player_jump_6", "Textures/player_jump_6.png");
-	loadTexture("player_jump_7", "Textures/player_jump_7.png");
+	loadTexture("player_jump_1", "Textures/Player/Jump/player_jump_1.png");
+	loadTexture("player_jump_2", "Textures/Player/Jump/player_jump_2.png");
+	loadTexture("player_jump_3", "Textures/Player/Jump/player_jump_3.png");
+	loadTexture("player_jump_4", "Textures/Player/Jump/player_jump_4.png");
+	loadTexture("player_jump_5", "Textures/Player/Jump/player_jump_5.png");
+	loadTexture("player_jump_6", "Textures/Player/Jump/player_jump_6.png");
+	loadTexture("player_jump_7", "Textures/Player/Jump/player_jump_7.png");
 
 	/* In Air */
 
-	loadTexture("player_inAir_1", "Textures/player_inAir_1.png");
+	loadTexture("player_inAir_1", "Textures/Player/Jump/player_inAir_1.png");
 	
 	/* Idle Attack */
-	loadTexture("player_idleAttack_1", "Textures/Attack/Idle-Attack/player_attack_1.png");
-	loadTexture("player_idleAttack_2", "Textures/Attack/Idle-Attack/player_attack_2.png");
-	loadTexture("player_idleAttack_3", "Textures/Attack/Idle-Attack/player_attack_3.png");
-	loadTexture("player_idleAttack_4", "Textures/Attack/Idle-Attack/player_attack_4.png");
-	loadTexture("player_idleAttack_5", "Textures/Attack/Idle-Attack/player_attack_5.png");
-	loadTexture("player_idleAttack_6", "Textures/Attack/Idle-Attack/player_attack_6.png");
-	loadTexture("player_idleAttack_7", "Textures/Attack/Idle-Attack/player_attack_7.png");
-	loadTexture("player_idleAttack_8", "Textures/Attack/Idle-Attack/player_attack_8.png");
+	loadTexture("player_idleAttack_1", "Textures/Player/Idle-Attack/player_attack_1.png");
+	loadTexture("player_idleAttack_2", "Textures/Player/Idle-Attack/player_attack_2.png");
+	loadTexture("player_idleAttack_3", "Textures/Player/Idle-Attack/player_attack_3.png");
+	loadTexture("player_idleAttack_4", "Textures/Player/Idle-Attack/player_attack_4.png");
+	loadTexture("player_idleAttack_5", "Textures/Player/Idle-Attack/player_attack_5.png");
+	loadTexture("player_idleAttack_6", "Textures/Player/Idle-Attack/player_attack_6.png");
+	loadTexture("player_idleAttack_7", "Textures/Player/Idle-Attack/player_attack_7.png");
+	loadTexture("player_idleAttack_8", "Textures/Player/Idle-Attack/player_attack_8.png");
 	
 	///Ceiling Plant///
 

@@ -21,7 +21,7 @@ void scriptTest(World * world, int entityID, float dt) {
 	if (v->x != 0)
 		s->animationManager.changeAnimation("run");
 	else
-		s->animationManager.changeAnimation("idle");
+		s->animationManager.changeAnimation("idleUnsheathed");
 
 	if (v->x < 0)
 		s->sprite.setTextureRect(sf::IntRect(s->sprite.getLocalBounds().width, 0, -s->sprite.getLocalBounds().width, s->sprite.getLocalBounds().height));
@@ -140,7 +140,7 @@ void scriptPlayer(World *world, float dt) {
 			/* No Input */
 			else {
 				if (sp->currentState == NO_STATE) {
-					s->animationManager.changeAnimation("idle");
+					s->animationManager.changeAnimation("idleUnsheathed");
 				}
 			}
 		}

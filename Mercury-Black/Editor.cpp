@@ -33,6 +33,7 @@ void Editor::init() {
 	objectMap.load();
 	textureText.setString(objectMap.object.textureName);
 
+	zoom = 2;
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
 
 }
@@ -56,6 +57,14 @@ void Editor::handleEvent() {
 		
 		engine->quit();
 		
+		break;
+
+	case sf::Event::MouseWheelScrolled:
+
+		if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
+			zoom += event.mouseWheelScroll.delta;
+		}
+
 		break;
 
 	case sf::Event::MouseButtonPressed:
@@ -192,6 +201,7 @@ void Editor::update(const float dt) {
 	toolText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 200);
 	textureText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 350);
 
+	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * zoom, engine->window.getDefaultView().getSize().y * zoom));
 	view.move(viewVelX, viewVelY);
 
 }

@@ -78,6 +78,8 @@ private:
 	float viewVelX;
 	float viewVelY;
 
+	float zoom;
+
 	sf::Text modeText;
 	sf::Text toolText;
 	sf::Text textureText;
