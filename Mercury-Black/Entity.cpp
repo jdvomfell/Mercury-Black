@@ -76,6 +76,7 @@ int createPlayer(World * world, float x, float y) {
 }
 
 int createCeilingPlant(World * world, float x, float y) {
+
 	int entityID = createEntity(world);
 	int i;
 	std::string plantName, temp;
@@ -87,9 +88,11 @@ int createCeilingPlant(World * world, float x, float y) {
 	world->position[entityID].x = x;
 	world->position[entityID].y = y;
 
-	world->scriptParameters[entityID].attackRangeMax = 1000.0f;
+	world->scriptParameters[entityID].attackRangeMax = 700.0f;
 	world->scriptParameters[entityID].attackRangeMin = 0.0f;
-
+	world->scriptParameters[entityID].spawnDistance = 500.0f;
+	world->scriptParameters[entityID].currentState = 5; //NOTSPAWNSTATE
+	
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "idle", 11, 0.2f);
 
@@ -98,7 +101,10 @@ int createCeilingPlant(World * world, float x, float y) {
 
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "tripleAttack", 25, 0.1f);
-
+	
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "notSpawn", 2, 0.1f);
+	
 	return entityID;
 }
 

@@ -6,6 +6,7 @@
 #define DEFENCE_STATE 2
 #define JUMP_STATE 3
 #define SPAWN_STATE 4
+#define NOT_SPAWNED_STATE 5 
 
 
 void scriptTest(World * world, int entityID, float dt) {
@@ -66,12 +67,13 @@ void scriptAttack(World* world, int entityID, sf::Vector2f position) {
 
 		std::fabs(world->position[entityID].x - position.x) >=
 		world->scriptParameters[entityID].attackRangeMin) {
-
-			world->input[entityID].attack = true;
+			
+		world->scriptParameters[entityID].currentState = ATTACK_STATE;
+			//world->input[entityID].attack = true;
 	}
 
 	else {
-		world->input[entityID].attack = false;
+		//world->input[entityID].attack = false;
 	}
 }
 
@@ -140,8 +142,8 @@ void scriptPlayer(World *world, float dt) {
 			/* No Input */
 			else {
 				if (sp->currentState == NO_STATE) {
-					s->animationManager.changeAnimation("idleUnsheathed");
 				}
+					s->animationManager.changeAnimation("idleUnsheathed");
 			}
 		}
 	}
@@ -192,19 +194,43 @@ void scriptPlayer(World *world, float dt) {
 void scriptPlant(World * world, int entityID, float dt) {
 	
 	Sprite *s;
+	ScriptParameters *sP;
 
 	s = &(world->sprite[entityID]);
-
-	scriptAttack(world, entityID, sf::Vector2f(world->position[0].x, world->position[0].y));
-
-	if (world->input[entityID].attack) {
-		s->animationManager.changeAnimation("tripleAttack");
-	}
-	else {
-		s->animationManager.changeAnimation("spawn");
-	}
+	sP = &(world->scriptParameters[entityID]);
 	
-	s->animationManager.updateAnimation(dt);
+	if (sP->currentState == NO_STATE) {
+		scriptAttack(world, entityID, sf::Vector2f(world->position[0].x, world->position[0].y));
+		
+		if (sP->currentState == ATTACK_STATE)
+			s->animationManager.changeAnimation("tripleAttack");
+		else
+			s->animationManager.changeAnimation("idle");
+	}
+	if (sP->currentState == NOT_SPAWNED_STATE) {
+		scriptSpawn(world, entityID);
+		if (sP->currentState == SPAWN_STATE)
+			s->animationManager.changeAnimation("spawn");
+		else
+			s->animationManager.changeAnimation("notSpawn");
+	}
+
 	s->sprite.setTexture(*s->animationManager.getCurrentTexture());
 	s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height));
+	
+	if (s->animationManager.updateAnimation(dt) == 1)
+		sP->currentState = NO_STATE;
+}
+
+void scriptSpawn(World *world, int entityID) {
+	ScriptParameters * sP;
+
+	sP = &world->scriptParameters[entityID];
+
+	if (sP->spawnDistance >= abs(world->position[entityID].x - world->position[0].x) &&
+		sP->spawnDistance >= abs(world->position[entityID].y - world->position[0].y)) {
+		sP->currentState = SPAWN_STATE;
+	}
+
+	return;
 }
