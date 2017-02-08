@@ -142,8 +142,8 @@ void scriptPlayer(World *world, float dt) {
 			/* No Input */
 			else {
 				if (sp->currentState == NO_STATE) {
-				}
 					s->animationManager.changeAnimation("idleUnsheathed");
+				}
 			}
 		}
 	}
@@ -204,10 +204,13 @@ void scriptPlant(World * world, int entityID, float dt) {
 		
 		if (sP->currentState == ATTACK_STATE)
 			s->animationManager.changeAnimation("tripleAttack");
-		else
-			s->animationManager.changeAnimation("idle");
+		else {
+			if (sP->currentState == NO_STATE)
+				s->animationManager.changeAnimation("idle");
+		}
 	}
-	if (sP->currentState == NOT_SPAWNED_STATE) {
+	
+	else if (sP->currentState == NOT_SPAWNED_STATE) {
 		scriptSpawn(world, entityID);
 		if (sP->currentState == SPAWN_STATE)
 			s->animationManager.changeAnimation("spawn");

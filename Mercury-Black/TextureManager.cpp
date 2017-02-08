@@ -124,9 +124,11 @@ void TextureManager::loadAllTextures() {
 	loadTexture("ceilingPlant_spawn_19", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_19.png");
 	loadTexture("ceilingPlant_spawn_20", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_20.png");
 
-	/*Not Spawned*/
+	/* Not Spawned */
+
 	loadTexture("ceilingPlant_notSpawn_1", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_2.png");
 	loadTexture("ceilingPlant_notSpawn_2", "Textures/Enemies/CeilingPlant/Spawn/ceilingPlant_Drop_3.png");
+
 	/* Idle */
 
 	loadTexture("ceilingPlant_idle_1", "Textures/Enemies/CeilingPlant/Idle/ceilingPlant_Idle_1.png");
@@ -179,5 +181,8 @@ void TextureManager::loadAllTextures() {
 	loadTexture("treeTest_1", "Textures/Test/TreeTest1.png");
 	loadTexture("Background", "Textures/Test/Background.png");
 	loadTexture("tree", "Textures/Test/tree.png");
+	loadTexture("alex", "alex.jpg");
+	loadTexture("todd", "todd.JPG");
+	loadTexture("adriano", "adrian.JPG");
 
 }

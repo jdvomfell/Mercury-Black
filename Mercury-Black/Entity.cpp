@@ -94,13 +94,13 @@ int createCeilingPlant(World * world, float x, float y) {
 	world->scriptParameters[entityID].currentState = 5; //NOTSPAWNSTATE
 	
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "idle", 11, 0.2f);
+		(world->textureManager, world->name[entityID].name, "idle", 11, 0.1f);
 
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "spawn", 20, 0.1f);
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "tripleAttack", 25, 0.1f);
+		(world->textureManager, world->name[entityID].name, "tripleAttack", 25, 0.065f);
 	
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "notSpawn", 2, 0.1f);
