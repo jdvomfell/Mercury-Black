@@ -3,6 +3,17 @@
 
 #include "GUI.h"
 
+class GUI_HitboxEditor : public GUI {
+
+public:
+
+	GUI_HitboxEditor(){}
+	GUI_HitboxEditor(float x, float y, sf::Color color, int size, sf::Font * font);
+
+	void interact(GameEngine * engine);
+
+};
+
 class GUI_NewGame : public GUI {
 
 public:

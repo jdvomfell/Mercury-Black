@@ -62,7 +62,8 @@ void GameEngine::update(const float dt) {
 
 void GameEngine::render(const float dt) {
 
-	window.clear(sf::Color::White);
+	//window.clear(sf::Color::White);
+	window.clear(sf::Color(248, 240, 225));
 
 	for (size_t i = 0; i < states.size(); i++)
 		states[i]->render(dt);

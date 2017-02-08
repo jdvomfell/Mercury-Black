@@ -63,7 +63,7 @@ int createPlayer(World * world, float x, float y) {
 		(world->textureManager, world->name[entityID].name, "idleAttack", 8, 0.1f);
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "run", 6, 0.125f);
+		(world->textureManager, world->name[entityID].name, "sheathedRun", 6, 0.125f);
 
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "jump", 7, 0.05f);
@@ -128,10 +128,10 @@ int createTest(World * world, sf::Vector2f position) {
 	world->scriptParameters[entityID].attackRangeMax = 250.0f;
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "idleUnsheathed", 1, 0.2f);
+		(world->textureManager, world->name[entityID].name, "idleUnsheathed", 8, 0.2f);
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "run", 6, 0.125f);
+		(world->textureManager, world->name[entityID].name, "sheathedRun", 6, 0.125f);
 	
 	return entityID;
 

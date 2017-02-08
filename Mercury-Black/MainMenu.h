@@ -42,6 +42,7 @@ private:
 	GUI_NewGame newButton;
 	GUI_LoadGame loadButton;
 	GUI_Editor editorButton;
+	GUI_HitboxEditor hitboxEditorButton;
 	GUI_Options optionsButton;
 	GUI_Quit quitButton;
 

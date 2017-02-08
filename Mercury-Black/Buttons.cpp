@@ -1,6 +1,22 @@
 #include "Buttons.h"
 #include "Editor.h"
 #include "Game.h"
+#include "HitboxEditor.h"
+#include "Fade.h"
+
+GUI_HitboxEditor::GUI_HitboxEditor(float x, float y, sf::Color color, int size, sf::Font * font) {
+
+	text = sf::Text("HB Editor", *font, size);
+	text.setPosition(x, y);
+	text.setFillColor(color);
+
+}
+
+void GUI_HitboxEditor::interact(GameEngine * engine) {
+
+	engine->changeState(HitboxEditor::instance(engine));
+
+}
 
 GUI_NewGame::GUI_NewGame(float x, float y, sf::Color color, int size, sf::Font * font) {
 

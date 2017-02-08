@@ -143,6 +143,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="HitboxEditor.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="ObjectMap.cpp" />
     <ClCompile Include="PlatformMap.cpp" />
@@ -163,6 +164,8 @@
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="Hitbox.h" />
+    <ClInclude Include="HitboxEditor.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="ObjectMap.h" />
     <ClInclude Include="PlatformMap.h" />

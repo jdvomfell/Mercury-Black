@@ -17,7 +17,11 @@ public:
 	sf::Texture * getTexture(std::string id);
 	
 	void loadTexture(std::string id, std::string fileName);
+	void loadTextures(std::string id, std::string fileName, int numTextures);
 	void loadAllTextures();
+
+	std::string getPrevTextureID(std::string textureID);
+	std::string getNextTextureID(std::string textureID);
 
 };
 

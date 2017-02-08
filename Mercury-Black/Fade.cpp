@@ -49,7 +49,7 @@ void FadeIn::update(const float dt) {
 	if (alpha > 0) {
 
 		if (alpha - dt >= 0)
-			alpha -= dt * 75;
+			alpha -= dt * 110;
 
 		else
 			alpha = 0;
@@ -117,7 +117,7 @@ void FadeOut::update(const float dt) {
 	if (alpha < 255) {
 
 		if (alpha + dt <= 255)
-			alpha += dt * 100;
+			alpha += dt * 135;
 
 		else
 			alpha = 255;

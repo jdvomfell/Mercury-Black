@@ -2,8 +2,10 @@
 
 sf::Texture * TextureManager::getTexture(std::string id) {
 
-	if (textures.find(id) == textures.end())
+	if (textures.find(id) == textures.end()) {
 		printf("Error: Could Not Find Texture: %s\n", id.c_str());
+		return &textures.begin()->second;
+	}
 	
 	return &textures[id];
 
@@ -20,6 +22,55 @@ void TextureManager::loadTexture(std::string id, std::string fileName) {
 
 }
 
+void TextureManager::loadTextures(std::string id, std::string sourceLocation, int numTextures) {
+
+	sf::Texture texture;
+
+	std::string fileName;
+	std::string idName;
+
+	for (int i = 1; i <= numTextures; i++) {
+
+		fileName = sourceLocation;
+		idName = id + "_" + std::to_string(i);
+
+		fileName = fileName + idName + ".png";
+
+		if (!texture.loadFromFile(fileName))
+			printf("Could Not Load Texture: %s\n", fileName.c_str());
+
+		textures[idName] = texture;
+
+	}
+
+}
+
+std::string TextureManager::getPrevTextureID(std::string textureID) {
+
+	if (textures.find(textureID) == --textures.end())
+		textureID = textures.begin()->first;
+	else if (textures.find(textureID) == textures.end())
+		textureID = textures.begin()->first;
+	else
+		textureID = (++textures.find(textureID))->first;
+
+	return textureID;
+
+}
+
+std::string TextureManager::getNextTextureID(std::string textureID) {
+
+	if (textures.find(textureID) == textures.begin())
+		textureID = (--textures.end())->first;
+	else if (textures.find(textureID) == textures.end())
+		textureID = textures.begin()->first;
+	else
+		textureID = (--textures.find(textureID))->first;
+
+	return textureID;
+
+}
+
 void TextureManager::loadAllTextures() {
 
 	//////Font///////
@@ -31,47 +82,23 @@ void TextureManager::loadAllTextures() {
 
 	/* Idle */
 
-	loadTexture("player_idleUnsheathed_1", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_1.png");
-	loadTexture("player_idleUnsheathed_2", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_2.png");
-	loadTexture("player_idleUnsheathed_3", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_3.png");
-	loadTexture("player_idleUnsheathed_4", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_4.png");
-	loadTexture("player_idleUnsheathed_5", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_5.png");
-	loadTexture("player_idleUnsheathed_6", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_6.png");
-	loadTexture("player_idleUnsheathed_7", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_7.png");
-	loadTexture("player_idleUnsheathed_8", "Textures/Player/IdleUnsheathed/player_idleUnsheathed_8.png");
+	loadTextures("player_idleUnsheathed", "Textures/Player/IdleUnsheathed/", 8);
 
 	/* Run */
 
-	loadTexture("player_run_1", "Textures/Player/Run/player_run_1.png");
-	loadTexture("player_run_2", "Textures/Player/Run/player_run_2.png");
-	loadTexture("player_run_3", "Textures/Player/Run/player_run_3.png");
-	loadTexture("player_run_4", "Textures/Player/Run/player_run_4.png");
-	loadTexture("player_run_5", "Textures/Player/Run/player_run_5.png");
-	loadTexture("player_run_6", "Textures/Player/Run/player_run_6.png");
+	loadTextures("player_sheathedRun", "Textures/Player/SheathedRun/", 6);
 
 	/* Jump */
-
-	loadTexture("player_jump_1", "Textures/Player/Jump/player_jump_1.png");
-	loadTexture("player_jump_2", "Textures/Player/Jump/player_jump_2.png");
-	loadTexture("player_jump_3", "Textures/Player/Jump/player_jump_3.png");
-	loadTexture("player_jump_4", "Textures/Player/Jump/player_jump_4.png");
-	loadTexture("player_jump_5", "Textures/Player/Jump/player_jump_5.png");
-	loadTexture("player_jump_6", "Textures/Player/Jump/player_jump_6.png");
-	loadTexture("player_jump_7", "Textures/Player/Jump/player_jump_7.png");
+	
+	loadTextures("player_jump", "Textures/Player/Jump/", 7);
 
 	/* In Air */
 
-	loadTexture("player_inAir_1", "Textures/Player/Jump/player_inAir_1.png");
+	loadTextures("player_inAir", "Textures/Player/Jump/", 1);
 	
 	/* Idle Attack */
-	loadTexture("player_idleAttack_1", "Textures/Player/Idle-Attack/player_attack_1.png");
-	loadTexture("player_idleAttack_2", "Textures/Player/Idle-Attack/player_attack_2.png");
-	loadTexture("player_idleAttack_3", "Textures/Player/Idle-Attack/player_attack_3.png");
-	loadTexture("player_idleAttack_4", "Textures/Player/Idle-Attack/player_attack_4.png");
-	loadTexture("player_idleAttack_5", "Textures/Player/Idle-Attack/player_attack_5.png");
-	loadTexture("player_idleAttack_6", "Textures/Player/Idle-Attack/player_attack_6.png");
-	loadTexture("player_idleAttack_7", "Textures/Player/Idle-Attack/player_attack_7.png");
-	loadTexture("player_idleAttack_8", "Textures/Player/Idle-Attack/player_attack_8.png");
+
+	loadTextures("player_idleAttack", "Textures/Player/Idle-Attack/", 8);
 	
 	///Ceiling Plant///
 

@@ -88,11 +88,11 @@ void Game::init() {
 
 	slide19 = sf::Text(slide1);
 	slide19.setString("Iterations\n");
-	slide19.setPosition(26800, 0);
+	slide19.setPosition(26800, -300);
 
 	slide20 = sf::Text(slide2);
 	slide20.setString("\n\n - Iteration 1 - Animations, Simple AI, Collisiion\n - Iteration 2 - Convex Collision, AI States\n   (Attack, Defend, Etc.)\n - Iteration 3 - Several Entities Working,\n   Interactable Objects, Hit Box Editor\n - Iteration 4 - Event Editor, Better Saves And Loads\n - Iteration 5 - \"Building The Game\"\n");
-	slide20.setPosition(26800, 0);
+	slide20.setPosition(26800, -300);
 
 	slide15 = sf::Text(slide1);
 	slide15.setString("Market Value\n");
@@ -107,14 +107,14 @@ void Game::init() {
 	slide17.setPosition(34800, -700);
 
 	slide18 = sf::Text(slide2);
-	slide18.setString("\n\n - Story Line\n - Polished Editor\n - Postprocessing Effects\n   - Sunrays\n   - Metaballs (INK)\n   - Canvas Texture\n");
+	slide18.setString("\n\n - Story Line\n - Polished Editor\n - Postprocessing Effects\n   - Sunrays\n   - Metaballs (INK)\n   - Canvas Texture\n - Steam Greenlight\n");
 	slide18.setPosition(34800, -700);
 
 	music.openFromFile("Music/drank.ogg");
 	music.setVolume(20);
 	music.setPosition(22800, 0, 0);
 	music.setMinDistance(1500.0f);
-	music.setAttenuation(50);
+	music.setAttenuation(30);
 	music.setLoop(true);
 	music.play();
 

@@ -17,17 +17,19 @@ void MainMenu::init() {
 	newButton = GUI_NewGame(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
 	loadButton = GUI_LoadGame(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
 	editorButton = GUI_Editor(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
+	hitboxEditorButton = GUI_HitboxEditor(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
 	optionsButton = GUI_Options(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
 	quitButton = GUI_Quit(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
 
 	newButton.text.setOrigin(newButton.text.getLocalBounds().width / 2, newButton.text.getLocalBounds().height / 2);
 	loadButton.text.setOrigin(loadButton.text.getLocalBounds().width / 2, loadButton.text.getLocalBounds().height / 2);
 	editorButton.text.setOrigin(editorButton.text.getLocalBounds().width / 2, editorButton.text.getLocalBounds().height / 2);
+	hitboxEditorButton.text.setOrigin(hitboxEditorButton.text.getLocalBounds().width / 2, hitboxEditorButton.text.getLocalBounds().height / 2);
 	optionsButton.text.setOrigin(optionsButton.text.getLocalBounds().width / 2, optionsButton.text.getLocalBounds().height / 2);
 	quitButton.text.setOrigin(quitButton.text.getLocalBounds().width / 2, quitButton.text.getLocalBounds().height / 2);
 
 	buttons.resize(5);
-	buttons = { &newButton, &loadButton, &editorButton, &optionsButton, &quitButton };
+	buttons = { &newButton, &loadButton, &editorButton, &hitboxEditorButton, &optionsButton, &quitButton };
 
 	view = engine->window.getDefaultView();
 	engine->window.setView(view);
@@ -37,6 +39,7 @@ void MainMenu::init() {
 	newButton.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 1/3, title.getPosition().y + (view.getSize().y / 2) * 2/3);
 	loadButton.text.setPosition(view.getCenter().x, title.getPosition().y + (view.getSize().y / 2) * 2/3);
 	editorButton.text.setPosition(view.getCenter().x + (view.getSize().x / 2) * 1/3, title.getPosition().y + (view.getSize().y / 2) * 2/3);
+	hitboxEditorButton.text.setPosition(view.getCenter().x, title.getPosition().y + (view.getSize().y / 2));
 	optionsButton.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 1/2, title.getPosition().y + (view.getSize().y / 2));
 	quitButton.text.setPosition(view.getCenter().x + (view.getSize().x / 2) * 1/2, title.getPosition().y + (view.getSize().y / 2));
 
@@ -101,6 +104,7 @@ void MainMenu::render(const float dt) {
 	engine->window.draw(newButton.text);
 	engine->window.draw(loadButton.text);
 	engine->window.draw(editorButton.text);
+	engine->window.draw(hitboxEditorButton.text);
 	engine->window.draw(optionsButton.text);
 	engine->window.draw(quitButton.text);
 	engine->window.draw(title);

@@ -19,7 +19,7 @@ void scriptTest(World * world, int entityID, float dt) {
 	scriptFollow(world, entityID,sf::Vector2f(world->position[0].x, world->position[0].y));
 
 	if (v->x != 0)
-		s->animationManager.changeAnimation("run");
+		s->animationManager.changeAnimation("sheathedRun");
 	else
 		s->animationManager.changeAnimation("idleUnsheathed");
 
@@ -122,7 +122,7 @@ void scriptPlayer(World *world, float dt) {
 			//}
 			/* No Input */
 			else {
-				s->animationManager.changeAnimation("run");
+				s->animationManager.changeAnimation("sheathedRun");
 			}
 		}
 		/* Not Moving*/
