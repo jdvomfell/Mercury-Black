@@ -12,6 +12,7 @@
 
 #define POINT 1
 #define OBJECT 2
+#define PLATFORM 3
 
 /* Editing Tools */
 

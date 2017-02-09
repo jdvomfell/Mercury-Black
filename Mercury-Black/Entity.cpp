@@ -4,7 +4,7 @@ void cleanWorld(World * world) {
 
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
-		world->mask[entityID] = EMPTY;
+		destroyEntity(world, entityID);
 
 	}
 
@@ -29,7 +29,37 @@ int createEntity(World * world){
 
 void destroyEntity(World * world, int entityID) {
 
-	printf("Destroying Entity: %s With ID: %d\n", world->name[entityID].name.c_str(), entityID);
+	world->gravity[entityID].weight = 1.0f;
+
+	world->name[entityID].name = "";
+
+	world->position[entityID].x = 0;
+	world->position[entityID].y = 0;
+
+	world->velocity[entityID].x = 0.0f;
+	world->velocity[entityID].y = 0.0f;
+	world->velocity[entityID].speed = 0.0f;
+	world->velocity[entityID].canJump = false;
+	world->velocity[entityID].onGround = false;
+
+	world->input[entityID].up = false;
+	world->input[entityID].down = false;
+	world->input[entityID].left = false;
+	world->input[entityID].right = false;
+	world->input[entityID].attack = false;
+	world->input[entityID].special = false;
+
+	world->scriptParameters[entityID].currentState = 0;
+	world->scriptParameters[entityID].spawnDistance = 0;
+	world->scriptParameters[entityID].followDistMax = 0;
+	world->scriptParameters[entityID].followDistMin = 0;
+	world->scriptParameters[entityID].attackRangeMax = 0;
+	world->scriptParameters[entityID].attackRangeMin = 0;
+	world->scriptParameters[entityID].attackFrequency = 0;
+	world->scriptParameters[entityID].secondsRemaining = 0;
+
+	world->sprite[entityID].sprite = sf::Sprite();
+	world->sprite[entityID].animationManager.clean();
 
 	world->mask[entityID] = EMPTY;
 

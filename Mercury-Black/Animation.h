@@ -12,19 +12,10 @@ class Animation {
 
 		float animationTime; 
 
-		Animation(float animationTime) {
-
-			this->animationTime = animationTime; 
-
-		}
-
+		Animation(float animationTime);
 		Animation() {}
 
-		void addFrame(sf::Texture * texture) {
-
-			textures.push_back(texture);
-
-		}
+		void addFrame(sf::Texture * texture);
 
 };
 

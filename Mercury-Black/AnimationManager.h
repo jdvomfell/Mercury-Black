@@ -11,18 +11,21 @@
 class AnimationManager {
 	public:
 
-		std::map<std::string, Animation *> animations; 
-
+		int currentFrame;
 		float currentTime; 
 
 		std::string currentAnimation;
 
-		int currentFrame;
+		std::map<std::string, Animation *> animations;
 
 		AnimationManager();
+
+		void clean();
 		sf::Texture * getCurrentTexture();
+
 		int updateAnimation(float deltaTime);
 		void changeAnimation(std::string animationID);
+
 		void addAnimation(Animation * animation, std::string id);
 		void createAnimation(TextureManager * textureManager, std::string entityName, std::string animationName, int numFrames, float animationSpeed);
 

@@ -65,6 +65,11 @@ void Editor::handleEvent() {
 			zoom += event.mouseWheelScroll.delta;
 		}
 
+		if (zoom < 1)
+			zoom = 1;
+
+		view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * zoom, engine->window.getDefaultView().getSize().y * zoom));
+
 		break;
 
 	case sf::Event::MouseButtonPressed:
@@ -201,7 +206,6 @@ void Editor::update(const float dt) {
 	toolText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 200);
 	textureText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 350);
 
-	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * zoom, engine->window.getDefaultView().getSize().y * zoom));
 	view.move(viewVelX, viewVelY);
 
 }
@@ -229,6 +233,10 @@ void Editor::rotateMode() {
 		modeText.setString("Mode: Object");
 	}
 	else if (mode == OBJECT) {
+		mode = PLATFORM;
+		modeText.setString("Mode: Platform");
+	}
+	else if (mode == PLATFORM) {
 		mode = POINT;
 		modeText.setString("Mode: Point");
 	}
