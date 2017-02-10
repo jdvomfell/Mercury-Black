@@ -10,12 +10,8 @@ void Game::init() {
 
 	world.textureManager = &engine->textureManager;
 
-	//int test = createTest(&world, sf::Vector2f(1000, 0));
 	createPlayer(&world, 900, 0);
-
-	//world.sprite[test].sprite.setTexture(*engine->textureManager.getTexture("player_run_1"));
-	//world.sprite[test].sprite.setOrigin(world.sprite[test].sprite.getLocalBounds().width / 2, world.sprite[test].sprite.getLocalBounds().height);
-
+	//createTest(&world, 2000, 0);
 	//createCeilingPlant(&world, 100, 1000);
 
 	objectMap = ObjectMap(&engine->textureManager);
@@ -72,7 +68,7 @@ void Game::init() {
 	slide11 = sf::Text(slide1);
 	slide11.setString("Todd Selwitz ;D\n");
 	slide11.setPosition(18800, 0);
-	int test = createTest(&world, sf::Vector2f(19000, 0));
+	int test = createTest(&world, 19000, 0);
 	
 	slide12 = sf::Text(slide2);
 	slide12.setString("\n\n - C/C++\n - Physics & Collision Development\n - AI Development\n");
@@ -164,6 +160,9 @@ void Game::handleEvent() {
 			if (event.key.code == sf::Keyboard::LShift)
 				world.input[PLAYER].special = true;
 
+			if (event.key.code == sf::Keyboard::R)
+				world.health[0].current = 0;
+
 			break;
 
 		case sf::Event::KeyReleased:
@@ -193,6 +192,11 @@ void Game::handleEvent() {
 
 void Game::update(const float dt) {
 
+	if (world.health[0].current <= 0) {
+		game.clean();
+		game.init();
+	}
+
 	aiSystem(&world, dt);
 	inputSystem(&world);
 	gravitySystem(&world);
@@ -200,6 +204,7 @@ void Game::update(const float dt) {
 	//PUT shapeCollisionSystem here
 	//animationSystem(&world, dt, PLAYER);
 	movementSystem(&world);
+	damageSystem(&world, dt);
 
 	//listener.setPosition(world.position[0].x, world.position[0].y, 0);
 	sf::Listener::setPosition(world.position[0].x, 0, world.position[0].y);

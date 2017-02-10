@@ -8,8 +8,8 @@ void scriptPlayer(World *world, float dt);
 void scriptPlant(World *world, int entityID, float dt);
 void scriptTest(World * world, int, float dt);
 
-void scriptFollow(World * world, int entityID, sf::Vector2f position);
-void scriptAttack(World * world, int entityID, sf::Vector2f position);
-void scriptRetreat(World * world, int entityID, sf::Vector2f position);
+void scriptFollow(World * world, int entityID, float x, float y);
+void scriptAttack(World * world, int entityID, float x, float y);
+void scriptRetreat(World * world, int entityID, float x, float y);
 void scriptSpawn(World * world, int entityID);
 #endif

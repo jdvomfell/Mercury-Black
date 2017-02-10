@@ -33,6 +33,9 @@ void destroyEntity(World * world, int entityID) {
 
 	world->name[entityID].name = "";
 
+	world->health[entityID].max = 0;
+	world->health[entityID].current = 0;
+
 	world->position[entityID].x = 0;
 	world->position[entityID].y = 0;
 
@@ -69,7 +72,7 @@ int createPlayer(World * world, float x, float y) {
 
 	int entityID = 0;
 
-	world->mask[entityID] = NAME | INPUT | POSITION | VELOCITY | SPRITE | COLLISION | GRAVITY | SCRIPT;
+	world->mask[entityID] = NAME | INPUT | POSITION | VELOCITY | SPRITE | COLLISION | GRAVITY | SCRIPT | HEALTH | STATS;
 
 	world->name[entityID].name = "player";
 
@@ -81,6 +84,11 @@ int createPlayer(World * world, float x, float y) {
 	world->velocity[entityID].speed = 15.0f;
 	world->velocity[entityID].canJump = false;
 	world->velocity[entityID].onGround = false;
+
+	world->stats[entityID].power = 30;
+
+	world->health[entityID].max = 100;
+	world->health[entityID].current = world->health[entityID].max;
 
 	world->gravity[entityID].weight = 1.0f;
 
@@ -111,7 +119,7 @@ int createCeilingPlant(World * world, float x, float y) {
 	int i;
 	std::string plantName, temp;
 
-	world->mask[entityID] = NAME | INPUT | POSITION | SPRITE | SCRIPT;
+	world->mask[entityID] = NAME | INPUT | POSITION | SPRITE | SCRIPT | STATS | HEALTH;
 
 	world->name[entityID].name = "ceilingPlant";
 
@@ -138,16 +146,16 @@ int createCeilingPlant(World * world, float x, float y) {
 	return entityID;
 }
 
-int createTest(World * world, sf::Vector2f position) {
+int createTest(World * world, float x, float y) {
 	
 	int entityID = createEntity(world);
 
-	world->mask[entityID] = NAME | INPUT | POSITION | VELOCITY | SPRITE | COLLISION | GRAVITY | SCRIPT;
+	world->mask[entityID] = NAME | INPUT | POSITION | VELOCITY | SPRITE | COLLISION | GRAVITY | SCRIPT | HEALTH | STATS;
 
 	world->name[entityID].name = "test";
 
-	world->position[entityID].x = position.x;
-	world->position[entityID].y = position.y;
+	world->position[entityID].x = x;
+	world->position[entityID].y = y;
 
 	world->velocity[entityID].x = 0.0f;
 	world->velocity[entityID].y = 0.0f;
@@ -156,6 +164,11 @@ int createTest(World * world, sf::Vector2f position) {
 	world->velocity[entityID].onGround = false;
 
 	world->gravity[entityID].weight = 1.0f;
+
+	world->stats[entityID].power = 0;
+
+	world->health[entityID].max = 100;
+	world->health[entityID].current = world->health[entityID].max;
 
 	world->scriptParameters[entityID].followDistMin = 250.0f;
 	world->scriptParameters[entityID].followDistMax = 1500.0f;
@@ -168,6 +181,9 @@ int createTest(World * world, sf::Vector2f position) {
 
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "sheathedRun", 6, 0.125f);
+
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "idleAttack", 8, 0.1f);
 	
 	return entityID;
 

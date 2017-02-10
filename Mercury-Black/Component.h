@@ -4,6 +4,14 @@
 #include <SFML\Graphics.hpp>
 #include "AnimationManager.h"
 
+
+#define NO_STATE 0
+#define ATTACK_STATE 1
+#define DEFENCE_STATE 2
+#define JUMP_STATE 3
+#define SPAWN_STATE 4
+#define NOT_SPAWNED_STATE 5 
+
 enum Component {
 
 	EMPTY = 0,
@@ -16,7 +24,8 @@ enum Component {
 	VELOCITY = 1 << 5,
 	COLLISION = 1 << 6,
 	SCRIPT = 1 << 7,
-
+	HEALTH = 1 << 8, 
+	STATS = 1 << 9
 
 };
 
@@ -81,6 +90,21 @@ struct ScriptParameters {
 	float secondsRemaining;
 	int currentState;
 	float spawnDistance;
+
+};
+
+struct Stats {
+
+	int power;
+
+};
+
+struct Health {
+
+	int max;
+	int current;
+	float hurtTimer;
+
 };
 
 #endif
