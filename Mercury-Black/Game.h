@@ -9,6 +9,7 @@
 #include "ObjectMap.h"
 #include "PlatformMap.h"
 #include "CollisionMap.h"
+#include "Options.h"
 
 #define PLAYER (0)
 
@@ -32,6 +33,8 @@ protected:
 private:
 
 	static Game game;
+
+	Options * options = Options::instance();
 
 	sf::View view;
 

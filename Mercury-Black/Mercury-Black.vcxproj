@@ -147,6 +147,8 @@
     <ClCompile Include="HitboxEditor.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="ObjectMap.cpp" />
+    <ClCompile Include="Options.cpp" />
+    <ClCompile Include="OptionsMenu.cpp" />
     <ClCompile Include="PlatformMap.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TextureManager.cpp" />
@@ -169,6 +171,8 @@
     <ClInclude Include="HitboxEditor.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="ObjectMap.h" />
+    <ClInclude Include="Options.h" />
+    <ClInclude Include="OptionsMenu.h" />
     <ClInclude Include="PlatformMap.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TextureManager.h" />
