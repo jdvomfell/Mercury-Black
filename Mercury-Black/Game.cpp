@@ -79,7 +79,7 @@ void Game::init() {
 	slide13.setPosition(22800, 0);
 
 	slide14 = sf::Text(slide2);
-	slide14.setString("\n\n - C/C++\n - Sound Design\n - Collision & Physics Development\n - Level Design\n");
+	slide14.setString("\n\n - C/C++\n - Sound Design\n - Collision & Physics Development\n - Level Design\n - FL Studio\n");
 	slide14.setPosition(22800, 0);
 
 	slide19 = sf::Text(slide1);
