@@ -11,7 +11,9 @@ struct World {
 	int mask[MAX_ENTITIES];
 
 	Name name[MAX_ENTITIES];
+	Stats stats[MAX_ENTITIES];
 	Input input[MAX_ENTITIES];
+	Health health[MAX_ENTITIES];
 	Sprite sprite[MAX_ENTITIES];
 	Gravity gravity[MAX_ENTITIES];
 	Position position[MAX_ENTITIES];
@@ -25,7 +27,9 @@ struct World {
 void cleanWorld(World * world);
 int createEntity(World * world);
 void destroyEntity(World * world, int entityID);
-int createTest(World * world, sf::Vector2f);
+
+int createTest(World * world, float x, float y);
 int createPlayer(World * world, float x, float y);
 int createCeilingPlant(World * world, float x, float y);
+
 #endif

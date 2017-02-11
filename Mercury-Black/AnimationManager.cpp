@@ -8,6 +8,20 @@ AnimationManager::AnimationManager() {
 
 }
 
+void AnimationManager::clean() {
+
+	std::map<std::string, Animation *>::iterator it;
+
+	it = animations.begin();
+	while (it != animations.end()) {
+
+		delete(it->second);
+		animations.erase(it++);
+
+	}
+
+}
+
 void AnimationManager::createAnimation(TextureManager * textureManager, std::string entityName, std::string animationName, int numFrames, float animationSpeed) {
 
 	std::string frameName;

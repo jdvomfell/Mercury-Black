@@ -34,8 +34,6 @@ void aiSystem(World * world, float dt) {
 	
 }
 
-
-
 #define RENDER_MASK (POSITION | SPRITE)
 
 void renderSystem(World * world, sf::RenderWindow * window) {
@@ -53,6 +51,50 @@ void renderSystem(World * world, sf::RenderWindow * window) {
 			s->sprite.setPosition(p->x, p->y);
 
 			window->draw(s->sprite);
+
+		}
+
+	}
+
+}
+
+#define TAKE_DAMAGE_MASK (HEALTH)
+#define DEAL_DAMAGE_MASK (STATS | SCRIPT)
+
+void damageSystem(World * world, float dt) {
+
+	Health * h;
+	Stats * st;
+	ScriptParameters * sp;
+
+	for (int damageTakerID = 0; damageTakerID < MAX_ENTITIES; damageTakerID++) {
+
+		world->health[damageTakerID].hurtTimer -= dt;
+
+		if ((world->mask[damageTakerID] & TAKE_DAMAGE_MASK) == TAKE_DAMAGE_MASK && world->health[damageTakerID].hurtTimer <= 0) {
+
+			h = &(world->health[damageTakerID]);
+
+			for (int damageDealerID = 0; damageDealerID < MAX_ENTITIES; damageDealerID++) {
+
+				if ((world->mask[damageDealerID] & DEAL_DAMAGE_MASK) == DEAL_DAMAGE_MASK && world->scriptParameters[damageDealerID].currentState == ATTACK_STATE) {
+					
+					if ((world->sprite[damageTakerID].sprite.getGlobalBounds().intersects(world->sprite[damageDealerID].sprite.getGlobalBounds()) == true) && (damageDealerID != damageTakerID)) {
+
+						st = &(world->stats[damageDealerID]);
+						sp = &(world->scriptParameters[damageDealerID]);
+
+						h->current -= st->power;
+
+						h->hurtTimer = 1.0f;
+
+						printf("E: %d\n", world->health[damageTakerID].current);
+
+					}
+
+				}
+
+			}
 
 		}
 

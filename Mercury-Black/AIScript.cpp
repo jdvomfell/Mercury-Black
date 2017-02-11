@@ -1,50 +1,51 @@
 #include "AIScript.h"
 #include <cmath>
 
-#define NO_STATE 0
-#define ATTACK_STATE 1
-#define DEFENCE_STATE 2
-#define JUMP_STATE 3
-#define SPAWN_STATE 4
-#define NOT_SPAWNED_STATE 5 
-
-
 void scriptTest(World * world, int entityID, float dt) {
 
 	Velocity * v;
 	Sprite * s;
+	ScriptParameters * sp;
 
 	v = &(world->velocity[entityID]);
 	s = &(world->sprite[entityID]);
+	sp = &(world->scriptParameters[entityID]);
 
-	scriptFollow(world, entityID,sf::Vector2f(world->position[0].x, world->position[0].y));
+	scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
+	scriptAttack(world, entityID, world->position[0].x, world->position[0].y);
 
 	if (v->x != 0)
 		s->animationManager.changeAnimation("sheathedRun");
-	else
-		s->animationManager.changeAnimation("idleUnsheathed");
+	else {
+		if (sp->currentState == ATTACK_STATE)
+			s->animationManager.changeAnimation("idleAttack");
+		else
+			s->animationManager.changeAnimation("idleUnsheathed");
+	}
 
 	if (v->x < 0)
 		s->sprite.setTextureRect(sf::IntRect(s->sprite.getLocalBounds().width, 0, -s->sprite.getLocalBounds().width, s->sprite.getLocalBounds().height));
 	if (v->x > 0)
 		s->sprite.setTextureRect(sf::IntRect(0, 0, s->sprite.getLocalBounds().width, s->sprite.getLocalBounds().height));
 
-	s->animationManager.updateAnimation(dt);
-
 	s->sprite.setTexture(*s->animationManager.getCurrentTexture());
 	s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height));
 
+	/* Allow Animation Changes If Current Animation Has Ended */
+	if (s->animationManager.updateAnimation(dt) == 1)
+		sp->currentState = NO_STATE;
+
 }
 
-void scriptFollow(World * world, int entityID, sf::Vector2f position) {
+void scriptFollow(World * world, int entityID, float x, float y) {
 
-	if (std::fabs(world->position[entityID].x - position.x) <=
+	if (std::fabs(world->position[entityID].x - x) <=
 		world->scriptParameters[entityID].followDistMax &&
 
-		std::fabs(world->position[entityID].x - position.x) >=
+		std::fabs(world->position[entityID].x - x) >=
 		world->scriptParameters[entityID].followDistMin){
 			
-			if (world->position[entityID].x - position.x < 0) {
+			if (world->position[entityID].x - x < 0) {
 				world->input[entityID].right = true;
 			}
 			
@@ -60,12 +61,12 @@ void scriptFollow(World * world, int entityID, sf::Vector2f position) {
 	
 }
 
-void scriptAttack(World* world, int entityID, sf::Vector2f position) {
+void scriptAttack(World* world, int entityID, float x, float y) {
 
-	if (std::fabs(world->position[entityID].x - position.x) <=
+	if (std::fabs(world->position[entityID].x - x) <=
 		world->scriptParameters[entityID].attackRangeMax &&
 
-		std::fabs(world->position[entityID].x - position.x) >=
+		std::fabs(world->position[entityID].x - x) >=
 		world->scriptParameters[entityID].attackRangeMin) {
 			
 		world->scriptParameters[entityID].currentState = ATTACK_STATE;
@@ -77,12 +78,12 @@ void scriptAttack(World* world, int entityID, sf::Vector2f position) {
 	}
 }
 
-void scriptRetreat(World * world, int entityID, sf::Vector2f position) {
+void scriptRetreat(World * world, int entityID, float x, float y) {
 
-	if (std::fabs(world->position[entityID].x - position.x) <=
+	if (std::fabs(world->position[entityID].x - x) <=
 		world->scriptParameters[entityID].followDistMin) {
 
-		if (world->position[entityID].x - position.x < 0) {
+		if (world->position[entityID].x - x < 0) {
 			world->input[entityID].left = true;
 		}
 
@@ -200,7 +201,7 @@ void scriptPlant(World * world, int entityID, float dt) {
 	sP = &(world->scriptParameters[entityID]);
 	
 	if (sP->currentState == NO_STATE) {
-		scriptAttack(world, entityID, sf::Vector2f(world->position[0].x, world->position[0].y));
+		scriptAttack(world, entityID, world->position[0].x, world->position[0].y);
 		
 		if (sP->currentState == ATTACK_STATE)
 			s->animationManager.changeAnimation("tripleAttack");
