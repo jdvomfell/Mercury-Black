@@ -12,20 +12,26 @@ void PlatformMap::load()
 
 }
 
+void PlatformMap::changeColor(sf::Color color, float position)
+{
+	platformMap[position]->shape->setFillColor(color);
+}
+
 void PlatformMap::add(sf::Vector2f position, unsigned int vertices)
 {
 	int i;
 
-	const sf::Color color = sf::Color::Blue;
+	sf::Color color = sf::Color::Blue;
 
 	platform = new Platform; 
 	platform->position = position; 
 	platform->shape = new sf::ConvexShape(vertices); 
 	platform->shape->setFillColor(color);
-
-	platform->shape->setPoint(0, position);
-	platform->shape->setPoint(1, sf::Vector2f(position.x + 400, position.y - 100));
-	platform->shape->setPoint(2, sf::Vector2f(position.x - 200, position.y - 450));
+	platform->shape->setPoint(0, sf::Vector2f(position.x, position.y));
+	platform->shape->setPoint(1, sf::Vector2f(position.x - 200, position.y - 100));
+	platform->shape->setPoint(2, sf::Vector2f(position.x - 400, position.y));
+	//platform->shape->setPoint(4, sf::Vector2f(position.x - 50, position.y + 50));
+	//platform->shape->setPoint(5, sf::Vector2f(position.x - 50, position.y));
 
 	platformMap.insert(std::make_pair(position.x, platform));
 }
@@ -56,7 +62,7 @@ sf::Vector2f PlatformMap::getEdgeNormal(int vertex, sf::ConvexShape shape) {
 
 /* Projects Shape onto SAT (normal of shape edge) */
 sf::Vector2f PlatformMap::getProjection(sf::Vector2f normal, sf::ConvexShape shape) {
-	double min, max, projection;
+	float min, max, projection;
 
 	int i;
 

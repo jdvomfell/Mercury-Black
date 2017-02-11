@@ -21,6 +21,7 @@ class PlatformMap {
 		std::map<float, Platform *> platformMap;
 		std::map<float, Platform *>::iterator pit;
 
+		void changeColor(sf::Color color, float position);
 		void save(); 
 		void load(); 
 		sf::Vector2f getEdgeNormal(int vertex, sf::ConvexShape shape);

@@ -18,7 +18,7 @@ void Game::init() {
 	objectMap.load();
 	collisionMap.load();
 
-	platformMap.add(sf::Vector2f(200, 1300), 3);
+	platformMap.add(sf::Vector2f(200, 1200), 3);
 
 	slide1.setFont(engine->textureManager.slideFont);
 	slide1.setStyle(sf::Text::Bold);

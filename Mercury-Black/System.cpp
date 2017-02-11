@@ -349,7 +349,7 @@ sf::Vector2f getEntityNormal(std::string side, sf::Sprite entity) {
 }
 
 sf::Vector2f getEntityProjection(sf::Vector2f normal, sf::Sprite entity) {
-	double min, max, projection; 
+	float min, max, projection; 
 	float entityX, entityY;
 	int i;
 	sf::Vector2f projReturn;
@@ -360,13 +360,13 @@ sf::Vector2f getEntityProjection(sf::Vector2f normal, sf::Sprite entity) {
 	min = (entityX * normal.x) + (entityY * normal.y);
 	max = min;
 
-	projection = ((entityX + entity.getGlobalBounds().width) * normal.x) + (entityY * normal.y);
+	projection = ((entityX + entity.getLocalBounds().width) * normal.x) + (entityY * normal.y);
 	if (projection > max)
 		max = projection;
 	else if (projection < min)
 		min = projection;
 
-	projection = (entityX * normal.x) + ((entityY + entity.getGlobalBounds().height) * normal.y);
+	projection = (entityX * normal.x) + ((entityY + entity.getLocalBounds().height) * normal.y);
 	if (projection > max)
 		max = projection;
 	else if (projection < min)
@@ -390,7 +390,7 @@ void shapeCollSystem(World * world, PlatformMap * platforms) {
 	sf::Sprite currentEntity;
 	sf::Vector2f shapeProjection;
 	sf::Vector2f entityProjection;
-	sf::Vector2f shapeAxis; 
+	sf::Vector2f shapeAxis;
 
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
@@ -412,7 +412,7 @@ void shapeCollSystem(World * world, PlatformMap * platforms) {
 
 					if (!isCollision(shapeProjection, entityProjection))
 					{
-						currentShape.setFillColor(sf::Color::Black);
+						platforms->changeColor(sf::Color::Yellow, platforms->pit->first);
 						collision = false;
 						printf("No col\n");
 						break;
@@ -425,7 +425,7 @@ void shapeCollSystem(World * world, PlatformMap * platforms) {
 
 				if (!isCollision(entityProjection, shapeProjection) && collision == true)
 				{
-					currentShape.setFillColor(sf::Color::Green);
+					platforms->changeColor(sf::Color::Yellow, platforms->pit->first);
 					collision = false;
 					printf("No col\n");
 					continue;
@@ -437,7 +437,7 @@ void shapeCollSystem(World * world, PlatformMap * platforms) {
 
 				if (!isCollision(entityProjection, shapeProjection) && collision == true)
 				{
-					currentShape.setFillColor(sf::Color::Yellow);
+					platforms->changeColor(sf::Color::Yellow, platforms->pit->first);
 					collision = false;
 					printf("No col\n");
 					continue;
@@ -445,7 +445,7 @@ void shapeCollSystem(World * world, PlatformMap * platforms) {
 
 				if (collision == true)
 				{
-					currentShape.setFillColor(sf::Color::Red);
+					platforms->changeColor(sf::Color::Red, platforms->pit->first);
 					printf("BUSTIN BUSTIN BUSTIN BUSTIN BUSTIN BUSTIN");
 					return;
 				}
