@@ -22,7 +22,7 @@ void Game::init() {
 	objectMap.load();
 	collisionMap.load();
 
-	//platformMap.add(sf::Vector2f(0, 500), 3);
+	platformMap.add(sf::Vector2f(200, 1300), 3);
 
 	slide1.setFont(engine->textureManager.slideFont);
 	slide1.setStyle(sf::Text::Bold);
@@ -197,7 +197,7 @@ void Game::update(const float dt) {
 	inputSystem(&world);
 	gravitySystem(&world);
 	collisionSystem(&world, &collisionMap);
-	//PUT shapeCollisionSystem here
+	shapeCollSystem(&world, &platformMap);
 	//animationSystem(&world, dt, PLAYER);
 	movementSystem(&world);
 

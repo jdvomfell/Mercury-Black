@@ -5,6 +5,8 @@
 #define DEACCELERATION_CONST 0.90f
 #define GRAVITY_CONST 0.5f
 #define JUMP_CONST -15.0f
+#define NORMAL_UP sf::Vector2f(0, 1)
+#define NORMAL_RIGHT sf::Vector2f(1, 0)
 
 #define SCRIPT_MASK (NAME | SCRIPT)
 
@@ -209,7 +211,7 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 			}
 
 			/* Calculate The Ground */
-
+			
 			slope = ((rightVertex->position.y - leftVertex->position.y) / (rightVertex->position.x - leftVertex->position.x));
 			ground = ((slope * (p->x - leftVertex->position.x)) + (leftVertex->position.y));
 
@@ -277,9 +279,135 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 			if (p->y < ground -30)
 				v->onGround = false;
-
 		}
 
 	}
 
-} 
+}
+
+sf::Vector2f getEntityNormal(std::string side, sf::Sprite entity) {
+	sf::Vector2f p1, p2, edge, normal;
+
+	//Get left side if leftSide = 1
+	if (side == "left")
+	{
+		edge.x = 0;
+		edge.y = entity.getGlobalBounds().height;
+	}
+	else
+	{
+		edge.x = entity.getGlobalBounds().width;
+		edge.y = 0;
+	}
+
+	normal.x = edge.y;
+	normal.y = -(edge.x);
+
+	return normal;
+}
+
+sf::Vector2f getEntityProjection(sf::Vector2f normal, sf::Sprite entity) {
+	double min, max, projection; 
+	float entityX, entityY;
+	int i;
+	sf::Vector2f projReturn;
+
+	entityX = entity.getGlobalBounds().left;
+	entityY = entity.getGlobalBounds().top;
+
+	min = (entityX * normal.x) + (entityY * normal.y);
+	max = min;
+
+	projection = ((entityX + entity.getGlobalBounds().width) * normal.x) + (entityY * normal.y);
+	if (projection > max)
+		max = projection;
+	else if (projection < min)
+		min = projection;
+
+	projection = (entityX * normal.x) + ((entityY + entity.getGlobalBounds().height) * normal.y);
+	if (projection > max)
+		max = projection;
+	else if (projection < min)
+		min = projection;
+	
+	projReturn.x = min;
+	projReturn.y = max;
+
+	return projReturn;
+}
+
+bool isCollision(sf::Vector2f shapeProj, sf::Vector2f entityProj)
+{
+	return  !(shapeProj.x > entityProj.y || entityProj.x > shapeProj.y);
+}
+
+void shapeCollSystem(World * world, PlatformMap * platforms) {	
+	int i;
+	bool collision = true; 
+	sf::ConvexShape currentShape;
+	sf::Sprite currentEntity;
+	sf::Vector2f shapeProjection;
+	sf::Vector2f entityProjection;
+	sf::Vector2f shapeAxis; 
+
+	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
+
+		if ((world->mask[entityID] & COLLISION_MASK) == COLLISION_MASK) {
+			
+			currentEntity = world->sprite[entityID].sprite;
+
+			for (platforms->pit = platforms->platformMap.begin(); platforms->pit != platforms->platformMap.end(); platforms->pit++) {
+				
+				currentShape = *platforms->pit->second->shape;
+				collision = true;
+
+				for (i = 0; i < currentShape.getPointCount(); i++) {
+					
+					shapeAxis = platforms->getEdgeNormal(i, currentShape);
+
+					shapeProjection = platforms->getProjection(shapeAxis, currentShape);
+					entityProjection = getEntityProjection(shapeAxis, currentEntity);
+
+					if (!isCollision(shapeProjection, entityProjection))
+					{
+						currentShape.setFillColor(sf::Color::Black);
+						collision = false;
+						printf("No col\n");
+						break;
+					}
+
+				}
+
+				entityProjection = getEntityProjection(getEntityNormal("left", currentEntity), currentEntity);
+				shapeProjection = platforms->getProjection(getEntityNormal("left", currentEntity), currentShape);
+
+				if (!isCollision(entityProjection, shapeProjection) && collision == true)
+				{
+					currentShape.setFillColor(sf::Color::Green);
+					collision = false;
+					printf("No col\n");
+					continue;
+				}
+
+
+				entityProjection = getEntityProjection(getEntityNormal("top", currentEntity), currentEntity);
+				shapeProjection = platforms->getProjection(getEntityNormal("top", currentEntity), currentShape);
+
+				if (!isCollision(entityProjection, shapeProjection) && collision == true)
+				{
+					currentShape.setFillColor(sf::Color::Yellow);
+					collision = false;
+					printf("No col\n");
+					continue;
+				}
+
+				if (collision == true)
+				{
+					currentShape.setFillColor(sf::Color::Red);
+					printf("BUSTIN BUSTIN BUSTIN BUSTIN BUSTIN BUSTIN");
+					return;
+				}
+			}
+		}
+	}
+}

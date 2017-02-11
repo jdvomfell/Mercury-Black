@@ -8,7 +8,7 @@ struct Platform {
 
 	sf::ConvexShape * shape; 
 	sf::Vector2f position; 
-	std::string type;
+	sf::Vector2f proj;
 };
 
 class PlatformMap {
@@ -23,7 +23,9 @@ class PlatformMap {
 
 		void save(); 
 		void load(); 
-
+		sf::Vector2f getEdgeNormal(int vertex, sf::ConvexShape shape);
+		sf::Vector2f getProjection(sf::Vector2f normal, sf::ConvexShape shape);
+		
 		void add(sf::Vector2f position, unsigned int vertices); 
 		void remove();
 		
