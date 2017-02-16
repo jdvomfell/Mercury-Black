@@ -414,7 +414,7 @@ void shapeCollSystem(World * world, PlatformMap * platforms) {
 					{
 						platforms->changeColor(sf::Color::Yellow, platforms->pit->first);
 						collision = false;
-						printf("No col\n");
+						//printf("No col\n");
 						break;
 					}
 
@@ -427,7 +427,7 @@ void shapeCollSystem(World * world, PlatformMap * platforms) {
 				{
 					platforms->changeColor(sf::Color::Yellow, platforms->pit->first);
 					collision = false;
-					printf("No col\n");
+					//printf("No col\n");
 					continue;
 				}
 
@@ -439,15 +439,14 @@ void shapeCollSystem(World * world, PlatformMap * platforms) {
 				{
 					platforms->changeColor(sf::Color::Yellow, platforms->pit->first);
 					collision = false;
-					printf("No col\n");
 					continue;
 				}
 
 				if (collision == true)
 				{
 					platforms->changeColor(sf::Color::Red, platforms->pit->first);
-					printf("BUSTIN BUSTIN BUSTIN BUSTIN BUSTIN BUSTIN");
-					return;
+					printf("BUSTIN");
+					//return;
 				}
 			}
 		}

@@ -116,7 +116,6 @@ int createPlayer(World * world, float x, float y) {
 int createCeilingPlant(World * world, float x, float y) {
 
 	int entityID = createEntity(world);
-	int i;
 	std::string plantName, temp;
 
 	world->mask[entityID] = NAME | INPUT | POSITION | SPRITE | SCRIPT | STATS | HEALTH;
@@ -165,7 +164,7 @@ int createTest(World * world, float x, float y) {
 
 	world->gravity[entityID].weight = 1.0f;
 
-	world->stats[entityID].power = 0;
+	world->stats[entityID].power = 10;
 
 	world->health[entityID].max = 100;
 	world->health[entityID].current = world->health[entityID].max;
