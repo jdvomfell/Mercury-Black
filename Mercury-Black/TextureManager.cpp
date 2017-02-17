@@ -181,8 +181,5 @@ void TextureManager::loadAllTextures() {
 	loadTexture("treeTest_1", "Textures/Test/TreeTest1.png");
 	loadTexture("Background", "Textures/Test/Background.png");
 	loadTexture("tree", "Textures/Test/tree.png");
-	loadTexture("alex", "alex.jpg");
-	loadTexture("todd", "todd.JPG");
-	loadTexture("adriano", "adrian.JPG");
 
 }

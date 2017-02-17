@@ -44,6 +44,8 @@ private:
 	
 	World world;
 
+	sf::RectangleShape rect;
+
 	sf::Text slide1;
 	sf::Text slide2;
 	sf::Text slide3;

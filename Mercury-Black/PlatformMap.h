@@ -17,7 +17,6 @@ class PlatformMap {
 
 		Platform * platform;
 		
-		//float = 'x' position
 		std::map<float, Platform *> platformMap;
 		std::map<float, Platform *>::iterator pit;
 

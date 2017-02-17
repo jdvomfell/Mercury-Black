@@ -19,7 +19,6 @@ void PlatformMap::changeColor(sf::Color color, float position)
 
 void PlatformMap::add(sf::Vector2f position, unsigned int vertices)
 {
-	int i;
 
 	sf::Color color = sf::Color::Blue;
 
@@ -28,7 +27,7 @@ void PlatformMap::add(sf::Vector2f position, unsigned int vertices)
 	platform->shape = new sf::ConvexShape(vertices); 
 	platform->shape->setFillColor(color);
 	platform->shape->setPoint(0, sf::Vector2f(position.x, position.y));
-	platform->shape->setPoint(1, sf::Vector2f(position.x - 200, position.y - 100));
+	platform->shape->setPoint(1, sf::Vector2f(position.x - 200, position.y - 300));
 	platform->shape->setPoint(2, sf::Vector2f(position.x - 400, position.y));
 	//platform->shape->setPoint(4, sf::Vector2f(position.x - 50, position.y + 50));
 	//platform->shape->setPoint(5, sf::Vector2f(position.x - 50, position.y));
@@ -64,7 +63,7 @@ sf::Vector2f PlatformMap::getEdgeNormal(int vertex, sf::ConvexShape shape) {
 sf::Vector2f PlatformMap::getProjection(sf::Vector2f normal, sf::ConvexShape shape) {
 	float min, max, projection;
 
-	int i;
+	size_t i;
 
 	sf::Vector2f projReturn; 
 
