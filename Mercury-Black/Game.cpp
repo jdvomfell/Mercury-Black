@@ -16,7 +16,7 @@ void Game::init() {
 	objectMap.load();
 	collisionMap.load();
 
-	platformMap.add(sf::Vector2f(200, 1200), 3);
+	platformMap.add(sf::Vector2f(200, 900), 5);
 
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);

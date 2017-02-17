@@ -25,7 +25,7 @@ void CollisionMap::insert(sf::Vector2f position) {
 }
 
 void CollisionMap::remove() {
-
+	
 	if (selected == map.end() || selected->second == NULL)
 		return;
 
