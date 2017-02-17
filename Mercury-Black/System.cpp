@@ -410,7 +410,7 @@ void shapeCollSystem(World * world, PlatformMap * platforms) {
 					shapeProjection = platforms->getProjection(shapeAxis, currentShape);
 					entityProjection = getEntityProjection(shapeAxis, currentEntity);
 
-					if (!isCollision(shapeProjection, entityProjection))
+					if (!isCollision(shapeProjection, entityProjection) && collision == true)
 					{
 						platforms->changeColor(sf::Color::Yellow, platforms->pit->first);
 						collision = false;
