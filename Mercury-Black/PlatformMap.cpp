@@ -28,9 +28,7 @@ void PlatformMap::add(sf::Vector2f position, unsigned int vertices)
 	platform->shape->setFillColor(color);
 	platform->shape->setPoint(0, sf::Vector2f(position.x, position.y));
 	platform->shape->setPoint(1, sf::Vector2f(position.x - 200, position.y - 300));
-	platform->shape->setPoint(2, sf::Vector2f(position.x - 500, position.y - 200));
-	platform->shape->setPoint(3, sf::Vector2f(position.x - 275, position.y - 150));
-	platform->shape->setPoint(4, sf::Vector2f(position.x - 400, position.y));
+	platform->shape->setPoint(2, sf::Vector2f(position.x - 400, position.y));
 
 	platformMap.insert(std::make_pair(position.x, platform));
 }

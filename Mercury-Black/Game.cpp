@@ -16,7 +16,7 @@ void Game::init() {
 	objectMap.load();
 	collisionMap.load();
 
-	platformMap.add(sf::Vector2f(200, 900), 5);
+	platformMap.add(sf::Vector2f(200, 1200), 3);
 
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
@@ -116,9 +116,9 @@ void Game::update(const float dt) {
 	inputSystem(&world);
 	gravitySystem(&world);
 	collisionSystem(&world, &collisionMap);
+	movementSystem(&world);
 	shapeCollSystem(&world, &platformMap);
 	//animationSystem(&world, dt, PLAYER);
-	movementSystem(&world);
 	damageSystem(&world, dt);
 
 	//listener.setPosition(world.position[0].x, world.position[0].y, 0);
