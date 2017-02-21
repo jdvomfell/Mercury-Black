@@ -4,35 +4,51 @@
 #include "TextureManager.h"
 #include <map>
 
-struct Platform {
-
-	sf::ConvexShape * shape; 
-	sf::Vector2f position; 
-	sf::Vector2f proj;
-};
-
 class PlatformMap {
 
 	public:
-
-		Platform * platform;
 		
-		std::map<float, Platform *> platformMap;
-		std::map<float, Platform *>::iterator pit;
+		std::map<float, sf::ConvexShape *> map;
+		std::map<float, sf::ConvexShape *>::iterator it;
 
-		void changeColor(sf::Color color, float position);
-		void save(); 
-		void load(); 
-		sf::Vector2f getEdgeNormal(int vertex, sf::ConvexShape shape);
-		sf::Vector2f getProjection(sf::Vector2f normal, sf::ConvexShape shape);
+		sf::Vector2f getEdgeNormal(int vertex, sf::ConvexShape * shape);
+		sf::Vector2f getProjection(sf::Vector2f normal, sf::ConvexShape * shape);
 		
-		void add(sf::Vector2f position, unsigned int vertices); 
+		void add(std::vector <sf::Vector2f> points);
 		void remove();
+
+		void save();
+		void load();
 		
 		PlatformMap() {};
-		//PlatformMap(TextureManager *); 
 
-		TextureManager * textureManager;
+};
+
+struct PlatPoint {
+
+	sf::Vector2f point;
+	PlatPoint * prevPoint;
+	PlatPoint * nextPoint;
+
+};
+
+class PlatformPoints {
+
+public:
+
+	PlatPoint * current;
+	PlatPoint * begin;
+
+	void insert(sf::Vector2f point);
+	void remove();
+
+	void clean();
+
+	void draw(sf::RenderWindow * window);
+	void update();
+	sf::VertexArray lines;
+
+	PlatformPoints() { current = NULL; begin = NULL; lines = sf::VertexArray(sf::LinesStrip, 0); }
 
 };
 

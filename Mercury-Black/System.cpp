@@ -188,7 +188,7 @@ void movementSystem(World * world) {
 
 #define ANIMATION_MASK (VELOCITY | SPRITE)
 
-void animationSystem(World * world, float dt) {
+/*void animationSystem(World * world, float dt) {
 
 	Sprite * s;
 	Velocity * v;
@@ -201,7 +201,7 @@ void animationSystem(World * world, float dt) {
 
 	}
 
-}
+}*/
 
 #define COLLISION_MASK (POSITION | VELOCITY | COLLISION | GRAVITY)
 
@@ -357,8 +357,8 @@ sf::Vector2f getEntityNormal(std::string side, sf::Sprite * entity) {
 }
 
 sf::Vector2f getEntityProjection(sf::Vector2f normal, sf::Sprite * entity) {
-	double min, max, projection; 
-	double entityX, entityY;
+	float min, max, projection; 
+	float entityX, entityY;
 	int i;
 	sf::Vector2f projReturn;
 
@@ -414,18 +414,20 @@ double getOverlap(sf::Vector2f firstProj, sf::Vector2f secondProj) {
 
 }
 
-void shapeCollSystem(World * world, PlatformMap * platforms) {	
+void shapeCollSystem(World * world, PlatformMap * platformMap) {	
 	int i;
 	bool collision = true; 
 	double overlap = 10000000000;
 	double overlapBuff;
-	sf::ConvexShape currentShape;
+	sf::ConvexShape * currentShape;
 	sf::Sprite * currentEntity;
 	
 	sf::Vector2f shapeProjection;
 	sf::Vector2f entityProjection;
 	sf::Vector2f shapeAxis;
-	sf::Vector2f smallestAxis; 
+	sf::Vector2f smallestAxis;
+
+	std::map<float, sf::ConvexShape *>::iterator it;
 
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
@@ -433,21 +435,21 @@ void shapeCollSystem(World * world, PlatformMap * platforms) {
 			
 			currentEntity = &world->sprite[entityID].sprite;
 
-			for (platforms->pit = platforms->platformMap.begin(); platforms->pit != platforms->platformMap.end(); platforms->pit++) {
+			for (it = platformMap->map.begin(); it != platformMap->map.end(); it++) {
 				
-				currentShape = *platforms->pit->second->shape;
+				currentShape = it->second;
 				collision = true;
 
-				for (i = 0; i < currentShape.getPointCount(); i++) {
+				for (i = 0; i < currentShape->getPointCount(); i++) {
 					
-					shapeAxis = platforms->getEdgeNormal(i, currentShape);
+					shapeAxis = platformMap->getEdgeNormal(i, currentShape);
 
-					shapeProjection = platforms->getProjection(shapeAxis, currentShape);
+					shapeProjection = platformMap->getProjection(shapeAxis, currentShape);
 					entityProjection = getEntityProjection(shapeAxis, currentEntity);
 
 					if (isCollision(entityProjection, shapeProjection) && collision == true)
 					{
-						platforms->changeColor(sf::Color::Black, platforms->pit->first);
+						currentShape->setFillColor(sf::Color::Black);
 						collision = false;
 						break;
 					}
@@ -464,11 +466,11 @@ void shapeCollSystem(World * world, PlatformMap * platforms) {
 				}
 
 				entityProjection = getEntityProjection(getEntityNormal("left", currentEntity), currentEntity);
-				shapeProjection = platforms->getProjection(getEntityNormal("left", currentEntity), currentShape);
+				shapeProjection = platformMap->getProjection(getEntityNormal("left", currentEntity), currentShape);
 
 				if (isCollision(shapeProjection, entityProjection) && collision == true)
 				{
-					platforms->changeColor(sf::Color::Black, platforms->pit->first);
+					currentShape->setFillColor(sf::Color::Black);
 					collision = false;
 					continue;
 				}
@@ -485,11 +487,11 @@ void shapeCollSystem(World * world, PlatformMap * platforms) {
 
 
 				entityProjection = getEntityProjection(getEntityNormal("top", currentEntity), currentEntity);
-				shapeProjection = platforms->getProjection(getEntityNormal("top", currentEntity), currentShape);
+				shapeProjection = platformMap->getProjection(getEntityNormal("top", currentEntity), currentShape);
 
 				if (isCollision(shapeProjection, entityProjection) && collision == true)
 				{
-					platforms->changeColor(sf::Color::Black, platforms->pit->first);
+					currentShape->setFillColor(sf::Color::Black);
 					collision = false;
 					continue;
 				}
@@ -507,7 +509,7 @@ void shapeCollSystem(World * world, PlatformMap * platforms) {
 				//COLLISION DETECTED, CALCULATE MTV
 				if (collision == true)
 				{
-					platforms->changeColor(sf::Color::Red, platforms->pit->first);					
+					currentShape->setFillColor(sf::Color::Red);
 				}
 			}
 		}

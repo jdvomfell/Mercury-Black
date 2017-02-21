@@ -7,6 +7,7 @@
 #include "CollisionMap.h"
 #include "ObjectMap.h"
 #include "GameState.h"
+#include "PlatformMap.h"
 
 /* Editing Types */
 
@@ -63,8 +64,10 @@ private:
 	Selector selector;
 	static Editor editor;
 
-	CollisionMap collisionMap;
 	ObjectMap objectMap;
+	PlatformMap platformMap;
+	CollisionMap collisionMap;
+	PlatformPoints platformPoints;
 
 	int mode;
 	int tool;

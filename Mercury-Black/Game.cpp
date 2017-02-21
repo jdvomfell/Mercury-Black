@@ -16,7 +16,11 @@ void Game::init() {
 	objectMap.load();
 	collisionMap.load();
 
-	platformMap.add(sf::Vector2f(200, 900), 5);
+	std::vector<sf::Vector2f> points;
+	points.push_back(sf::Vector2f(200, 700));
+	points.push_back(sf::Vector2f(0, 400));
+	points.push_back(sf::Vector2f(-200, 700));
+	platformMap.add(points);
 
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
@@ -142,29 +146,9 @@ void Game::render(const float dt) {
 	engine->window.draw(collisionMap.lines);
 
 	engine->window.draw(rect);
-	engine->window.draw(slide1);
-	engine->window.draw(slide2);
-	engine->window.draw(slide3);
-	engine->window.draw(slide4);
-	engine->window.draw(slide5);
-	engine->window.draw(slide6);
-	engine->window.draw(slide7);
-	engine->window.draw(slide8);
-	engine->window.draw(slide9);
-	engine->window.draw(slide10);
-	engine->window.draw(slide11);
-	engine->window.draw(slide12);
-	engine->window.draw(slide13);
-	engine->window.draw(slide14);
-	engine->window.draw(slide15);
-	engine->window.draw(slide16);
-	engine->window.draw(slide17);
-	engine->window.draw(slide18);
-	engine->window.draw(slide19);
-	engine->window.draw(slide20);
 
 	renderSystem(&world, &engine->window);
 
-	for (platformMap.pit = platformMap.platformMap.begin(); platformMap.pit != platformMap.platformMap.end(); platformMap.pit++)
-		engine->window.draw(*(platformMap.pit->second->shape));
+	for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)
+		engine->window.draw(*(pit->second));
 }

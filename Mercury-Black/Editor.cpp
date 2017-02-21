@@ -80,7 +80,9 @@ void Editor::handleEvent() {
 				collisionMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 			if (mode == OBJECT)
 				objectMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
-		
+			if (mode == PLATFORM)
+				platformPoints.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+
 		}
 
 		if (event.mouseButton.button == sf::Mouse::Right) {
@@ -128,9 +130,10 @@ void Editor::handleEvent() {
 			
 			if (mode == POINT)
 				collisionMap.remove();
-
-			else if (mode == OBJECT)
+			if (mode == OBJECT)
 				objectMap.remove();
+			if (mode == PLATFORM)
+				platformPoints.remove();
 
 			selector.rect.setOutlineColor(sf::Color::Transparent);
 
@@ -212,12 +215,12 @@ void Editor::update(const float dt) {
 
 void Editor::render(const float dt) {
 
-	std::map<float, Object *>::iterator it;
-	for (it = objectMap.map.begin(); it != objectMap.map.end(); it++)
-		engine->window.draw(it->second->sprite);
+	objectMap.draw(&engine->window);
 
 	if (showLines)
 		engine->window.draw(collisionMap.lines);
+
+	platformPoints.draw(&engine->window);
 
 	engine->window.draw(selector.rect);
 

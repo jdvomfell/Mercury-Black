@@ -118,6 +118,16 @@ void ObjectMap::remove() {
 
 }
 
+void ObjectMap::draw(sf::RenderWindow * window) {
+
+	std::map<float, Object *>::iterator it;
+	for (it = map.begin(); it != map.end(); it++)
+		window->draw(it->second->sprite);
+
+	return;
+
+}
+
 std::map <float, Object *>::iterator ObjectMap::findRight(float x) {
 
 	return map.lower_bound(x);
