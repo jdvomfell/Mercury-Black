@@ -120,9 +120,9 @@ void Game::update(const float dt) {
 	inputSystem(&world);
 	gravitySystem(&world);
 	collisionSystem(&world, &collisionMap);
+	movementSystem(&world);
 	shapeCollSystem(&world, &platformMap);
 	//animationSystem(&world, dt, PLAYER);
-	movementSystem(&world);
 	damageSystem(&world, dt);
 
 	//listener.setPosition(world.position[0].x, world.position[0].y, 0);
