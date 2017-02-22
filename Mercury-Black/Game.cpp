@@ -16,11 +16,11 @@ void Game::init() {
 	objectMap.load();
 	collisionMap.load();
 
-	std::vector<sf::Vector2f> points;
+	/*std::vector<sf::Vector2f> points;
 	points.push_back(sf::Vector2f(200, 700));
 	points.push_back(sf::Vector2f(0, 400));
 	points.push_back(sf::Vector2f(-200, 700));
-	platformMap.add(points);
+	platformMap.add(points);*/
 
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);

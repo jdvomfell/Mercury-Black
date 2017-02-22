@@ -14,8 +14,11 @@ class PlatformMap {
 		sf::Vector2f getEdgeNormal(int vertex, sf::ConvexShape * shape);
 		sf::Vector2f getProjection(sf::Vector2f normal, sf::ConvexShape * shape);
 		
-		void add(std::vector <sf::Vector2f> points);
+		void add(sf::VertexArray * points);
 		void remove();
+		void clean();
+
+		void draw(sf::RenderWindow * window);
 
 		void save();
 		void load();

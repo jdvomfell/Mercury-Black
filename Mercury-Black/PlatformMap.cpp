@@ -12,16 +12,19 @@ void PlatformMap::load()
 
 }
 
-void PlatformMap::add(std::vector <sf::Vector2f> points)
+void PlatformMap::add(sf::VertexArray * points)
 {
 
-	sf::ConvexShape * shape = new sf::ConvexShape(points.size());
+	if (points->getVertexCount() == 0)
+		return;
+
+	sf::ConvexShape * shape = new sf::ConvexShape(points->getVertexCount());
 	
 	shape->setFillColor(sf::Color::Black);
 	
-	for (size_t i = 0; i < points.size(); i++) {
+	for (size_t i = 0; i < points->getVertexCount(); i++) {
 
-		shape->setPoint(i, points[i]);
+		shape->setPoint(i, (*points)[i].position);
 
 	}
 
@@ -32,6 +35,21 @@ void PlatformMap::add(std::vector <sf::Vector2f> points)
 
 void PlatformMap::remove()
 {
+
+}
+
+void PlatformMap::clean() {
+
+	std::map<float, sf::ConvexShape *>::iterator pit = map.begin();
+
+	while(pit != map.end()) {
+
+		delete(pit->second);
+		map.erase(pit++);
+
+	}
+
+	return;
 
 }
 
@@ -63,7 +81,10 @@ sf::Vector2f PlatformMap::getEdgeNormal(int vertex, sf::ConvexShape * shape) {
 
 /* Projects Shape onto SAT (normal of shape edge) */
 sf::Vector2f PlatformMap::getProjection(sf::Vector2f normal, sf::ConvexShape * shape) {
-	double min, max, projection;
+	
+	float min;
+	float max;
+	float projection;
 
 	size_t i;
 
@@ -85,6 +106,17 @@ sf::Vector2f PlatformMap::getProjection(sf::Vector2f normal, sf::ConvexShape * s
 	projReturn.y = max; 
 
 	return projReturn;
+
+}
+
+void PlatformMap::draw(sf::RenderWindow * window) {
+
+	std::map<float, sf::ConvexShape *>::iterator pit;
+
+	for (pit = map.begin(); pit != map.end(); pit++)
+		window->draw(*pit->second);
+
+	return;
 
 }
 
@@ -195,13 +227,29 @@ void PlatformPoints::update() {
 	PlatPoint * uit = begin;
 
 	while (uit != NULL) {
-		printf("YO\n");
 		if (current == uit)
 			lines.append(sf::Vertex(uit->point, sf::Color::Red));
 		else
 			lines.append(sf::Vertex(uit->point, sf::Color::Black));
 		uit = uit->nextPoint;
 	}
-	printf("\n...\n\n");
+
+}
+
+void PlatformPoints::clean() {
+
+	current = begin;
+
+	while (begin != NULL) {
+
+		current = begin;
+
+		begin = current->nextPoint;
+		delete(current);
+
+	}
+
+	current = NULL;
+	lines.clear();
 
 }

@@ -42,6 +42,8 @@ void Editor::clean() {
 
 	collisionMap.clean();
 	objectMap.clean();
+	platformPoints.clean();
+	platformMap.clean();
 
 }
 
@@ -139,6 +141,15 @@ void Editor::handleEvent() {
 
 		}
 
+		if (event.key.code == sf::Keyboard::Return) {
+
+			if (mode == PLATFORM) {
+				platformMap.add(&platformPoints.lines);
+				platformPoints.clean();
+			}
+
+		}
+
 		if (event.key.code == sf::Keyboard::A)
 			doLeft = true;
 		if (event.key.code == sf::Keyboard::D)
@@ -221,6 +232,7 @@ void Editor::render(const float dt) {
 		engine->window.draw(collisionMap.lines);
 
 	platformPoints.draw(&engine->window);
+	platformMap.draw(&engine->window);
 
 	engine->window.draw(selector.rect);
 
