@@ -3,10 +3,12 @@
 
 void CollisionMap::clean() {
 
-	for (selected = map.begin(); selected != map.end();) {
+	std::map<float, sf::Vertex *>::iterator cit = map.begin();
 
-		delete(selected->second);
-		map.erase(selected++);
+	while(cit != map.end()) {
+
+		delete(cit->second);
+		map.erase(cit++);
 
 	}
 

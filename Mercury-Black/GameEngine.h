@@ -30,7 +30,6 @@ public:
 
 private:
 	
-	void loadAllTextures();
 	std::vector <GameState *> states;
 	bool running;
 

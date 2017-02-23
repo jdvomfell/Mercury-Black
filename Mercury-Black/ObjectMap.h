@@ -25,6 +25,8 @@ public:
 	void insert(sf::Vector2f position);
 	void remove();
 
+	void draw(sf::RenderWindow * window);
+
 	std::map <float, Object *>::iterator findClosest(sf::Vector2f);
 	std::map <float, Object *>::iterator findRight(float x);
 	std::map <float, Object *>::iterator findLeft(float x);

@@ -111,6 +111,9 @@
     <ClCompile Include="Options.cpp">
       <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
+    <ClCompile Include="PauseMenu.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="Options.h">
       <Filter>Header Files\GameUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseMenu.h">
+      <Filter>Header Files\GameStates</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

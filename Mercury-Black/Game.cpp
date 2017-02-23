@@ -2,6 +2,7 @@
 
 #include "System.h"
 #include "MainMenu.h"
+#include "PauseMenu.h"
 #include "Editor.h"
 
 Game Game::game;
@@ -11,23 +12,28 @@ void Game::init() {
 	world.textureManager = &engine->textureManager;
 
 	createPlayer(&world, 900, 0);
+	createTest(&world, 2000, 0); / ';'
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	collisionMap.load();
 
-	platformMap.add(sf::Vector2f(200, 1200), 3);
+	/*std::vector<sf::Vector2f> points;
+	points.push_back(sf::Vector2f(200, 700));
+	points.push_back(sf::Vector2f(0, 400));
+	points.push_back(sf::Vector2f(-200, 700));
+	platformMap.add(points);*/
 
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
 
-	/*music.openFromFile("Music/drank.ogg");
+	music.openFromFile("Music/drank.ogg");
 	music.setVolume(20);
-	music.setPosition(22800, 0, 0);
+	music.setPosition(0, 0, 0);
 	music.setMinDistance(1500.0f);
 	music.setAttenuation(30);
 	music.setLoop(true);
-	music.play();*/
+	music.play();
 
 }
 
@@ -55,7 +61,7 @@ void Game::handleEvent() {
 		case sf::Event::KeyPressed:
 
 			if (event.key.code == sf::Keyboard::Escape)
-				engine->changeState(MainMenu::instance(engine));
+				engine->pushState(PauseMenu::instance(engine));
 
 			if (event.key.code == sf::Keyboard::Tab)
 				engine->changeState(Editor::instance(engine));
@@ -142,29 +148,9 @@ void Game::render(const float dt) {
 	engine->window.draw(collisionMap.lines);
 
 	engine->window.draw(rect);
-	engine->window.draw(slide1);
-	engine->window.draw(slide2);
-	engine->window.draw(slide3);
-	engine->window.draw(slide4);
-	engine->window.draw(slide5);
-	engine->window.draw(slide6);
-	engine->window.draw(slide7);
-	engine->window.draw(slide8);
-	engine->window.draw(slide9);
-	engine->window.draw(slide10);
-	engine->window.draw(slide11);
-	engine->window.draw(slide12);
-	engine->window.draw(slide13);
-	engine->window.draw(slide14);
-	engine->window.draw(slide15);
-	engine->window.draw(slide16);
-	engine->window.draw(slide17);
-	engine->window.draw(slide18);
-	engine->window.draw(slide19);
-	engine->window.draw(slide20);
 
 	renderSystem(&world, &engine->window);
 
-	for (platformMap.pit = platformMap.platformMap.begin(); platformMap.pit != platformMap.platformMap.end(); platformMap.pit++)
-		engine->window.draw(*(platformMap.pit->second->shape));
+	for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)
+		engine->window.draw(*(pit->second));
 }

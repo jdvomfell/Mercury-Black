@@ -11,6 +11,11 @@ void scriptTest(World * world, int entityID, float dt) {
 	s = &(world->sprite[entityID]);
 	sp = &(world->scriptParameters[entityID]);
 
+	if (sp->currentState == DEATH_STATE) {
+		destroyEntity(world, entityID);
+		return;
+	}
+
 	scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
 	scriptAttack(world, entityID, world->position[0].x, world->position[0].y);
 

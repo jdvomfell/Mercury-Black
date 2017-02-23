@@ -1,4 +1,5 @@
 #include "HitboxEditor.h"
+#include "MainMenu.h"
 
 HitboxEditor HitboxEditor::hitboxEditor;
 
@@ -45,6 +46,9 @@ void HitboxEditor::handleEvent() {
 			textureID = engine->textureManager.getPrevTextureID(textureID);
 
 		}
+
+		if (event.key.code == sf::Keyboard::Escape)
+			engine->changeState(MainMenu::instance(engine));
 
 	}
 

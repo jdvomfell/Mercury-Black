@@ -14,10 +14,8 @@ void gravitySystem(World * world);
 void movementSystem(World * world);
 void animationSystem(World * world, float dt);
 void collisionSystem(World * world, CollisionMap * collisionMap);
-void shapeCollSystem(World * world, PlatformMap * platforms);
+void shapeCollSystem(World * world, PlatformMap * platformMap);
 
-sf::Vector2f getEntityNormal(std::string side, sf::Sprite entity);
-sf::Vector2f getEntityProjection(sf::Vector2f normal, sf::Sprite entity);
 bool isCollision(sf::Vector2f shapeProj, sf::Vector2f entityProj);
 
 #endif
