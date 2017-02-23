@@ -11,6 +11,7 @@
 #define JUMP_STATE 3
 #define SPAWN_STATE 4
 #define NOT_SPAWNED_STATE 5 
+#define DEATH_STATE 6
 
 enum Component {
 
