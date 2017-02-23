@@ -23,8 +23,10 @@ void GameEngine::clean() {
 void GameEngine::changeState(GameState * state) {
 
 	if (!states.empty()) {
-		states.back()->clean();
-		states.pop_back();
+		for (int i = 0; i < states.size(); i++) {
+			states[i]->clean();
+		}
+		states.clear();
 	}
 
 	states.push_back(state);

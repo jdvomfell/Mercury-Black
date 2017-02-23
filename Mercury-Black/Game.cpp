@@ -2,6 +2,7 @@
 
 #include "System.h"
 #include "MainMenu.h"
+#include "PauseMenu.h"
 #include "Editor.h"
 
 Game Game::game;
@@ -60,7 +61,7 @@ void Game::handleEvent() {
 		case sf::Event::KeyPressed:
 
 			if (event.key.code == sf::Keyboard::Escape)
-				engine->changeState(MainMenu::instance(engine));
+				engine->pushState(PauseMenu::instance(engine));
 
 			if (event.key.code == sf::Keyboard::Tab)
 				engine->changeState(Editor::instance(engine));
