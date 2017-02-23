@@ -61,7 +61,7 @@ void Game::handleEvent() {
 
 			if (event.key.code == sf::Keyboard::Escape)
 				engine->pushState(PauseMenu::instance(engine));
-
+			
 			if (event.key.code == sf::Keyboard::Tab)
 				engine->changeState(Editor::instance(engine));
 

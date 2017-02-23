@@ -2,71 +2,33 @@
 #define BUTTONS_H
 
 #include "GUI.h"
+#include "Buttons.h"
+#include "Editor.h"
+#include "Game.h"
+#include "HitboxEditor.h"
+#include "Fade.h"
 
-class GUI_HitboxEditor : public GUI {
 
-public:
-
-	GUI_HitboxEditor(){}
-	GUI_HitboxEditor(float x, float y, sf::Color color, int size, sf::Font * font);
-
-	void interact(GameEngine * engine);
-
-};
-
-class GUI_NewGame : public GUI {
+class Button : public GUI {
 
 public:
+    typedef void(*eventFunction)(GameEngine *);
 
-	GUI_NewGame() {}
-	GUI_NewGame(float x, float y, sf::Color color, int size, sf::Font * font);
-	
-	void interact(GameEngine * engine);
+    Button() {}
+    Button(std::string name, float x, float y, sf::Color color, int size, sf::Font * font, eventFunction funcPtr);
+	// A destructor
+    ~Button(){ m_funcPtr = NULL; }        
 
+    // Invokes the registered function
+    void interact(GameEngine *);
+
+    private:
+        eventFunction m_funcPtr;
 };
 
-class GUI_LoadGame : public GUI {
-
-public:
-
-	GUI_LoadGame() {}
-	GUI_LoadGame(float x, float y, sf::Color color, int size, sf::Font * font);
-
-	void interact(GameEngine * engine);
-
-};
-
-class GUI_Editor : public GUI {
-
-public:
-
-	GUI_Editor() {}
-	GUI_Editor(float x, float y, sf::Color color, int size, sf::Font * font);
-
-	void interact(GameEngine * engine);
-
-};
-
-class GUI_Options : public GUI {
-
-public:
-
-	GUI_Options() {}
-	GUI_Options(float x, float y, sf::Color color, int size, sf::Font * font);
-
-	void interact(GameEngine * engine);
-
-};
-
-class GUI_Quit : public GUI {
-
-public:
-
-	GUI_Quit() {}
-	GUI_Quit(float x, float y, sf::Color color, int size, sf::Font * font);
-
-	void interact(GameEngine * engine);
-
-};
-
+void changeToGame(GameEngine * engine);
+void changeToEditor(GameEngine * engine);
+void changeToHitboxEditor(GameEngine * engine);
+void quitGame(GameEngine * engine);
+void doNothing(GameEngine * engine);
 #endif
