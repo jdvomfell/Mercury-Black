@@ -25,13 +25,13 @@ void Game::init() {
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
 
-	/*music.openFromFile("Music/drank.ogg");
+	music.openFromFile("Music/drank.ogg");
 	music.setVolume(20);
-	music.setPosition(22800, 0, 0);
+	music.setPosition(0, 0, 0);
 	music.setMinDistance(1500.0f);
 	music.setAttenuation(30);
 	music.setLoop(true);
-	music.play();*/
+	music.play();
 
 }
 

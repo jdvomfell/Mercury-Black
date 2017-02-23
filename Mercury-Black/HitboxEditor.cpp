@@ -46,6 +46,9 @@ void HitboxEditor::handleEvent() {
 
 		}
 
+		if (event.key.code == sf::Keyboard::Escape)
+			engine->popState();
+
 	}
 
 }
