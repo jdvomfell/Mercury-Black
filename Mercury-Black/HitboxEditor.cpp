@@ -1,4 +1,5 @@
 #include "HitboxEditor.h"
+#include "MainMenu.h"
 
 HitboxEditor HitboxEditor::hitboxEditor;
 
@@ -47,7 +48,7 @@ void HitboxEditor::handleEvent() {
 		}
 
 		if (event.key.code == sf::Keyboard::Escape)
-			engine->popState();
+			engine->changeState(MainMenu::instance(engine));
 
 	}
 
