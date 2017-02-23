@@ -14,21 +14,14 @@ void MainMenu::init() {
 	title.setOutlineColor(uText);
 	title.setOrigin(title.getGlobalBounds().width / 2, title.getGlobalBounds().height / 2);
 
-	newButton = GUI_NewGame(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
-	loadButton = GUI_LoadGame(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
-	editorButton = GUI_Editor(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
-	hitboxEditorButton = GUI_HitboxEditor(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
-	optionsButton = GUI_Options(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
-	quitButton = GUI_Quit(0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font);
+	newButton = Button("New", 0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font, &changeToGame);
+	loadButton = Button("Load", 0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font, &doNothing);
+	editorButton = Button("Editor", 0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font, &changeToEditor);
+	hitboxEditorButton = Button("HB Editor", 0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font, &changeToHitboxEditor);
+	optionsButton = Button("Options", 0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font, &doNothing);
+	quitButton = Button("Quit", 0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font, &quitGame);
 
-	newButton.text.setOrigin(newButton.text.getLocalBounds().width / 2, newButton.text.getLocalBounds().height / 2);
-	loadButton.text.setOrigin(loadButton.text.getLocalBounds().width / 2, loadButton.text.getLocalBounds().height / 2);
-	editorButton.text.setOrigin(editorButton.text.getLocalBounds().width / 2, editorButton.text.getLocalBounds().height / 2);
-	hitboxEditorButton.text.setOrigin(hitboxEditorButton.text.getLocalBounds().width / 2, hitboxEditorButton.text.getLocalBounds().height / 2);
-	optionsButton.text.setOrigin(optionsButton.text.getLocalBounds().width / 2, optionsButton.text.getLocalBounds().height / 2);
-	quitButton.text.setOrigin(quitButton.text.getLocalBounds().width / 2, quitButton.text.getLocalBounds().height / 2);
-
-	buttons.resize(5);
+	buttons.resize(6);
 	buttons = { &newButton, &loadButton, &editorButton, &hitboxEditorButton, &optionsButton, &quitButton };
 
 	view = engine->window.getDefaultView();

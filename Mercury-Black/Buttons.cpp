@@ -3,85 +3,35 @@
 #include "Game.h"
 #include "HitboxEditor.h"
 #include "Fade.h"
+#include <string>
 
-GUI_HitboxEditor::GUI_HitboxEditor(float x, float y, sf::Color color, int size, sf::Font * font) {
+Button::Button(std::string name, float x, float y, sf::Color color, int size, sf::Font * font, eventFunction funcPtr){
 
-	text = sf::Text("HB Editor", *font, size);
+	text = sf::Text(name, *font, size);
 	text.setPosition(x, y);
 	text.setFillColor(color);
 
+	text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
+	
+	 m_funcPtr = funcPtr;
 }
 
-void GUI_HitboxEditor::interact(GameEngine * engine) {
-
-	engine->changeState(HitboxEditor::instance(engine));
-
+void Button::interact(GameEngine * engine) {
+	(m_funcPtr)(engine);
 }
 
-GUI_NewGame::GUI_NewGame(float x, float y, sf::Color color, int size, sf::Font * font) {
-
-	text = sf::Text("New", *font, size);
-	text.setPosition(x, y);
-	text.setFillColor(color);
-
-}
-
-void GUI_NewGame::interact(GameEngine * engine) {
-
+void changeToGame(GameEngine * engine) {
 	engine->changeState(Game::instance(engine));
-
 }
-
-GUI_LoadGame::GUI_LoadGame(float x, float y, sf::Color color, int size, sf::Font * font) {
-
-	text = sf::Text("Load", *font, size);
-	text.setPosition(x, y);
-	text.setFillColor(color);
-
-}
-
-void GUI_LoadGame::interact(GameEngine * engine) {
-
-}
-
-GUI_Editor::GUI_Editor(float x, float y, sf::Color color, int size, sf::Font * font) {
-
-	text = sf::Text("Editor", *font, size);
-	text.setPosition(x, y);
-	text.setFillColor(color);
-
-}
-
-void GUI_Editor::interact(GameEngine * engine) {
-
+void changeToEditor(GameEngine * engine) {
 	engine->changeState(Editor::instance(engine));
-
 }
-
-GUI_Options::GUI_Options(float x, float y, sf::Color color, int size, sf::Font * font) {
-
-	text = sf::Text("Options", *font, size);
-	text.setPosition(x, y);
-	text.setFillColor(color);
-
+void changeToHitboxEditor(GameEngine * engine) {
+	engine->changeState(HitboxEditor::instance(engine));
 }
-
-void GUI_Options::interact(GameEngine * engine) {
-
-}
-
-GUI_Quit::GUI_Quit(float x, float y, sf::Color color, int size, sf::Font * font) {
-
-	text = sf::Text("Quit", *font, size);
-	text.setPosition(x, y);
-	text.setFillColor(color);
-
-
-
-}
-
-void GUI_Quit::interact(GameEngine * engine) {
-
+void quitGame(GameEngine * engine) {
 	engine->quit();
-
+}
+void doNothing(GameEngine * engine) {
+	return;
 }

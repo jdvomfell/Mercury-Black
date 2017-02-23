@@ -39,12 +39,12 @@ private:
 
 	std::vector <GUI *> buttons;
 
-	GUI_NewGame newButton;
-	GUI_LoadGame loadButton;
-	GUI_Editor editorButton;
-	GUI_HitboxEditor hitboxEditorButton;
-	GUI_Options optionsButton;
-	GUI_Quit quitButton;
+	Button newButton;
+	Button loadButton;
+	Button editorButton;
+	Button hitboxEditorButton;
+	Button optionsButton;
+	Button quitButton;
 
 	sf::Text title;
 
