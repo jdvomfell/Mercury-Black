@@ -12,17 +12,11 @@ void Game::init() {
 	world.textureManager = &engine->textureManager;
 
 	createPlayer(&world, 900, 0);
-	createTest(&world, 2000, 0); / ';'
+	createTest(&world, 2000, 0);
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	collisionMap.load();
-
-	/*std::vector<sf::Vector2f> points;
-	points.push_back(sf::Vector2f(200, 700));
-	points.push_back(sf::Vector2f(0, 400));
-	points.push_back(sf::Vector2f(-200, 700));
-	platformMap.add(points);*/
 
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);

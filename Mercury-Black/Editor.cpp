@@ -144,7 +144,7 @@ void Editor::handleEvent() {
 		if (event.key.code == sf::Keyboard::Return) {
 
 			if (mode == PLATFORM) {
-				platformMap.add(&platformPoints.lines);
+				platformMap.insert(&platformPoints.lines);
 				platformPoints.clean();
 			}
 
