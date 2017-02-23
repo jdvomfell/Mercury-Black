@@ -88,6 +88,9 @@ void damageSystem(World * world, float dt) {
 
 						h->hurtTimer = 1.0f;
 
+						if (world->health[damageTakerID].current <= 0)
+							world->scriptParameters[damageTakerID].currentState = DEATH_STATE;
+
 						printf("E: %d\n", world->health[damageTakerID].current);
 
 					}

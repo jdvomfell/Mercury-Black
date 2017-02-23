@@ -12,6 +12,7 @@ void Game::init() {
 	world.textureManager = &engine->textureManager;
 
 	createPlayer(&world, 900, 0);
+	createTest(&world, 2000, 0); / ';'
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
