@@ -83,15 +83,8 @@ sf::Vector2f PlatformMap::getEdgeNormal(int vertex, sf::ConvexShape * shape) {
 	edge.x = p1.x - p2.x;
 	edge.y = p1.y - p2.y;
 
-	if (edge.y < 0) {
-		normal.x = edge.y;
-		normal.y = -(edge.x);
-	}
-	else
-	{
-		normal.x = -(edge.y);
-		normal.y = edge.x;
-	}
+	normal.x = edge.y;
+	normal.y = -edge.x;
 
 	return normal;
 }
