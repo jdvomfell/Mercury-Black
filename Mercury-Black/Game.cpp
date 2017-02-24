@@ -12,7 +12,7 @@ void Game::init() {
 	world.textureManager = &engine->textureManager;
 
 	createPlayer(&world, 900, 0);
-	createTest(&world, 2000, 0);
+	//createTest(&world, 2000, 0);
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
@@ -20,6 +20,12 @@ void Game::init() {
 
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
+
+	sf::VertexArray * va = new sf::VertexArray(sf::Lines, 0);
+	va->append(sf::Vertex(sf::Vector2f(0, 500), sf::Color::Black));
+	va->append(sf::Vertex(sf::Vector2f(-200, 700), sf::Color::Black));
+	va->append(sf::Vertex(sf::Vector2f(200, 700), sf::Color::Black));
+	platformMap.insert(va);
 
 	music.openFromFile("Music/drank.ogg");
 	music.setVolume(20);

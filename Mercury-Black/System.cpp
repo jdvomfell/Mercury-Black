@@ -476,7 +476,7 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 				{
 					currentShape->setFillColor(sf::Color::Black);
 					collision = false;
-					//continue;
+					continue;
 				}
 				else
 				{
@@ -497,7 +497,7 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 				{
 					currentShape->setFillColor(sf::Color::Black);
 					collision = false;
-					//continue;
+					continue;
 				}
 				else
 				{

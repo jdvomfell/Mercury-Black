@@ -20,6 +20,7 @@
 #define PLACE 1
 #define DELETE 2
 #define MOVE 3
+#define BOX 4
 
 class Selector {
 
@@ -83,6 +84,10 @@ private:
 	float viewVelY;
 
 	float zoom;
+
+	sf::Vector2f corner1;
+	sf::Vector2f corner2;
+	sf::RectangleShape rect;
 
 	sf::Text modeText;
 	sf::Text toolText;

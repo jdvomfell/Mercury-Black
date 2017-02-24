@@ -46,7 +46,7 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\GameUtility\Resources">
+    <Filter Include="Header Files\Resources">
       <UniqueIdentifier>{99c58a44-4cf3-416e-94f4-ea5ee4d46887}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -150,13 +150,13 @@
       <Filter>Header Files\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="TextureManager.h">
-      <Filter>Header Files\GameUtility\Resources</Filter>
+      <Filter>Header Files\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Animation.h">
-      <Filter>Header Files\GameUtility\Resources</Filter>
+      <Filter>Header Files\Resources</Filter>
     </ClInclude>
     <ClInclude Include="AnimationManager.h">
-      <Filter>Header Files\GameUtility\Resources</Filter>
+      <Filter>Header Files\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ObjectMap.h">
       <Filter>Header Files\GameUtility</Filter>

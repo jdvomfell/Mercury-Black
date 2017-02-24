@@ -42,7 +42,7 @@ void PlatformMap::insertBox(sf::Vector2f topLeft, sf::Vector2f bottomRight) {
 	shape->setPoint(0, topLeft);
 	shape->setPoint(1, sf::Vector2f(topLeft.x, bottomRight.y));
 	shape->setPoint(2, bottomRight);
-	shape->setPoint(4, sf::Vector2f(bottomRight.x, topLeft.y));
+	shape->setPoint(3, sf::Vector2f(bottomRight.x, topLeft.y));
 
 	map.insert(std::make_pair(shape->getPoint(0).x, shape));
 
