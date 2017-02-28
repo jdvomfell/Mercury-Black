@@ -2,6 +2,7 @@
 #include "Editor.h"
 #include "Game.h"
 #include "HitboxEditor.h"
+#include "MainMenu.h"
 #include "Fade.h"
 #include <string>
 
@@ -20,14 +21,21 @@ void Button::interact(GameEngine * engine) {
 	(m_funcPtr)(engine);
 }
 
+// functions that the function pointer in Button will point to
 void changeToGame(GameEngine * engine) {
 	engine->changeState(Game::instance(engine));
+}
+void popState(GameEngine * engine) {
+	engine->popState();
 }
 void changeToEditor(GameEngine * engine) {
 	engine->changeState(Editor::instance(engine));
 }
 void changeToHitboxEditor(GameEngine * engine) {
 	engine->changeState(HitboxEditor::instance(engine));
+}
+void changeToMainMenu(GameEngine * engine) {
+	engine->changeState(MainMenu::instance(engine));
 }
 void quitGame(GameEngine * engine) {
 	engine->quit();

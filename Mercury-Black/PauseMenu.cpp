@@ -8,33 +8,29 @@ void PauseMenu::init() {
 	hText = sf::Color::Black;
 	uText = sf::Color(100, 100, 100, 255);
 
-	title = sf::Text("Paused", engine->textureManager.font, MENU_TITLE_SIZE);
+	title = sf::Text("Paused", engine->textureManager.font, PAUSE_TITLE_SIZE);
 	title.setFillColor(sf::Color::Black);
 	title.setOutlineThickness(5);
 	title.setOutlineColor(uText);
 	title.setOrigin(title.getGlobalBounds().width / 2, title.getGlobalBounds().height / 2);
 
-	newButton = Button("New", 0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font, &changeToGame);
-	loadButton = Button("Load", 0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font, &doNothing);
-	editorButton = Button("Editor", 0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font, &changeToEditor);
-	hitboxEditorButton = Button("HB Editor", 0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font, &changeToHitboxEditor);
-	optionsButton = Button("Options", 0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font, &doNothing);
-	quitButton = Button("Quit", 0, 0, uText, MENU_FONT_SIZE, &engine->textureManager.font, &quitGame);
+	resumeButton = Button("Resume", 0, 0, uText, PAUSE_FONT_SIZE, &engine->textureManager.font, &popState);
+	optionsButton = Button("Options", 0, 0, uText, PAUSE_FONT_SIZE, &engine->textureManager.font, &doNothing);
+	mainMenuButton = Button("Main Menu", 0, 0, uText, PAUSE_FONT_SIZE, &engine->textureManager.font, &changeToMainMenu);
+	quitButton = Button("Quit", 0, 0, uText, PAUSE_FONT_SIZE, &engine->textureManager.font, &quitGame);
 
-	buttons.resize(6);
-	buttons = { &newButton, &loadButton, &editorButton, &hitboxEditorButton, &optionsButton, &quitButton };
+	buttons.resize(4);
+	buttons = { &resumeButton, &optionsButton, &mainMenuButton, &quitButton };
 
 	view = engine->window.getDefaultView();
 	engine->window.setView(view);
 
-	title.setPosition(view.getCenter().x, view.getCenter().y - (view.getSize().y / 5));
+	title.setPosition(view.getCenter().x, view.getCenter().y - (view.getSize().y / 3));
 
-	newButton.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 1 / 3, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
-	loadButton.text.setPosition(view.getCenter().x, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
-	editorButton.text.setPosition(view.getCenter().x + (view.getSize().x / 2) * 1 / 3, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
-	hitboxEditorButton.text.setPosition(view.getCenter().x, title.getPosition().y + (view.getSize().y / 2));
-	optionsButton.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 1 / 2, title.getPosition().y + (view.getSize().y / 2));
-	quitButton.text.setPosition(view.getCenter().x + (view.getSize().x / 2) * 1 / 2, title.getPosition().y + (view.getSize().y / 2));
+	resumeButton.text.setPosition(view.getCenter().x, title.getPosition().y + (view.getSize().y / 6));
+	optionsButton.text.setPosition(view.getCenter().x, title.getPosition().y + 2*(view.getSize().y / 6));
+	mainMenuButton.text.setPosition(view.getCenter().x, title.getPosition().y + 3*(view.getSize().y / 6));
+	quitButton.text.setPosition(view.getCenter().x, title.getPosition().y + 4*(view.getSize().y / 6));
 
 }
 
@@ -101,12 +97,8 @@ void PauseMenu::update(const float dt) {
 void PauseMenu::render(const float dt) {
 
 	engine->window.clear(sf::Color(248, 240, 225));
-	engine->window.draw(newButton.text);
-	engine->window.draw(loadButton.text);
-	engine->window.draw(editorButton.text);
-	engine->window.draw(hitboxEditorButton.text);
-	engine->window.draw(optionsButton.text);
-	engine->window.draw(quitButton.text);
+	for (size_t i = 0; i < buttons.size(); i++)
+		engine->window.draw(buttons[i]->text);
 	engine->window.draw(title);
 
 }

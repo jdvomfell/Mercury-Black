@@ -94,12 +94,8 @@ void MainMenu::update(const float dt) {
 
 void MainMenu::render(const float dt) {
 
-	engine->window.draw(newButton.text);
-	engine->window.draw(loadButton.text);
-	engine->window.draw(editorButton.text);
-	engine->window.draw(hitboxEditorButton.text);
-	engine->window.draw(optionsButton.text);
-	engine->window.draw(quitButton.text);
+	for (size_t i = 0; i < buttons.size(); i++)
+		engine->window.draw(buttons[i]->text);
 	engine->window.draw(title);
 
 }

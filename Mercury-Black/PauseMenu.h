@@ -4,8 +4,8 @@
 #include "GameState.h"
 #include "Buttons.h"
 
-#define MENU_FONT_SIZE 70
-#define MENU_TITLE_SIZE 200
+#define PAUSE_FONT_SIZE 70
+#define PAUSE_TITLE_SIZE 200
 
 #define NEW_GAME 1
 #define LOAD_GAME 2
@@ -39,11 +39,9 @@ private:
 
 	std::vector <GUI *> buttons;
 
-	Button newButton;
-	Button loadButton;
-	Button editorButton;
-	Button hitboxEditorButton;
+	Button resumeButton;
 	Button optionsButton;
+	Button mainMenuButton;
 	Button quitButton;
 
 	sf::Text title;

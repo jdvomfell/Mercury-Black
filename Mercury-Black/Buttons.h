@@ -27,8 +27,10 @@ public:
 };
 
 void changeToGame(GameEngine * engine);
+void popState(GameEngine * engine);
 void changeToEditor(GameEngine * engine);
 void changeToHitboxEditor(GameEngine * engine);
+void changeToMainMenu(GameEngine * engine);
 void quitGame(GameEngine * engine);
 void doNothing(GameEngine * engine);
 #endif
