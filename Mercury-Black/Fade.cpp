@@ -131,7 +131,7 @@ void FadeOut::update(const float dt) {
 
 	}
 
-	fadeColor = sf::Color(0, 0, 0, alpha);
+	fadeColor = sf::Color(0, 0, 0, (int) alpha);
 	overlay.setFillColor(fadeColor);
 
 }
@@ -147,7 +147,7 @@ TransitionState TransitionState::transitionState;
 void TransitionState::init() {
 
 	overlay.setPosition(0, 0);
-	overlay.setSize(sf::Vector2f(engine->window.getSize().x, engine->window.getSize().y));
+	overlay.setSize(sf::Vector2f((float)engine->window.getSize().x, (float)engine->window.getSize().y));
 	overlay.setFillColor(sf::Color::White);
 
 }

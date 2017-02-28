@@ -12,7 +12,7 @@ void PlatformMap::load()
 
 }
 
-void PlatformMap::add(sf::VertexArray * points)
+void PlatformMap::insert(sf::VertexArray * points)
 {
 
 	if (points->getVertexCount() == 0)
@@ -31,6 +31,23 @@ void PlatformMap::add(sf::VertexArray * points)
 	map.insert(std::make_pair(shape->getPoint(0).x, shape));
 
 	return;
+}
+
+void PlatformMap::insertBox(sf::Vector2f topLeft, sf::Vector2f bottomRight) {
+
+	sf::ConvexShape * shape = new sf::ConvexShape(4);
+
+	shape->setFillColor(sf::Color::Black);
+
+	shape->setPoint(0, topLeft);
+	shape->setPoint(1, sf::Vector2f(topLeft.x, bottomRight.y));
+	shape->setPoint(2, bottomRight);
+	shape->setPoint(3, sf::Vector2f(bottomRight.x, topLeft.y));
+
+	map.insert(std::make_pair(shape->getPoint(0).x, shape));
+
+	return;
+
 }
 
 void PlatformMap::remove()
@@ -66,15 +83,8 @@ sf::Vector2f PlatformMap::getEdgeNormal(int vertex, sf::ConvexShape * shape) {
 	edge.x = p1.x - p2.x;
 	edge.y = p1.y - p2.y;
 
-	if (edge.y < 0) {
-		normal.x = edge.y;
-		normal.y = -(edge.x);
-	}
-	else
-	{
-		normal.x = -(edge.y);
-		normal.y = edge.x;
-	}
+	normal.x = edge.y;
+	normal.y = -edge.x;
 
 	return normal;
 }

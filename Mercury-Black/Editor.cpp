@@ -83,8 +83,10 @@ void Editor::handleEvent() {
 			if (mode == OBJECT)
 				objectMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 			if (mode == PLATFORM)
-				platformPoints.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
-
+				if (tool == BOX) 
+					corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+				else
+					platformPoints.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 		}
 
 		if (event.mouseButton.button == sf::Mouse::Right) {
@@ -120,6 +122,21 @@ void Editor::handleEvent() {
 
 		break;
 
+	case sf::Event::MouseButtonReleased:
+
+		if (event.mouseButton.button == sf::Mouse::Left) {
+
+			if (mode == PLATFORM) {
+				if (tool == BOX) {
+					corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+					platformMap.insertBox(corner1, corner2);
+				}
+			}
+
+		}
+
+		break;
+
 	case sf::Event::KeyPressed:
 		
 		if (event.key.code == sf::Keyboard::Escape)
@@ -144,7 +161,7 @@ void Editor::handleEvent() {
 		if (event.key.code == sf::Keyboard::Return) {
 
 			if (mode == PLATFORM) {
-				platformMap.add(&platformPoints.lines);
+				platformMap.insert(&platformPoints.lines);
 				platformPoints.clean();
 			}
 
@@ -271,6 +288,10 @@ void Editor::rotateTool() {
 	else if (tool == DELETE) {
 		tool = MOVE;
 		toolText.setString("Tool: Move");
+	}
+	else if (tool == MOVE) {
+		tool = BOX;
+		toolText.setString("Tool: Box");
 	}
 	else {
 		tool = PLACE;

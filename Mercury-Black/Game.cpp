@@ -12,20 +12,20 @@ void Game::init() {
 	world.textureManager = &engine->textureManager;
 
 	createPlayer(&world, 900, 0);
-	createTest(&world, 2000, 0);
+	//createTest(&world, 2000, 0);
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	collisionMap.load();
 
-	/*std::vector<sf::Vector2f> points;
-	points.push_back(sf::Vector2f(200, 700));
-	points.push_back(sf::Vector2f(0, 400));
-	points.push_back(sf::Vector2f(-200, 700));
-	platformMap.add(points);*/
-
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
+
+	sf::VertexArray * va = new sf::VertexArray(sf::Lines, 0);
+	va->append(sf::Vertex(sf::Vector2f(900, 800), sf::Color::Black));
+	va->append(sf::Vertex(sf::Vector2f(700, 1000), sf::Color::Black));
+	va->append(sf::Vertex(sf::Vector2f(1100, 1000), sf::Color::Black));
+	platformMap.insert(va);
 
 	music.openFromFile("Music/drank.ogg");
 	music.setVolume(20);
