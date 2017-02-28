@@ -1,14 +1,85 @@
 #include "PlatformMap.h"
 
 #include "TextureManager.h"
+#include <fstream>
 
 void PlatformMap::save()
 {
+
+	std::ofstream ofstream;
+	std::string filename = "platform.dat";
+
+	ofstream.open(filename, std::ios::out | std::ios::binary);
+
+	for (std::map<float, sf::ConvexShape *>::iterator it = map.begin(); it != map.end(); it++) {
+
+		ofstream
+			<< it->second->getPointCount() << std::endl;
+
+		for (size_t i = 0; i < it->second->getPointCount(); i++) {
+
+			ofstream
+				<< it->second->getPoint(i).x << std::endl
+				<< it->second->getPoint(i).y << std::endl;
+
+		}
+
+	}
+
+	ofstream.close();
 
 }
 
 void PlatformMap::load()
 {
+
+	size_t pointCount;
+	sf::Vector2f point;
+	unsigned int platformCount = 0;
+
+	PlatformPoints platformPoints;
+
+	std::ifstream ifstream;
+	std::string filename = "platform.dat";
+
+	ifstream.open(filename, std::ios::in | std::ios::binary);
+
+	if (!ifstream.is_open()) {
+		printf("Cannot Open Platform File (Possibly No File To Load)\n");
+		return;
+	}
+
+	clean();
+
+	while (ifstream >> pointCount) {
+
+		if (ifstream.eof())
+			return;
+
+		platformCount++;
+
+		printf("PC: %d\n", pointCount);
+
+		printf("PLAT C: %d\n", platformCount);
+
+		for (size_t i = 0; i < pointCount; i++) {
+
+			ifstream >> point.x >> point.y;
+
+			printf("X,Y: %f %f\n", point.x, point.y);
+
+			platformPoints.insert(point);
+
+		}
+
+		insert(&platformPoints.lines);
+		platformPoints.clean();
+
+	}
+
+	printf("Loaded %d Platforms\n", platformCount);
+
+	ifstream.close();
 
 }
 
@@ -19,9 +90,9 @@ void PlatformMap::insert(sf::VertexArray * points)
 		return;
 
 	sf::ConvexShape * shape = new sf::ConvexShape(points->getVertexCount());
-	
+
 	shape->setFillColor(sf::Color::Black);
-	
+
 	for (size_t i = 0; i < points->getVertexCount(); i++) {
 
 		shape->setPoint(i, (*points)[i].position);
@@ -59,7 +130,7 @@ void PlatformMap::clean() {
 
 	std::map<float, sf::ConvexShape *>::iterator pit = map.begin();
 
-	while(pit != map.end()) {
+	while (pit != map.end()) {
 
 		delete(pit->second);
 		map.erase(pit++);
@@ -71,6 +142,7 @@ void PlatformMap::clean() {
 }
 
 sf::Vector2f PlatformMap::getEdgeNormal(int vertex, sf::ConvexShape * shape) {
+
 	sf::Vector2f p1, p2, edge, normal;
 
 	p1 = shape->getPoint(vertex);
@@ -91,21 +163,28 @@ sf::Vector2f PlatformMap::getEdgeNormal(int vertex, sf::ConvexShape * shape) {
 
 /* Projects Shape onto SAT (normal of shape edge) */
 sf::Vector2f PlatformMap::getProjection(sf::Vector2f normal, sf::ConvexShape * shape) {
-	
+
 	float min;
 	float max;
 	float projection;
 
+	sf::Vector2f unitNormal;
+
+	unitNormal.x = normal.x / (sqrt(pow(normal.x, 2) + pow(normal.y, 2)));
+	unitNormal.y = normal.y / (sqrt(pow(normal.x, 2) + pow(normal.y, 2)));
+
+	normal = unitNormal;
+
 	size_t i;
 
-	sf::Vector2f projReturn; 
+	sf::Vector2f projReturn;
 
 	min = (shape->getPoint(0).x * normal.x) + (shape->getPoint(0).y * normal.y);
 	max = min;
 
 	for (i = 1; i < shape->getPointCount(); i++)
 	{
-		projection = (shape->getPoint(i).x * normal.x) + (shape->getPoint(i).y * normal.y);	
+		projection = (shape->getPoint(i).x * normal.x) + (shape->getPoint(i).y * normal.y);
 		if (projection < min)
 			min = projection;
 		else if (projection > max)
@@ -113,7 +192,7 @@ sf::Vector2f PlatformMap::getProjection(sf::Vector2f normal, sf::ConvexShape * s
 	}
 
 	projReturn.x = min;
-	projReturn.y = max; 
+	projReturn.y = max;
 
 	return projReturn;
 
@@ -140,10 +219,10 @@ void PlatformPoints::insert(sf::Vector2f point) {
 
 	/* If There Is An Existing Point */
 	if (current != NULL) {
-		
+
 		/* Set Previous */
 		platPoint->prevPoint = current;
-		
+
 		/* Set Next */
 		if (current->nextPoint != NULL) {
 			platPoint->nextPoint = current->nextPoint;

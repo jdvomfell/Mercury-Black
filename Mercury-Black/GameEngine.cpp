@@ -23,7 +23,7 @@ void GameEngine::clean() {
 void GameEngine::changeState(GameState * state) {
 
 	if (!states.empty()) {
-		for (int i = 0; i < states.size(); i++) {
+		for (size_t i = 0; i < states.size(); i++) {
 			states[i]->clean();
 		}
 		states.clear();

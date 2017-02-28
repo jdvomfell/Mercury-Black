@@ -10,7 +10,7 @@
 Editor Editor::editor;
 
 void Editor::init() {
-	
+
 	selector = Selector();
 
 	showLines = true;
@@ -32,6 +32,8 @@ void Editor::init() {
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	textureText.setString(objectMap.object.textureName);
+
+	platformMap.load();
 
 	zoom = 2;
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
@@ -56,9 +58,9 @@ void Editor::handleEvent() {
 	switch (event.type) {
 
 	case sf::Event::Closed:
-		
+
 		engine->quit();
-		
+
 		break;
 
 	case sf::Event::MouseWheelScrolled:
@@ -77,13 +79,13 @@ void Editor::handleEvent() {
 	case sf::Event::MouseButtonPressed:
 
 		if (event.mouseButton.button == sf::Mouse::Left) {
-			
-			if(mode == POINT)
+
+			if (mode == POINT)
 				collisionMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 			if (mode == OBJECT)
 				objectMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 			if (mode == PLATFORM)
-				if (tool == BOX) 
+				if (tool == BOX)
 					corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
 				else
 					platformPoints.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
@@ -103,7 +105,7 @@ void Editor::handleEvent() {
 			}
 
 			if (mode == OBJECT) {
-				
+
 				objectMap.selected = objectMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
 				if (objectMap.selected != objectMap.map.end()) {
@@ -138,7 +140,7 @@ void Editor::handleEvent() {
 		break;
 
 	case sf::Event::KeyPressed:
-		
+
 		if (event.key.code == sf::Keyboard::Escape)
 			engine->changeState(MainMenu::instance(engine));
 
@@ -146,7 +148,7 @@ void Editor::handleEvent() {
 			engine->changeState(Game::instance(engine));
 
 		if (event.key.code == sf::Keyboard::Delete) {
-			
+
 			if (mode == POINT)
 				collisionMap.remove();
 			if (mode == OBJECT)
@@ -182,10 +184,12 @@ void Editor::handleEvent() {
 		if (event.key.code == sf::Keyboard::J) {
 			collisionMap.save();
 			objectMap.save();
+			platformMap.save();
 		}
 		if (event.key.code == sf::Keyboard::K) {
 			collisionMap.load();
 			objectMap.load();
+			platformMap.load();
 		}
 
 		if (event.key.code == sf::Keyboard::M)
@@ -259,7 +263,7 @@ void Editor::render(const float dt) {
 }
 
 void Editor::rotateMode() {
-	
+
 	if (mode == POINT) {
 		mode = OBJECT;
 		modeText.setString("Mode: Object");

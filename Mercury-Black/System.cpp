@@ -11,7 +11,7 @@
 #define SCRIPT_MASK (NAME | SCRIPT)
 
 void aiSystem(World * world, float dt) {
-	
+
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
 		if ((world->mask[entityID] & SCRIPT_MASK) == SCRIPT_MASK) {
@@ -29,9 +29,9 @@ void aiSystem(World * world, float dt) {
 				printf("ERROR: Could Not Find Entity AI: %s\n", world->name[entityID].name.c_str());
 
 		}
-	
+
 	}
-	
+
 }
 
 #define RENDER_MASK (POSITION | SPRITE)
@@ -78,7 +78,7 @@ void damageSystem(World * world, float dt) {
 			for (int damageDealerID = 0; damageDealerID < MAX_ENTITIES; damageDealerID++) {
 
 				if ((world->mask[damageDealerID] & DEAL_DAMAGE_MASK) == DEAL_DAMAGE_MASK && world->scriptParameters[damageDealerID].currentState == ATTACK_STATE) {
-					
+
 					if ((world->sprite[damageTakerID].sprite.getGlobalBounds().intersects(world->sprite[damageDealerID].sprite.getGlobalBounds()) == true) && (damageDealerID != damageTakerID)) {
 
 						st = &(world->stats[damageDealerID]);
@@ -128,10 +128,21 @@ void inputSystem(World * world) {
 			if (i->left && i->right)
 				v->x = 0.0f;
 
-			if (i->jump && v->canJump) {
-				v->y = JUMP_CONST;
-				v->onGround = false;
-				v->canJump = false;
+			if (i->jump) {
+
+				if (v->canJump) {
+					v->y = JUMP_CONST;
+					v->onGround = false;
+					v->canJump = false;
+				}
+
+				else if (v->canDoubleJump) {
+					v->y = JUMP_CONST;
+					v->canDoubleJump = false;
+				}
+
+				i->jump = false;
+
 			}
 
 			/* DEACCELERATION MODS */
@@ -193,16 +204,16 @@ void movementSystem(World * world) {
 
 /*void animationSystem(World * world, float dt) {
 
-	Sprite * s;
-	Velocity * v;
+Sprite * s;
+Velocity * v;
 
-	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
+for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
-		if ((world->mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
+if ((world->mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
 
-		}
+}
 
-	}
+}
 
 }*/
 
@@ -256,7 +267,7 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 			}
 
 			/* Calculate The Ground */
-			
+
 			slope = ((rightVertex->position.y - leftVertex->position.y) / (rightVertex->position.x - leftVertex->position.x));
 			ground = ((slope * (p->x - leftVertex->position.x)) + (leftVertex->position.y));
 
@@ -267,8 +278,9 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 				v->y = 0;
 				p->y = ground;
-				v->onGround = true;
 				v->canJump = true;
+				v->onGround = true;
+				v->canDoubleJump = true;
 
 			}
 
@@ -309,11 +321,11 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 			if (v->onGround && std::abs(slope) > 1.8) {
 
 				v->canJump = false;
-				
+
 				if (slope > 1.8 && v->x <= 0) {
 					v->x = 0.5f;
 				}
-				
+
 				else if (slope < -1.8 && v->x >= 0) {
 					v->x = -0.5f;
 				}
@@ -322,7 +334,7 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 			}
 
-			if (p->y < ground -30)
+			if (p->y < ground - 30)
 				v->onGround = false;
 		}
 
@@ -346,56 +358,64 @@ sf::Vector2f getEntityNormal(std::string side, sf::Sprite * entity) {
 	}
 	else if (side == "top")
 	{
-		edge.x = entity->getLocalBounds().width - entity->getLocalBounds().left;
+		edge.x = entity->getLocalBounds().left - entity->getLocalBounds().width;
 		edge.y = 0;
 	}
 	else if (side == "bottom")
 	{
-		edge.x = entity->getLocalBounds().left - entity->getLocalBounds().width;
+		edge.x = entity->getLocalBounds().width - entity->getLocalBounds().left;
 		edge.y = 0;
 	}
 
-	normal.x = -edge.y;
-	normal.y = edge.x;
+	normal.x = edge.y;
+	normal.y = -edge.x;
 
 	return normal;
 }
 
 sf::Vector2f getEntityProjection(sf::Vector2f normal, sf::Sprite * entity) {
-	float min, max, projection; 
-	float entityX, entityY;
-	int i;
+
+	float min, max, projection;
 	sf::Vector2f projReturn;
+	sf::Vector2f unitNormal;
 
-	entityX = entity->getGlobalBounds().left;
-	entityY = entity->getGlobalBounds().top;
+	unitNormal.x = normal.x / (sqrt(pow(normal.x, 2) + pow(normal.y, 2)));
+	unitNormal.y = normal.y / (sqrt(pow(normal.x, 2) + pow(normal.y, 2)));
 
-	min = (entityX * normal.x) + (entityY * normal.y);
+	normal = unitNormal;
+
+	sf::Vector2f topLeft(entity->getGlobalBounds().left, entity->getGlobalBounds().top);
+	sf::Vector2f topRight(entity->getGlobalBounds().left + entity->getGlobalBounds().width, entity->getGlobalBounds().top);
+	sf::Vector2f bottomLeft(entity->getGlobalBounds().left, entity->getGlobalBounds().top + entity->getGlobalBounds().height);
+	sf::Vector2f bottomRight(entity->getGlobalBounds().left + entity->getGlobalBounds().width, entity->getGlobalBounds().top + entity->getGlobalBounds().height);
+
+	min = (topLeft.x * normal.x) + (topLeft.y * normal.y);
 	max = min;
-	
-	projection = ((entityX * normal.x) + (entityY * normal.y));
+
+	projection = ((topLeft.x * normal.x) + (topLeft.y * normal.y));
 	if (projection < min)
 		min = projection;
 	else if (projection > max)
 		max = projection;
 
-	projection = (entityX * normal.x) + ((entityY + entity->getLocalBounds().height) * normal.y);
+	projection = (bottomLeft.x * normal.x) + (bottomLeft.y * normal.y);
 	if (projection < min)
 		min = projection;
 	else if (projection > max)
 		max = projection;
 
-	projection = ((entityX + entity->getLocalBounds().width) * normal.x) + ((entityY) * normal.y);
+	projection = (topRight.x * normal.x) + (topRight.y * normal.y);
 	if (projection < min)
 		min = projection;
 	else if (projection > max)
 		max = projection;
-	
-	projection = ((entityX + entity->getLocalBounds().width) * normal.x) + ((entityY + entity->getLocalBounds().height) * normal.y);
+
+	projection = (bottomRight.x * normal.x) + (bottomRight.y * normal.y);
 	if (projection < min)
 		min = projection;
 	else if (projection > max)
 		max = projection;
+
 	projReturn.x = min;
 	projReturn.y = max;
 
@@ -406,17 +426,17 @@ bool isCollision(sf::Vector2f firstProj, sf::Vector2f secondProj) {
 
 	return (firstProj.y < secondProj.x || secondProj.y < firstProj.x);
 
-}	
+}
 
 float getOverlap(sf::Vector2f shapeProj, sf::Vector2f entityProj) {
 
-	float overlapLength = abs(std::min(shapeProj.y, entityProj.y) - std::max(shapeProj.x, entityProj.x));
+	float overlapLength = std::min(shapeProj.y, entityProj.y) - std::max(shapeProj.x, entityProj.x);
 
 	return overlapLength;
 
 }
 
-void stopCollision(World * world, unsigned int entityID, double length, sf::Vector2f axis)
+void stopCollision(World * world, unsigned int entityID, float length, sf::Vector2f axis)
 {
 
 	sf::Vector2f unitNormal;
@@ -425,25 +445,35 @@ void stopCollision(World * world, unsigned int entityID, double length, sf::Vect
 	unitNormal.x = axis.x / (sqrt(pow(axis.x, 2) + pow(axis.y, 2)));
 	unitNormal.y = axis.y / (sqrt(pow(axis.x, 2) + pow(axis.y, 2)));
 
-	world->position[entityID].x += unitNormal.x * length;
-	world->position[entityID].y += unitNormal.y * length;
+	mtv.x = unitNormal.x * length;
+	mtv.y = unitNormal.y * length;
+
+	if (mtv.x > 0)
+		mtv.x += 0.01f;
+	else if (mtv.x < 0)
+		mtv.x += -0.01f;
+
+	if (mtv.y > 0)
+		mtv.y += 0.01f;
+	else if (mtv.y < 0)
+		mtv.y += -0.01f;
+
+	world->position[entityID].x += mtv.x;
+	world->position[entityID].y += mtv.y;
 
 	world->velocity[entityID].x = 0;
 	world->velocity[entityID].y = 0;
 
-	printf("UN: %f %f\n", unitNormal.x, unitNormal.y);
-	printf("L: %f\n", length);
-
 }
 
-void shapeCollSystem(World * world, PlatformMap * platformMap) {	
-	int i;
-	bool collision = true; 
-	float overlap = FLT_MAX;
+void shapeCollSystem(World * world, PlatformMap * platformMap) {
+
+	bool collision = true;
+	float overlap;
 	float overlapBuff;
 	sf::ConvexShape * currentShape;
 	sf::Sprite * currentEntity;
-	
+
 	sf::Vector2f shapeProjection;
 	sf::Vector2f entityProjection;
 	sf::Vector2f shapeAxis;
@@ -454,18 +484,19 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
 		if ((world->mask[entityID] & COLLISION_MASK) == COLLISION_MASK) {
-			
+
 			currentEntity = &world->sprite[entityID].sprite;
 
-			overlap = FLT_MAX;
-
 			for (it = platformMap->map.begin(); it != platformMap->map.end(); it++) {
-				
+
+				overlap = FLT_MAX;
+				overlapBuff = FLT_MAX;
+
 				currentShape = it->second;
 				collision = true;
 
-				for (i = 0; i < currentShape->getPointCount(); i++) {
-					
+				for (size_t i = 0; i < currentShape->getPointCount(); i++) {
+
 					shapeAxis = platformMap->getEdgeNormal(i, currentShape);
 
 					shapeProjection = platformMap->getProjection(shapeAxis, currentShape);
@@ -477,35 +508,15 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 						collision = false;
 						break;
 					}
-					else 
+					else
 					{
 						overlapBuff = getOverlap(shapeProjection, entityProjection);
 
 						if (overlapBuff < overlap)
 						{
 							overlap = overlapBuff;
-							smallestAxis = shapeAxis; 
+							smallestAxis = shapeAxis;
 						}
-					}
-				}
-
-				entityProjection = getEntityProjection(getEntityNormal("left", currentEntity), currentEntity);
-				shapeProjection = platformMap->getProjection(getEntityNormal("left", currentEntity), currentShape);
-
-				if (isCollision(shapeProjection, entityProjection) && collision == true)
-				{
-					currentShape->setFillColor(sf::Color::Black);
-					collision = false;
-					continue;
-				}
-				else
-				{
-					overlapBuff = getOverlap(entityProjection, shapeProjection);
-
-					if (overlapBuff < overlap)
-					{
-						overlap = overlapBuff;
-						smallestAxis = getEntityNormal("left", currentEntity);
 					}
 				}
 
@@ -522,10 +533,30 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 				{
 					overlapBuff = getOverlap(entityProjection, shapeProjection);
 
-					if (overlapBuff < overlap)
+					if (overlapBuff <= overlap)
 					{
 						overlap = overlapBuff;
 						smallestAxis = getEntityNormal("right", currentEntity);
+					}
+				}
+
+				entityProjection = getEntityProjection(getEntityNormal("left", currentEntity), currentEntity);
+				shapeProjection = platformMap->getProjection(getEntityNormal("left", currentEntity), currentShape);
+
+				if (isCollision(shapeProjection, entityProjection) && collision == true)
+				{
+					currentShape->setFillColor(sf::Color::Black);
+					collision = false;
+					continue;
+				}
+				else
+				{
+					overlapBuff = getOverlap(entityProjection, shapeProjection);
+
+					if (overlapBuff <= overlap)
+					{
+						overlap = overlapBuff;
+						smallestAxis = getEntityNormal("left", currentEntity);
 					}
 				}
 
@@ -543,7 +574,7 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
 					overlapBuff = getOverlap(entityProjection, shapeProjection);
 
-					if (overlapBuff < overlap)
+					if (overlapBuff <= overlap)
 					{
 						overlap = overlapBuff;
 						smallestAxis = getEntityNormal("top", currentEntity);
@@ -564,7 +595,7 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
 					overlapBuff = getOverlap(entityProjection, shapeProjection);
 
-					if (overlapBuff < overlap)
+					if (overlapBuff <= overlap)
 					{
 						overlap = overlapBuff;
 						smallestAxis = getEntityNormal("bottom", currentEntity);

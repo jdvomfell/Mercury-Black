@@ -16,15 +16,16 @@ void Game::init() {
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
+	platformMap.load();
 	collisionMap.load();
 
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
 
 	sf::VertexArray * va = new sf::VertexArray(sf::Lines, 0);
-	va->append(sf::Vertex(sf::Vector2f(900, 800), sf::Color::Black));
-	va->append(sf::Vertex(sf::Vector2f(700, 1000), sf::Color::Black));
-	va->append(sf::Vertex(sf::Vector2f(1100, 1000), sf::Color::Black));
+	va->append(sf::Vertex(sf::Vector2f(900, 400), sf::Color::Black));
+	va->append(sf::Vertex(sf::Vector2f(700, 600), sf::Color::Black));
+	va->append(sf::Vertex(sf::Vector2f(1100, 600), sf::Color::Black));
 	platformMap.insert(va);
 
 	music.openFromFile("Music/drank.ogg");
@@ -62,7 +63,7 @@ void Game::handleEvent() {
 
 			if (event.key.code == sf::Keyboard::Escape)
 				engine->pushState(PauseMenu::instance(engine));
-			
+
 			if (event.key.code == sf::Keyboard::Tab)
 				engine->changeState(Editor::instance(engine));
 

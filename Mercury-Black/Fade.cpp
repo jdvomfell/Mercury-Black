@@ -59,7 +59,7 @@ void FadeIn::update(const float dt) {
 		engine->popState();
 
 
-	fadeColor = sf::Color(0, 0, 0, alpha);
+	fadeColor = sf::Color(0, 0, 0, (sf::Uint8)alpha);
 	overlay.setFillColor(fadeColor);
 
 }
