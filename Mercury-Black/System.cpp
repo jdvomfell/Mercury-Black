@@ -1,4 +1,5 @@
 #include "System.h"
+#include "CollisionHelper.h"
 #include <cmath>
 
 /* Do Not Edit CONSTS Without Discussing Gameplay Implications First */
@@ -342,110 +343,6 @@ void collisionSystem(World * world, CollisionMap * collisionMap) {
 
 }
 
-sf::Vector2f getEntityNormal(std::string side, sf::Sprite * entity) {
-
-	if (side == "left")
-		return sf::Vector2f(-1.0f, 0.0f);
-
-	else if (side == "right")
-		return sf::Vector2f(1.0f, 0.0f);
-
-	else if (side == "top")
-		return sf::Vector2f(0.0f, -1.0f);
-
-	else if (side == "bottom")
-		return sf::Vector2f(0.0f, 1.0f);
-
-	return sf::Vector2f(0.0f, 0.0f);
-
-}
-
-sf::Vector2f getEntityProjection(sf::Vector2f unitNormal, sf::Sprite * entity) {
-
-	float min, max, projection;
-	sf::Vector2f projReturn;
-
-	sf::Vector2f topLeft(entity->getGlobalBounds().left, entity->getGlobalBounds().top);
-	sf::Vector2f topRight(entity->getGlobalBounds().left + entity->getGlobalBounds().width, entity->getGlobalBounds().top);
-	sf::Vector2f bottomLeft(entity->getGlobalBounds().left, entity->getGlobalBounds().top + entity->getGlobalBounds().height);
-	sf::Vector2f bottomRight(entity->getGlobalBounds().left + entity->getGlobalBounds().width, entity->getGlobalBounds().top + entity->getGlobalBounds().height);
-
-	min = (topLeft.x * unitNormal.x) + (topLeft.y * unitNormal.y);
-	max = min;
-
-	projection = ((topLeft.x * unitNormal.x) + (topLeft.y * unitNormal.y));
-	if (projection < min)
-		min = projection;
-	else if (projection > max)
-		max = projection;
-
-	projection = (bottomLeft.x * unitNormal.x) + (bottomLeft.y * unitNormal.y);
-	if (projection < min)
-		min = projection;
-	else if (projection > max)
-		max = projection;
-
-	projection = (topRight.x * unitNormal.x) + (topRight.y * unitNormal.y);
-	if (projection < min)
-		min = projection;
-	else if (projection > max)
-		max = projection;
-
-	projection = (bottomRight.x * unitNormal.x) + (bottomRight.y * unitNormal.y);
-	if (projection < min)
-		min = projection;
-	else if (projection > max)
-		max = projection;
-
-	projReturn.x = min;
-	projReturn.y = max;
-
-	return projReturn;
-}
-
-bool isCollision(sf::Vector2f firstProj, sf::Vector2f secondProj) {
-
-	return !(firstProj.y < secondProj.x || secondProj.y < firstProj.x);
-
-}
-
-float getOverlap(sf::Vector2f shapeProj, sf::Vector2f entityProj) {
-
-	if ((shapeProj.x < entityProj.x && shapeProj.y > entityProj.y) || (entityProj.x < shapeProj.x && entityProj.y > shapeProj.y))
-		return FLT_MAX;
-
-	float overlapLength = abs(std::min(shapeProj.y, entityProj.y) - std::max(shapeProj.x, entityProj.x));
-
-	return overlapLength;
-
-}
-
-void stopCollision(World * world, unsigned int entityID, float length, sf::Vector2f unitNormal)
-{
-
-	sf::Vector2f mtv;
-
-	mtv.x = unitNormal.x * length;
-	mtv.y = unitNormal.y * length;
-
-	if (mtv.x > 0)
-		mtv.x += 0.02f;
-	else if (mtv.x < 0)
-		mtv.x += -0.02f;
-
-	if (mtv.y > 0)
-		mtv.y += 0.02f;
-	else if (mtv.y < 0)
-		mtv.y += -0.02f;
-
-	world->position[entityID].x += mtv.x;
-	world->position[entityID].y += mtv.y;
-
-	world->velocity[entityID].x = 0;
-	world->velocity[entityID].y = 0;
-
-}
-
 /*void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
 	sf::Sprite * sprite;
@@ -491,6 +388,8 @@ void stopCollision(World * world, unsigned int entityID, float length, sf::Vecto
 
 void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
+	CollisionHelper * entity = new CollisionHelper;
+
 	bool collision = true;
 	float overlap;
 	float overlapBuff;
@@ -499,6 +398,11 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
 	sf::Vector2f shapeProjection;
 	sf::Vector2f entityProjection;
+	
+	sf::Vector2f entityTopNormal;
+	sf::Vector2f entityBottomNormal; 
+	sf::Vector2f entityLeftNormal;
+	sf::Vector2f entityRightNormal; 
 	sf::Vector2f shapeNormal;
 	sf::Vector2f smallestNormal;
 
@@ -509,6 +413,11 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 		if ((world->mask[entityID] & COLLISION_MASK) == COLLISION_MASK) {
 
 			sprite = &world->sprite[entityID].sprite;
+
+			entityTopNormal = entity->getEntityNormal("top", sprite);
+			entityBottomNormal = entity->getEntityNormal("bottom", sprite);
+			entityLeftNormal = entity->getEntityNormal("left", sprite);
+			entityRightNormal = entity->getEntityNormal("right", sprite);
 
 			for (it = platformMap->map.begin(); it != platformMap->map.end(); it++) {
 
@@ -523,9 +432,9 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 					shapeNormal = platformMap->getEdgeNormal(i, shape);
 
 					shapeProjection = platformMap->getProjection(shapeNormal, shape);
-					entityProjection = getEntityProjection(shapeNormal, sprite);
+					entityProjection = entity->getEntityProjection(shapeNormal, sprite);
 
-					if (!isCollision(entityProjection, shapeProjection) && collision == true)
+					if (!entity->isCollision(entityProjection, shapeProjection) && collision == true)
 					{
 						shape->setFillColor(sf::Color::Black);
 						collision = false;
@@ -534,7 +443,7 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 					else
 					{
 
-						overlapBuff = getOverlap(shapeProjection, entityProjection);
+						overlapBuff = entity->getOverlap(shapeProjection, entityProjection);
 
 						if (overlapBuff <= overlap)
 						{
@@ -544,10 +453,10 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 					}
 				}
 
-				entityProjection = getEntityProjection(getEntityNormal("top", sprite), sprite);
-				shapeProjection = platformMap->getProjection(getEntityNormal("top", sprite), shape);
+				entityProjection = entity->getEntityProjection(entityTopNormal, sprite);
+				shapeProjection = platformMap->getProjection(entityTopNormal, shape);
 
-				if (!isCollision(shapeProjection, entityProjection) && collision == true)
+				if (!entity->isCollision(shapeProjection, entityProjection) && collision == true)
 				{
 					shape->setFillColor(sf::Color::Black);
 					collision = false;
@@ -556,19 +465,19 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 				else
 				{
 
-					overlapBuff = getOverlap(entityProjection, shapeProjection);
+					overlapBuff = entity->getOverlap(entityProjection, shapeProjection);
 
 					if (overlapBuff <= overlap && shapeProjection.x <= entityProjection.y)
 					{
 						overlap = overlapBuff;
-						smallestNormal = getEntityNormal("top", sprite);
+						smallestNormal = entityTopNormal;
 					}
 				}
 
-				entityProjection = getEntityProjection(getEntityNormal("bottom", sprite), sprite);
-				shapeProjection = platformMap->getProjection(getEntityNormal("bottom", sprite), shape);
+				entityProjection = entity->getEntityProjection(entityBottomNormal, sprite);
+				shapeProjection = platformMap->getProjection(entityBottomNormal, shape);
 
-				if (!isCollision(shapeProjection, entityProjection) && collision == true)
+				if (!entity->isCollision(shapeProjection, entityProjection) && collision == true)
 				{
 					shape->setFillColor(sf::Color::Black);
 					collision = false;
@@ -576,19 +485,19 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 				}
 				else
 				{
-					overlapBuff = getOverlap(entityProjection, shapeProjection);
+					overlapBuff = entity->getOverlap(entityProjection, shapeProjection);
 
 					if (overlapBuff <= overlap && shapeProjection.y >= entityProjection.x && entityProjection.y > shapeProjection.y)
 					{
 						overlap = overlapBuff;
-						smallestNormal = getEntityNormal("bottom", sprite);
+						smallestNormal = entityBottomNormal;
 					}
 				}
 
-				entityProjection = getEntityProjection(getEntityNormal("left", sprite), sprite);
-				shapeProjection = platformMap->getProjection(getEntityNormal("left", sprite), shape);
+				entityProjection = entity->getEntityProjection(entityLeftNormal, sprite);
+				shapeProjection = platformMap->getProjection(entityLeftNormal, shape);
 
-				if (!isCollision(shapeProjection, entityProjection) && collision == true)
+				if (!entity->isCollision(shapeProjection, entityProjection) && collision == true)
 				{
 					shape->setFillColor(sf::Color::Black);
 					collision = false;
@@ -596,19 +505,19 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 				}
 				else
 				{
-					overlapBuff = getOverlap(entityProjection, shapeProjection);
+					overlapBuff = entity->getOverlap(entityProjection, shapeProjection);
 
 					if (overlapBuff <= overlap && shapeProjection.y >= entityProjection.x)
 					{
 						overlap = overlapBuff;
-						smallestNormal = getEntityNormal("left", sprite);
+						smallestNormal = entityLeftNormal;
 					}
 				}
 
-				entityProjection = getEntityProjection(getEntityNormal("right", sprite), sprite);
-				shapeProjection = platformMap->getProjection(getEntityNormal("right", sprite), shape);
+				entityProjection = entity->getEntityProjection(entityRightNormal, sprite);
+				shapeProjection = platformMap->getProjection(entityRightNormal, shape);
 
-				if (!isCollision(shapeProjection, entityProjection) && collision == true)
+				if (!entity->isCollision(shapeProjection, entityProjection) && collision == true)
 				{
 					shape->setFillColor(sf::Color::Black);
 					collision = false;
@@ -616,12 +525,12 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 				}
 				else
 				{
-					overlapBuff = getOverlap(entityProjection, shapeProjection);
+					overlapBuff = entity->getOverlap(entityProjection, shapeProjection);
 
 					if (overlapBuff <= overlap && shapeProjection.y >= entityProjection.x && entityProjection.y > shapeProjection.y)
 					{
 						overlap = overlapBuff;
-						smallestNormal = getEntityNormal("right", sprite);
+						smallestNormal = entityRightNormal;
 					}
 				}
 
@@ -629,9 +538,11 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 				if (collision == true)
 				{
 					shape->setFillColor(sf::Color::Red);
-					stopCollision(world, entityID, overlap, smallestNormal);
+					entity->stopCollision(world, entityID, overlap, smallestNormal);
 				}
 			}
 		}
 	}
+
+	delete(entity);
 }
