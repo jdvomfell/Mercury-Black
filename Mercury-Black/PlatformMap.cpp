@@ -143,7 +143,7 @@ void PlatformMap::clean() {
 
 sf::Vector2f PlatformMap::getEdgeNormal(int vertex, sf::ConvexShape * shape) {
 
-	sf::Vector2f p1, p2, edge, normal;
+	sf::Vector2f p1, p2, edge, normal, unitNormal;
 
 	p1 = shape->getPoint(vertex);
 
@@ -158,33 +158,29 @@ sf::Vector2f PlatformMap::getEdgeNormal(int vertex, sf::ConvexShape * shape) {
 	normal.x = edge.y;
 	normal.y = -edge.x;
 
-	return normal;
+	unitNormal.x = normal.x / (sqrt(pow(normal.x, 2) + pow(normal.y, 2)));
+	unitNormal.y = normal.y / (sqrt(pow(normal.x, 2) + pow(normal.y, 2)));
+
+	return unitNormal;
 }
 
 /* Projects Shape onto SAT (normal of shape edge) */
-sf::Vector2f PlatformMap::getProjection(sf::Vector2f normal, sf::ConvexShape * shape) {
+sf::Vector2f PlatformMap::getProjection(sf::Vector2f unitNormal, sf::ConvexShape * shape) {
 
 	float min;
 	float max;
 	float projection;
 
-	sf::Vector2f unitNormal;
-
-	unitNormal.x = normal.x / (sqrt(pow(normal.x, 2) + pow(normal.y, 2)));
-	unitNormal.y = normal.y / (sqrt(pow(normal.x, 2) + pow(normal.y, 2)));
-
-	normal = unitNormal;
-
 	size_t i;
 
 	sf::Vector2f projReturn;
 
-	min = (shape->getPoint(0).x * normal.x) + (shape->getPoint(0).y * normal.y);
+	min = (shape->getPoint(0).x * unitNormal.x) + (shape->getPoint(0).y * unitNormal.y);
 	max = min;
 
 	for (i = 1; i < shape->getPointCount(); i++)
 	{
-		projection = (shape->getPoint(i).x * normal.x) + (shape->getPoint(i).y * normal.y);
+		projection = (shape->getPoint(i).x * unitNormal.x) + (shape->getPoint(i).y * unitNormal.y);
 		if (projection < min)
 			min = projection;
 		else if (projection > max)
