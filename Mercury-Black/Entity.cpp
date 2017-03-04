@@ -127,8 +127,12 @@ int createCeilingPlant(World * world, float x, float y) {
 
 	world->scriptParameters[entityID].attackRangeMax = 700.0f;
 	world->scriptParameters[entityID].attackRangeMin = 0.0f;
+
+	world->scriptParameters[entityID].followDistMax = 500.0f;
+	world->scriptParameters[entityID].followDistMin = 0.0f;
+
 	world->scriptParameters[entityID].spawnDistance = 500.0f;
-	world->scriptParameters[entityID].currentState = 5; //NOTSPAWNSTATE
+	world->scriptParameters[entityID].currentState = NOT_SPAWNED_STATE;
 	
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "idle", 11, 0.1f);

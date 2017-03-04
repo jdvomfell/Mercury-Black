@@ -1,48 +1,11 @@
 #include "AIScript.h"
 #include <cmath>
 
-void scriptTest(World * world, int entityID, float dt) {
-
-	Velocity * v;
-	Sprite * s;
-	ScriptParameters * sp;
-
-	v = &(world->velocity[entityID]);
-	s = &(world->sprite[entityID]);
-	sp = &(world->scriptParameters[entityID]);
-
-	if (sp->currentState == DEATH_STATE) {
-		destroyEntity(world, entityID);
-		return;
-	}
-
-	scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
-	scriptAttack(world, entityID, world->position[0].x, world->position[0].y);
-
-	if (v->x != 0)
-		s->animationManager.changeAnimation("sheathedRun");
-	else {
-		if (sp->currentState == ATTACK_STATE)
-			s->animationManager.changeAnimation("idleAttack");
-		else
-			s->animationManager.changeAnimation("idleUnsheathed");
-	}
-
-	if (v->x < 0)
-		s->sprite.setTextureRect(sf::IntRect((int)s->sprite.getLocalBounds().width, 0, (int)-s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
-	if (v->x > 0)
-		s->sprite.setTextureRect(sf::IntRect(0, 0, (int)s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
-
-	s->sprite.setTexture(*s->animationManager.getCurrentTexture());
-	s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height));
-
-	/* Allow Animation Changes If Current Animation Has Ended */
-	if (s->animationManager.updateAnimation(dt) == 1)
-		sp->currentState = NO_STATE;
-
-}
+/* Utility Scripts */
 
 void scriptFollow(World * world, int entityID, float x, float y) {
+
+	printf("YO");
 
 	if (std::fabs(world->position[entityID].x - x) <=
 		world->scriptParameters[entityID].followDistMax &&
@@ -50,13 +13,14 @@ void scriptFollow(World * world, int entityID, float x, float y) {
 		std::fabs(world->position[entityID].x - x) >=
 		world->scriptParameters[entityID].followDistMin){
 			
-			if (world->position[entityID].x - x < 0) {
-				world->input[entityID].right = true;
-			}
-			
-			else {
-				world->input[entityID].left = true;
-			}
+		if (world->position[entityID].x < x) {
+			world->input[entityID].right = true;
+			world->input[entityID].left = false;
+		}
+		else {
+			world->input[entityID].left = true;
+			world->input[entityID].right = false;
+		}
 	}
 
 	else {
@@ -88,7 +52,7 @@ void scriptRetreat(World * world, int entityID, float x, float y) {
 	if (std::fabs(world->position[entityID].x - x) <=
 		world->scriptParameters[entityID].followDistMin) {
 
-		if (world->position[entityID].x - x < 0) {
+		if (world->position[entityID].x < x) {
 			world->input[entityID].left = true;
 		}
 
@@ -102,6 +66,8 @@ void scriptRetreat(World * world, int entityID, float x, float y) {
 		world->input[entityID].right = false;
 	}
 }
+
+/* Entity Scripts */
 
 void scriptPlayer(World *world, float dt) {
 
@@ -181,19 +147,8 @@ void scriptPlayer(World *world, float dt) {
 				}
 			//}
 		}
-	}
 	
-	if (v->x < 0)
-		s->sprite.setTextureRect(sf::IntRect((int)s->sprite.getLocalBounds().width, 0, (int)-s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
-	if (v->x > 0)
-		s->sprite.setTextureRect(sf::IntRect(0, 0, (int)s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
-
-	s->sprite.setTexture(*s->animationManager.getCurrentTexture());
-	s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height));
-
-	/* Allow Animation Changes If Current Animation Has Ended */
-	if (s->animationManager.updateAnimation(dt) == 1)
-		sp->currentState = NO_STATE;
+	}
 
 }
 
@@ -204,8 +159,9 @@ void scriptPlant(World * world, int entityID, float dt) {
 
 	s = &(world->sprite[entityID]);
 	sP = &(world->scriptParameters[entityID]);
-	
+		
 	if (sP->currentState == NO_STATE) {
+		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
 		scriptAttack(world, entityID, world->position[0].x, world->position[0].y);
 		
 		if (sP->currentState == ATTACK_STATE)
@@ -224,11 +180,6 @@ void scriptPlant(World * world, int entityID, float dt) {
 			s->animationManager.changeAnimation("notSpawn");
 	}
 
-	s->sprite.setTexture(*s->animationManager.getCurrentTexture());
-	s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height));
-	
-	if (s->animationManager.updateAnimation(dt) == 1)
-		sP->currentState = NO_STATE;
 }
 
 void scriptSpawn(World *world, int entityID) {
@@ -242,4 +193,33 @@ void scriptSpawn(World *world, int entityID) {
 	}
 
 	return;
+}
+
+void scriptTest(World * world, int entityID, float dt) {
+
+	Velocity * v;
+	Sprite * s;
+	ScriptParameters * sp;
+
+	v = &(world->velocity[entityID]);
+	s = &(world->sprite[entityID]);
+	sp = &(world->scriptParameters[entityID]);
+
+	if (sp->currentState == DEATH_STATE) {
+		destroyEntity(world, entityID);
+		return;
+	}
+
+	scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
+	scriptAttack(world, entityID, world->position[0].x, world->position[0].y);
+
+	if (v->x != 0)
+		s->animationManager.changeAnimation("sheathedRun");
+	else {
+		if (sp->currentState == ATTACK_STATE)
+			s->animationManager.changeAnimation("idleAttack");
+		else
+			s->animationManager.changeAnimation("idleUnsheathed");
+	}
+
 }

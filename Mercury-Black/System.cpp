@@ -200,22 +200,41 @@ void movementSystem(World * world) {
 
 }
 
-#define ANIMATION_MASK (VELOCITY | SPRITE)
+#define ANIMATION_MASK (INPUT | SPRITE | SCRIPT)
 
-/*void animationSystem(World * world, float dt) {
+void animationSystem(World * world, float dt) {
 
-Sprite * s;
-Velocity * v;
+	Sprite * s;
+	Input * i;
+	ScriptParameters * sp;
 
-for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
+	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
-if ((world->mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
+		if ((world->mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
+
+			s = &(world->sprite[entityID]);
+			i = &(world->input[entityID]);
+			sp = &(world->scriptParameters[entityID]);
+
+			if (i->left)
+				s->sprite.setTextureRect(sf::IntRect((int)s->sprite.getLocalBounds().width, 0, (int)-s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
+			else if (i->right)
+				s->sprite.setTextureRect(sf::IntRect(0, 0, (int)s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
+
+			s->sprite.setTexture(*s->animationManager.getCurrentTexture());
+			s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height));
+
+			/* Allow Animation Changes If Current Animation Has Ended */
+			if (s->animationManager.updateAnimation(dt) == 1) {
+				sp->currentState = NO_STATE;
+
+			}
+
+		}
+
+	}
 
 }
-
-}
-
-}*/
 
 #define COLLISION_MASK (POSITION | VELOCITY | COLLISION | GRAVITY)
 
@@ -429,14 +448,14 @@ void stopCollision(World * world, unsigned int entityID, float length, sf::Vecto
 	mtv.y = unitNormal.y * length;
 
 	if (mtv.x > 0)
-		mtv.x += 0.02f;
+		mtv.x += 0.01f;
 	else if (mtv.x < 0)
-		mtv.x += -0.02f;
+		mtv.x += -0.01f;
 
 	if (mtv.y > 0)
-		mtv.y += 0.02f;
+		mtv.y += 0.01f;
 	else if (mtv.y < 0)
-		mtv.y += -0.02f;
+		mtv.y += -0.01f;
 
 	world->position[entityID].x += mtv.x;
 	world->position[entityID].y += mtv.y;
@@ -445,49 +464,6 @@ void stopCollision(World * world, unsigned int entityID, float length, sf::Vecto
 	world->velocity[entityID].y = 0;
 
 }
-
-/*void shapeCollSystem(World * world, PlatformMap * platformMap) {
-
-	sf::Sprite * sprite;
-	sf::ConvexShape * shape;
-
-	std::map<float, sf::ConvexShape *>::iterator it;
-
-	float seperationDistance;
-	float seperationDistanceTest;
-
-	// Go Through All Entities
-
-	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
-		if ((world->mask[entityID] & COLLISION_MASK) == COLLISION_MASK) {
-
-			sprite = &world->sprite[entityID].sprite;
-
-			for (it = platformMap->map.begin(); it != platformMap->map.end(); it++) {
-
-				shape = it->second;
-
-				// Reset Collision Variables
-
-				seperationDistance = FLT_MAX;
-				seperationDistanceTest = FLT_MAX;
-
-				// Start Collision Detection Between Entity And Platform
-
-				// Project Entity And Shape Onto Each Of Shapes Normals
-				for (size_t i = 0; i < shape->getPointCount(); i++) {
-					
-				}
-
-				// End Collision Detection
-
-			}
-
-		}
-	}
-
-}
-*/
 
 void shapeCollSystem(World * world, PlatformMap * platformMap) {
 

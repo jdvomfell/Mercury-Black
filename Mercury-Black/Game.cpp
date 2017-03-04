@@ -13,6 +13,7 @@ void Game::init() {
 
 	createPlayer(&world, 900, 0);
 	//createTest(&world, 2000, 0);
+	createCeilingPlant(&world, 3000, 1000);
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
@@ -120,12 +121,12 @@ void Game::update(const float dt) {
 	}
 
 	aiSystem(&world, dt);
+	animationSystem(&world, dt);
 	inputSystem(&world);
 	gravitySystem(&world);
 	collisionSystem(&world, &collisionMap);
 	movementSystem(&world);
 	shapeCollSystem(&world, &platformMap);
-	//animationSystem(&world, dt, PLAYER);
 	damageSystem(&world, dt);
 
 	//listener.setPosition(world.position[0].x, world.position[0].y, 0);
