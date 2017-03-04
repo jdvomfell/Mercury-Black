@@ -5,8 +5,6 @@
 
 void scriptFollow(World * world, int entityID, float x, float y) {
 
-	printf("YO");
-
 	if (std::fabs(world->position[entityID].x - x) <=
 		world->scriptParameters[entityID].followDistMax &&
 
