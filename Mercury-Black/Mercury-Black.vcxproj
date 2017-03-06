@@ -136,6 +136,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="Buttons.cpp" />
+    <ClCompile Include="CollisionHelper.cpp" />
     <ClCompile Include="CollisionMap.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Editor.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationManager.h" />
     <ClInclude Include="Buttons.h" />
+    <ClInclude Include="CollisionHelper.h" />
     <ClInclude Include="CollisionMap.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Editor.h" />
