@@ -21,6 +21,7 @@
 #define DELETE 2
 #define MOVE 3
 #define BOX 4
+#define GROUND 5
 
 class Selector {
 

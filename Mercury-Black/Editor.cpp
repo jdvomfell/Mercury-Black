@@ -87,6 +87,8 @@ void Editor::handleEvent() {
 			if (mode == PLATFORM)
 				if (tool == BOX)
 					corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+				else if (tool == GROUND)
+					platformMap.insertGround(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 				else
 					platformPoints.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 		}
@@ -296,6 +298,10 @@ void Editor::rotateTool() {
 	else if (tool == MOVE) {
 		tool = BOX;
 		toolText.setString("Tool: Box");
+	}
+	else if (tool == BOX) {
+		tool = GROUND;
+		toolText.setString("Tool: Ground");
 	}
 	else {
 		tool = PLACE;

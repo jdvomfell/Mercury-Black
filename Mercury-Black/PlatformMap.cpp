@@ -99,7 +99,7 @@ void PlatformMap::insert(sf::VertexArray * points)
 
 	}
 
-	map.insert(std::make_pair(shape->getPoint(0).x, shape));
+	map.insert(std::make_pair(shape->getPoint(0).x, shape)).first;
 
 	return;
 }
@@ -121,6 +121,44 @@ void PlatformMap::insertBox(sf::Vector2f topLeft, sf::Vector2f bottomRight) {
 
 }
 
+void PlatformMap::insertGround(sf::Vector2f groundPosition) {
+
+	sf::Vector2f edge;
+	sf::Vector2f normal;
+	sf::Vector2f unitNormal;
+
+
+	if (platformPoints.isEmpty()) {
+
+		platformPoints.insert(groundPosition);
+		platformPoints.insert(sf::Vector2f(groundPosition.x, groundPosition.y + 30));
+
+	}
+
+	else {
+
+		edge.x = platformPoints.begin->point.x - groundPosition.x;
+		edge.y = platformPoints.begin->point.y - groundPosition.y;
+
+		normal.x = edge.y;
+		normal.y = -edge.x;
+
+		unitNormal.x = normal.x / (sqrt(pow(normal.x, 2) + pow(normal.y, 2)));
+		unitNormal.y = normal.y / (sqrt(pow(normal.x, 2) + pow(normal.y, 2)));
+
+		platformPoints.insert(sf::Vector2f(groundPosition.x + unitNormal.x * 30, groundPosition.y + unitNormal.y * 30));
+		platformPoints.insert(groundPosition);
+
+		insert(&platformPoints.lines);
+		platformPoints.clean();
+
+		platformPoints.insert(groundPosition);
+		platformPoints.insert(sf::Vector2f(sf::Vector2f(groundPosition.x + unitNormal.x * 30, groundPosition.y + unitNormal.y * 30)));
+
+	}
+
+}
+
 void PlatformMap::remove()
 {
 
@@ -136,6 +174,8 @@ void PlatformMap::clean() {
 		map.erase(pit++);
 
 	}
+
+	platformPoints.clean();
 
 	return;
 
@@ -336,5 +376,14 @@ void PlatformPoints::clean() {
 
 	current = NULL;
 	lines.clear();
+
+}
+
+bool PlatformPoints::isEmpty() {
+
+	if (lines.getVertexCount() == 0)
+		return true;
+	else
+		return false;
 
 }
