@@ -42,12 +42,12 @@
     <Filter Include="Source Files\Entity Component System">
       <UniqueIdentifier>{6141b342-b503-49b1-874c-1d5680d33bcf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Header Files\Resources">
       <UniqueIdentifier>{99c58a44-4cf3-416e-94f4-ea5ee4d46887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -115,7 +115,7 @@
       <Filter>Source Files\GameStates</Filter>
     </ClCompile>
     <ClCompile Include="CollisionHelper.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -189,7 +189,7 @@
       <Filter>Header Files\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="CollisionHelper.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GameUtility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

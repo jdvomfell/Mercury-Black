@@ -73,7 +73,7 @@ float CollisionHelper::getOverlap(sf::Vector2f shapeProj, sf::Vector2f entityPro
 	if ((shapeProj.x < entityProj.x && shapeProj.y > entityProj.y) || (entityProj.x < shapeProj.x && entityProj.y > shapeProj.y))
 		return FLT_MAX;
 
-	float overlapLength = abs(std::min(shapeProj.y, entityProj.y) - std::max(shapeProj.x, entityProj.x));
+	float overlapLength = fabs(std::min(shapeProj.y, entityProj.y) - std::max(shapeProj.x, entityProj.x));
 
 	return overlapLength;
 
