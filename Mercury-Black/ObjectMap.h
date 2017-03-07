@@ -7,6 +7,7 @@
 
 struct Object {
 
+	int layer;
 	sf::Vector2f position;
 	std::string textureName;
 
@@ -41,6 +42,7 @@ public:
 
 	Object object;
 	std::map<float, Object *> map;
+	std::multimap<int, Object *> layerMap;
 	std::map<float, Object *>::iterator selected;
 
 };

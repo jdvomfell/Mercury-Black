@@ -58,15 +58,9 @@ void PlatformMap::load()
 
 		platformCount++;
 
-		printf("PC: %d\n", pointCount);
-
-		printf("PLAT C: %d\n", platformCount);
-
 		for (size_t i = 0; i < pointCount; i++) {
 
 			ifstream >> point.x >> point.y;
-
-			printf("X,Y: %f %f\n", point.x, point.y);
 
 			platformPoints.insert(point);
 
@@ -99,7 +93,7 @@ void PlatformMap::insert(sf::VertexArray * points)
 
 	}
 
-	map.insert(std::make_pair(shape->getPoint(0).x, shape)).first;
+	map.insert(std::make_pair(shape->getPoint(0).x, shape));
 
 	return;
 }
@@ -161,6 +155,13 @@ void PlatformMap::insertGround(sf::Vector2f groundPosition) {
 
 void PlatformMap::remove()
 {
+
+	if (selected == map.end() || selected->second == NULL)
+		return;
+
+	delete(selected->second);
+	map.erase(selected);
+	selected = map.end();
 
 }
 
@@ -242,6 +243,49 @@ void PlatformMap::draw(sf::RenderWindow * window) {
 		window->draw(*pit->second);
 
 	return;
+
+}
+
+std::map <float, sf::ConvexShape *>::iterator PlatformMap::findRight(float x) {
+
+	return map.lower_bound(x);
+
+}
+
+std::map <float, sf::ConvexShape *>::iterator PlatformMap::findLeft(float x) {
+
+	if (map.lower_bound(x) != map.begin())
+		return --map.lower_bound(x);
+	else
+		return map.end();
+
+}
+
+std::map <float, sf::ConvexShape *>::iterator PlatformMap::findClosest(sf::Vector2f position) {
+
+	float distanceLeft;
+	float distanceRight;
+
+	std::map<float, sf::ConvexShape *>::iterator left = findLeft(position.x);
+	std::map<float, sf::ConvexShape *>::iterator right = findRight(position.x);
+
+	if (left != map.end() && right != map.end()) {
+		distanceLeft = sqrt(pow((position.x - left->second->getPoint(0).x), 2) + pow((position.y - left->second->getPoint(0).y), 2));
+		distanceRight = sqrt(pow((right->second->getPoint(0).x - position.x), 2) + pow((right->second->getPoint(0).y - position.y), 2));
+		if (distanceLeft < distanceRight)
+			return left;
+		else
+			return right;
+	}
+
+	else if (left == map.end())
+		return right;
+
+	else if (right == map.end())
+		return left;
+
+	else
+		return map.end();
 
 }
 

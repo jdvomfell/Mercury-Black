@@ -40,7 +40,6 @@ private:
 
 	ObjectMap objectMap;
 	PlatformMap platformMap;
-	CollisionMap collisionMap;
 	
 	World world;
 

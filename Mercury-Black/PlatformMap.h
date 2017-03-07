@@ -40,7 +40,7 @@ class PlatformMap {
 	public:
 		
 		std::map<float, sf::ConvexShape *> map;
-		std::map<float, sf::ConvexShape *>::iterator it;
+		std::map<float, sf::ConvexShape *>::iterator selected;
 
 		PlatformPoints platformPoints;
 
@@ -51,6 +51,10 @@ class PlatformMap {
 		void insertBox(sf::Vector2f topLeft, sf::Vector2f bottomRight);
 		void insertGround(sf::Vector2f groundPosition);
 
+		std::map <float, sf::ConvexShape *>::iterator findClosest(sf::Vector2f);
+		std::map <float, sf::ConvexShape *>::iterator findRight(float x);
+		std::map <float, sf::ConvexShape *>::iterator findLeft(float x);
+
 		void remove();
 		void clean();
 
@@ -59,7 +63,7 @@ class PlatformMap {
 		void save();
 		void load();
 		
-		PlatformMap() {};
+		PlatformMap() { selected = map.end(); }
 
 };
 

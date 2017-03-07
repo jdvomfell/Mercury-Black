@@ -82,7 +82,7 @@ void scriptPlayer(World *world, float dt) {
 	/* On Ground */
 	if (v->onGround) {
 		/* Moving */
-		if (v->x != 0) {
+		if (i->left || i->right) {
 			/* Jump */
 			if (i->jump) {
 				s->animationManager.changeAnimation("jump");
@@ -198,7 +198,9 @@ void scriptTest(World * world, int entityID, float dt) {
 	Velocity * v;
 	Sprite * s;
 	ScriptParameters * sp;
+	Input * i;
 
+	i = &(world->input[entityID]);
 	v = &(world->velocity[entityID]);
 	s = &(world->sprite[entityID]);
 	sp = &(world->scriptParameters[entityID]);
@@ -211,7 +213,7 @@ void scriptTest(World * world, int entityID, float dt) {
 	scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
 	scriptAttack(world, entityID, world->position[0].x, world->position[0].y);
 
-	if (v->x != 0)
+	if (i->left || i->right)
 		s->animationManager.changeAnimation("sheathedRun");
 	else {
 		if (sp->currentState == ATTACK_STATE)

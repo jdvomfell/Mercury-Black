@@ -68,7 +68,6 @@ private:
 
 	ObjectMap objectMap;
 	PlatformMap platformMap;
-	CollisionMap collisionMap;
 	PlatformPoints platformPoints;
 
 	int mode;

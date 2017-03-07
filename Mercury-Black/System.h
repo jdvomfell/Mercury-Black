@@ -13,9 +13,6 @@ void damageSystem(World * world, float dt);
 void gravitySystem(World * world);
 void movementSystem(World * world);
 void animationSystem(World * world, float dt);
-void collisionSystem(World * world, CollisionMap * collisionMap);
 void shapeCollSystem(World * world, PlatformMap * platformMap);
-
-bool isCollision(sf::Vector2f shapeProj, sf::Vector2f entityProj);
 
 #endif

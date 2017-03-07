@@ -19,15 +19,15 @@ sf::Vector2f CollisionHelper::getEntityNormal(std::string side, sf::Sprite * ent
 
 }
 
-sf::Vector2f CollisionHelper::getEntityProjection(sf::Vector2f unitNormal, sf::Sprite * entity) {
+sf::Vector2f CollisionHelper::getEntityProjection(sf::Vector2f unitNormal, sf::Sprite entity) {
 
 	float min, max, projection;
 	sf::Vector2f projReturn;
 
-	sf::Vector2f topLeft(entity->getGlobalBounds().left, entity->getGlobalBounds().top);
-	sf::Vector2f topRight(entity->getGlobalBounds().left + entity->getGlobalBounds().width, entity->getGlobalBounds().top);
-	sf::Vector2f bottomLeft(entity->getGlobalBounds().left, entity->getGlobalBounds().top + entity->getGlobalBounds().height);
-	sf::Vector2f bottomRight(entity->getGlobalBounds().left + entity->getGlobalBounds().width, entity->getGlobalBounds().top + entity->getGlobalBounds().height);
+	sf::Vector2f topLeft(entity.getGlobalBounds().left, entity.getGlobalBounds().top);
+	sf::Vector2f topRight(entity.getGlobalBounds().left + entity.getGlobalBounds().width, entity.getGlobalBounds().top);
+	sf::Vector2f bottomLeft(entity.getGlobalBounds().left, entity.getGlobalBounds().top + entity.getGlobalBounds().height);
+	sf::Vector2f bottomRight(entity.getGlobalBounds().left + entity.getGlobalBounds().width, entity.getGlobalBounds().top + entity.getGlobalBounds().height);
 
 	min = (topLeft.x * unitNormal.x) + (topLeft.y * unitNormal.y);
 	max = min;
@@ -97,6 +97,8 @@ void CollisionHelper::stopCollision(World * world, unsigned int entityID, float 
 	else if (mtv.y < 0)
 		mtv.y += -0.02f;
 
+	world->position[entityID].x += world->velocity[entityID].x;
+	world->position[entityID].y += world->velocity[entityID].y;
 	world->position[entityID].x += mtv.x;
 	world->position[entityID].y += mtv.y;
 

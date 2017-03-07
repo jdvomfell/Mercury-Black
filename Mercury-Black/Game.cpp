@@ -12,22 +12,15 @@ void Game::init() {
 	world.textureManager = &engine->textureManager;
 
 	createPlayer(&world, 900, 0);
-	//createTest(&world, 2000, 0);
-	createCeilingPlant(&world, 3000, 1000);
+	createTest(&world, 2000, 0);
+	//createCeilingPlant(&world, 3000, 1000);
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	platformMap.load();
-	collisionMap.load();
 
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
-
-	sf::VertexArray * va = new sf::VertexArray(sf::Lines, 0);
-	va->append(sf::Vertex(sf::Vector2f(900, 400), sf::Color::Black));
-	va->append(sf::Vertex(sf::Vector2f(700, 600), sf::Color::Black));
-	va->append(sf::Vertex(sf::Vector2f(1100, 600), sf::Color::Black));
-	platformMap.insert(va);
 
 	music.openFromFile("Music/drank.ogg");
 	music.setVolume(20);
@@ -42,7 +35,8 @@ void Game::init() {
 void Game::clean() {
 
 	cleanWorld(&world);
-	collisionMap.clean();
+	platformMap.clean();
+	objectMap.clean();
 
 }
 
@@ -124,15 +118,14 @@ void Game::update(const float dt) {
 	animationSystem(&world, dt);
 	inputSystem(&world);
 	gravitySystem(&world);
-	collisionSystem(&world, &collisionMap);
-	movementSystem(&world);
 	shapeCollSystem(&world, &platformMap);
+	movementSystem(&world);
 	damageSystem(&world, dt);
 
 	//listener.setPosition(world.position[0].x, world.position[0].y, 0);
 	sf::Listener::setPosition(world.position[0].x, 0, world.position[0].y);
 
-	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2.5f, engine->window.getDefaultView().getSize().y * 2.5f));
+	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 3.5f, engine->window.getDefaultView().getSize().y * 3.5f));
 	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y - view.getSize().y / 4));
 	engine->window.setView(view);
 
@@ -146,8 +139,6 @@ void Game::render(const float dt) {
 	std::map<float, Object *>::iterator it;
 	for (it = objectMap.map.begin(); it != objectMap.map.end(); it++)
 		engine->window.draw(it->second->sprite);
-
-	engine->window.draw(collisionMap.lines);
 
 	engine->window.draw(rect);
 

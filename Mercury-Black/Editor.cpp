@@ -26,9 +26,6 @@ void Editor::init() {
 	textureText = sf::Text("", engine->textureManager.font, 60);
 	textureText.setFillColor(sf::Color::Black);
 
-	collisionMap.load();
-	collisionMap.updateVerticies();
-
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	textureText.setString(objectMap.object.textureName);
@@ -42,7 +39,6 @@ void Editor::init() {
 
 void Editor::clean() {
 
-	collisionMap.clean();
 	objectMap.clean();
 	platformPoints.clean();
 	platformMap.clean();
@@ -80,11 +76,9 @@ void Editor::handleEvent() {
 
 		if (event.mouseButton.button == sf::Mouse::Left) {
 
-			if (mode == POINT)
-				collisionMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 			if (mode == OBJECT)
 				objectMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
-			if (mode == PLATFORM)
+			else if (mode == PLATFORM)
 				if (tool == BOX)
 					corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
 				else if (tool == GROUND)
@@ -95,18 +89,23 @@ void Editor::handleEvent() {
 
 		if (event.mouseButton.button == sf::Mouse::Right) {
 
-			if (mode == POINT) {
-				collisionMap.selected = collisionMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+			selector.rect.setOutlineColor(sf::Color::Transparent);
 
-				if (collisionMap.selected != collisionMap.map.end()) {
-					selector.rect.setSize(sf::Vector2f(15, 15));
-					selector.rect.setOrigin(selector.rect.getSize() * 0.5f);
-					selector.rect.setPosition(collisionMap.selected->second->position);
-					selector.rect.setOutlineColor(sf::Color::Blue);
+			if (mode == PLATFORM) {
+
+				if (platformMap.selected != platformMap.map.end())
+					platformMap.selected->second->setOutlineThickness(0);
+
+				platformMap.selected = platformMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+
+				if (platformMap.selected != platformMap.map.end()) {
+					platformMap.selected->second->setOutlineThickness(5);
+					platformMap.selected->second->setOutlineColor(sf::Color::Red);
 				}
+
 			}
 
-			if (mode == OBJECT) {
+			else if (mode == OBJECT) {
 
 				objectMap.selected = objectMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
@@ -116,9 +115,6 @@ void Editor::handleEvent() {
 					selector.rect.setPosition(objectMap.selected->second->position.x, objectMap.selected->second->position.y);
 					selector.rect.setOutlineColor(sf::Color::Blue);
 				}
-
-				else
-					selector.rect.setOutlineColor(sf::Color::Transparent);
 
 			}
 
@@ -143,6 +139,13 @@ void Editor::handleEvent() {
 
 	case sf::Event::KeyPressed:
 
+		if (event.key.code == sf::Keyboard::Up)
+			objectMap.object.layer++;
+
+		if (event.key.code == sf::Keyboard::Down)
+			if(objectMap.object.layer > 0)
+				objectMap.object.layer--;
+
 		if (event.key.code == sf::Keyboard::Escape)
 			engine->changeState(MainMenu::instance(engine));
 
@@ -151,12 +154,14 @@ void Editor::handleEvent() {
 
 		if (event.key.code == sf::Keyboard::Delete) {
 
-			if (mode == POINT)
-				collisionMap.remove();
 			if (mode == OBJECT)
 				objectMap.remove();
-			if (mode == PLATFORM)
-				platformPoints.remove();
+			else if (mode == PLATFORM) {
+				if (tool == PLACE)
+					platformPoints.remove();
+				else if (tool == DELETE)
+					platformMap.remove();
+			}
 
 			selector.rect.setOutlineColor(sf::Color::Transparent);
 
@@ -184,12 +189,10 @@ void Editor::handleEvent() {
 			showLines = !showLines;
 
 		if (event.key.code == sf::Keyboard::J) {
-			collisionMap.save();
 			objectMap.save();
 			platformMap.save();
 		}
 		if (event.key.code == sf::Keyboard::K) {
-			collisionMap.load();
 			objectMap.load();
 			platformMap.load();
 		}
@@ -250,9 +253,6 @@ void Editor::update(const float dt) {
 void Editor::render(const float dt) {
 
 	objectMap.draw(&engine->window);
-
-	if (showLines)
-		engine->window.draw(collisionMap.lines);
 
 	platformPoints.draw(&engine->window);
 	platformMap.draw(&engine->window);

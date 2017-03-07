@@ -13,9 +13,10 @@ void ObjectMap::save() {
 
 	for (std::map<float, Object *>::iterator it = map.begin(); it != map.end(); it++) {
 		
-		printf("%f, %f, %s\n", it->second->position.x, it->second->position.y, it->second->textureName.c_str());
+		printf("%d, %f, %f, %s\n", it->second->layer, it->second->position.x, it->second->position.y, it->second->textureName.c_str());
 
 		ofstream
+			<< it->second->layer << std::endl
 			<< it->second->position.x << std::endl
 			<< it->second->position.y << std::endl
 			<< it->second->textureName << std::endl;
@@ -33,9 +34,10 @@ void ObjectMap::load() {
 
 	Object * tempObject = NULL;
 
-	std::string n;
 	float x;
 	float y;
+	int layer;
+	std::string name;
 
 	int numObjects = 0;
 
@@ -44,11 +46,11 @@ void ObjectMap::load() {
 	ifstream.open(objectFilename, std::ios::in | std::ios::binary);
 
 	if (!ifstream.is_open()) {
-		//printf("ERROR: Cannot Open Object File (Possibly No File To Load)\n");
+		printf("ERROR: Cannot Open Object File (Possibly No File To Load)\n");
 		return;
 	}
 
-	while (ifstream >> x >> y >> n) {
+	while (ifstream >> layer >> x >> y >> name) {
 
 		if (ifstream.eof())
 			return;
@@ -58,7 +60,7 @@ void ObjectMap::load() {
 		numObjects++;
 
 		object.position = sf::Vector2f(x, y);
-		object.textureName = n;
+		object.textureName = name;
 
 		insert(object.position);
 
@@ -83,6 +85,15 @@ void ObjectMap::clean() {
 
 	}
 
+	std::multimap<int, Object *>::iterator lit;
+	lit = layerMap.begin();
+
+	while (lit != layerMap.end()) {
+
+		layerMap.erase(lit++);
+
+	}
+
 	selected = map.end();
 
 }
@@ -97,6 +108,7 @@ void ObjectMap::insert(sf::Vector2f position) {
 	Object * tempObject = new Object;
 
 	tempObject->textureName = object.textureName;
+	tempObject->layer = object.layer;
 	tempObject->sprite.setTexture(textureManager->textures.find(object.textureName)->second);
 	tempObject->sprite.setOrigin(tempObject->sprite.getLocalBounds().width / 2, tempObject->sprite.getLocalBounds().height / 2);
 
@@ -104,6 +116,7 @@ void ObjectMap::insert(sf::Vector2f position) {
 	tempObject->sprite.setPosition(position);
 
 	map.insert(std::make_pair(tempObject->position.x, tempObject));
+	layerMap.insert(std::make_pair(tempObject->layer, tempObject));
 
 }
 
@@ -111,6 +124,17 @@ void ObjectMap::remove() {
 
 	if (selected == map.end() || selected->second == NULL)
 		return;
+
+	std::multimap<int, Object *>::iterator lit;
+	lit = layerMap.begin();
+
+	while (lit != layerMap.end()) {
+		if (lit->second == selected->second) {
+			layerMap.erase(lit);
+			break;
+		}
+		lit++;
+	}
 
 	delete(selected->second);
 	map.erase(selected);
@@ -120,8 +144,8 @@ void ObjectMap::remove() {
 
 void ObjectMap::draw(sf::RenderWindow * window) {
 
-	std::map<float, Object *>::iterator it;
-	for (it = map.begin(); it != map.end(); it++)
+	std::multimap<int, Object *>::iterator it;
+	for (it = layerMap.begin(); it != layerMap.end(); it++)
 		window->draw(it->second->sprite);
 
 	return;
@@ -195,6 +219,7 @@ ObjectMap::ObjectMap(TextureManager * textureManager) {
 
 	this->textureManager = textureManager;
 	object.textureName = this->textureManager->textures.begin()->first;
+	object.layer = 0;
 	object.position = sf::Vector2f(0, 0);
 
 }
