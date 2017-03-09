@@ -138,6 +138,9 @@ void Editor::handleEvent() {
 		break;
 
 	case sf::Event::KeyPressed:
+		
+		if (event.key.code == sf::Keyboard::LShift)
+			doSpeedUp = true;
 
 		if (event.key.code == sf::Keyboard::Up) {
 			objectMap.object.layer++;
@@ -215,6 +218,8 @@ void Editor::handleEvent() {
 		break;
 
 	case sf::Event::KeyReleased:
+		if (event.key.code == sf::Keyboard::LShift)
+			doSpeedUp = false;
 		if (event.key.code == sf::Keyboard::A)
 			doLeft = false;
 		if (event.key.code == sf::Keyboard::D)
@@ -230,19 +235,36 @@ void Editor::handleEvent() {
 
 void Editor::update(const float dt) {
 
-	if (doLeft == true)
-		viewVelX = -15.0f;
-	else if (doRight == true)
-		viewVelX = 15.0f;
-	else
-		viewVelX = 0.0f;
+	if (doSpeedUp) {
+		if (doLeft == true)
+			viewVelX = -30.0f;
+		else if (doRight == true)
+			viewVelX = 30.0f;
+		else
+			viewVelX = 0.0f;
 
-	if (doUp == true)
-		viewVelY = -15.0f;
-	else if (doDown == true)
-		viewVelY = 15.0f;
-	else
-		viewVelY = 0.0f;
+		if (doUp == true)
+			viewVelY = -30.0f;
+		else if (doDown == true)
+			viewVelY = 30.0f;
+		else
+			viewVelY = 0.0f;
+	}
+	else {
+		if (doLeft == true)
+			viewVelX = -15.0f;
+		else if (doRight == true)
+			viewVelX = 15.0f;
+		else
+			viewVelX = 0.0f;
+
+		if (doUp == true)
+			viewVelY = -15.0f;
+		else if (doDown == true)
+			viewVelY = 15.0f;
+		else
+			viewVelY = 0.0f;
+	}
 
 	engine->window.setView(view);
 
