@@ -40,7 +40,6 @@ void Editor::init() {
 void Editor::clean() {
 
 	objectMap.clean();
-	platformPoints.clean();
 	platformMap.clean();
 
 }
@@ -81,10 +80,19 @@ void Editor::handleEvent() {
 			else if (mode == PLATFORM)
 				if (tool == BOX)
 					corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
-				else if (tool == GROUND)
+				else if (tool == GROUND) {
+					if (platformMap.selected != platformMap.map.end())
+						platformMap.selected->second->setOutlineThickness(0);
+
 					platformMap.insertGround(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+
+					if (platformMap.selected != platformMap.map.end()) {
+						platformMap.selected->second->setOutlineThickness(5);
+						platformMap.selected->second->setOutlineColor(sf::Color::Red);
+					}
+				}
 				else
-					platformPoints.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+					platformMap.platformPoints.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 		}
 
 		if (event.mouseButton.button == sf::Mouse::Right) {
@@ -165,8 +173,8 @@ void Editor::handleEvent() {
 				objectMap.remove();
 			else if (mode == PLATFORM) {
 				if (tool == PLACE)
-					platformPoints.remove();
-				else if (tool == DELETE)
+					platformMap.platformPoints.remove();
+				else
 					platformMap.remove();
 			}
 
@@ -176,10 +184,8 @@ void Editor::handleEvent() {
 
 		if (event.key.code == sf::Keyboard::Return) {
 
-			if (mode == PLATFORM) {
-				platformMap.insert(&platformPoints.lines);
-				platformPoints.clean();
-			}
+			if (mode == PLATFORM)
+				platformMap.insert();
 
 		}
 
@@ -280,8 +286,8 @@ void Editor::render(const float dt) {
 
 	objectMap.draw(&engine->window);
 
-	platformPoints.draw(&engine->window);
 	platformMap.draw(&engine->window);
+	platformMap.platformPoints.draw(&engine->window);
 
 	engine->window.draw(selector.rect);
 

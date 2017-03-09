@@ -68,7 +68,6 @@ private:
 
 	ObjectMap objectMap;
 	PlatformMap platformMap;
-	PlatformPoints platformPoints;
 
 	int mode;
 	int tool;

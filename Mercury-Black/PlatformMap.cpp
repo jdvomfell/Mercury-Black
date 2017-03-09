@@ -66,7 +66,7 @@ void PlatformMap::load()
 
 		}
 
-		insert(&platformPoints.lines);
+		insert();
 		platformPoints.clean();
 
 	}
@@ -77,25 +77,25 @@ void PlatformMap::load()
 
 }
 
-void PlatformMap::insert(sf::VertexArray * points)
+std::map<float, sf::ConvexShape *>::iterator PlatformMap::insert()
 {
 
-	if (points->getVertexCount() == 0)
-		return;
+	if (platformPoints.lines.getVertexCount() == 0)
+		return map.end();
 
-	sf::ConvexShape * shape = new sf::ConvexShape(points->getVertexCount());
+	sf::ConvexShape * shape = new sf::ConvexShape(platformPoints.lines.getVertexCount());
 
 	shape->setFillColor(sf::Color::Black);
 
-	for (size_t i = 0; i < points->getVertexCount(); i++) {
+	for (size_t i = 0; i < platformPoints.lines.getVertexCount(); i++) {
 
-		shape->setPoint(i, (*points)[i].position);
+		shape->setPoint(i, (platformPoints.lines)[i].position);
 
 	}
 
-	map.insert(std::make_pair(shape->getPoint(0).x, shape));
+	platformPoints.clean();
 
-	return;
+	return map.insert(std::make_pair(shape->getPoint(0).x, shape)).first;
 }
 
 void PlatformMap::insertBox(sf::Vector2f topLeft, sf::Vector2f bottomRight) {
@@ -121,6 +121,32 @@ void PlatformMap::insertGround(sf::Vector2f groundPosition) {
 	sf::Vector2f normal;
 	sf::Vector2f unitNormal;
 
+	if (selected != map.end()) {
+
+		if (platformPoints.isEmpty()) {
+
+			platformPoints.insert(selected->second->getPoint(3));
+			platformPoints.insert(selected->second->getPoint(2));
+
+		}
+
+		edge.x = platformPoints.begin->point.x - groundPosition.x;
+		edge.y = platformPoints.begin->point.y - groundPosition.y;
+
+		normal.x = edge.y;
+		normal.y = -edge.x;
+
+		unitNormal.x = normal.x / (sqrt(pow(normal.x, 2) + pow(normal.y, 2)));
+		unitNormal.y = normal.y / (sqrt(pow(normal.x, 2) + pow(normal.y, 2)));
+
+		platformPoints.insert(sf::Vector2f(groundPosition.x + unitNormal.x * 30, groundPosition.y + unitNormal.y * 30));
+		platformPoints.insert(groundPosition);
+
+		selected = insert();
+
+		return;
+
+	}
 
 	if (platformPoints.isEmpty()) {
 
@@ -143,11 +169,7 @@ void PlatformMap::insertGround(sf::Vector2f groundPosition) {
 		platformPoints.insert(sf::Vector2f(groundPosition.x + unitNormal.x * 30, groundPosition.y + unitNormal.y * 30));
 		platformPoints.insert(groundPosition);
 
-		insert(&platformPoints.lines);
-		platformPoints.clean();
-
-		platformPoints.insert(groundPosition);
-		platformPoints.insert(sf::Vector2f(sf::Vector2f(groundPosition.x + unitNormal.x * 30, groundPosition.y + unitNormal.y * 30)));
+		selected = insert();
 
 	}
 
@@ -348,6 +370,7 @@ void PlatformPoints::remove() {
 		delete(current);
 		current = NULL;
 		begin = NULL;
+		update();
 		return;
 	}
 
