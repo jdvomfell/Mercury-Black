@@ -139,12 +139,16 @@ void Editor::handleEvent() {
 
 	case sf::Event::KeyPressed:
 
-		if (event.key.code == sf::Keyboard::Up)
+		if (event.key.code == sf::Keyboard::Up) {
 			objectMap.object.layer++;
+			printf("Layer: %d", objectMap.object.layer);
+		}
 
-		if (event.key.code == sf::Keyboard::Down)
-			if(objectMap.object.layer > 0)
+		if (event.key.code == sf::Keyboard::Down) {
+			if (objectMap.object.layer > 0)
 				objectMap.object.layer--;
+			printf("Layer: %d", objectMap.object.layer);
+		}
 
 		if (event.key.code == sf::Keyboard::Escape)
 			engine->changeState(MainMenu::instance(engine));

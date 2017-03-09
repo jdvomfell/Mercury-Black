@@ -13,6 +13,7 @@ void Game::init() {
 
 	createPlayer(&world, 900, 0);
 	createTest(&world, 2000, 0);
+	createHeart(&world, 900, 500);
 	//createCeilingPlant(&world, 3000, 1000);
 
 	objectMap = ObjectMap(&engine->textureManager);
@@ -70,6 +71,9 @@ void Game::handleEvent() {
 				world.input[PLAYER].left = true;
 			if (event.key.code == sf::Keyboard::D)
 				world.input[PLAYER].right = true;
+
+			if (event.key.code == sf::Keyboard::L)
+				drawPlatforms = !drawPlatforms;
 
 			if (event.key.code == sf::Keyboard::Space)
 				world.input[PLAYER].attack = true;
@@ -144,6 +148,8 @@ void Game::render(const float dt) {
 
 	renderSystem(&world, &engine->window);
 
-	for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)
-		engine->window.draw(*(pit->second));
+	if(drawPlatforms)
+		for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)
+			engine->window.draw(*(pit->second));
+
 }
