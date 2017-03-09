@@ -25,6 +25,9 @@ void aiSystem(World * world, float dt) {
 			else if (world->name[entityID].name == "test")
 				scriptTest(world, entityID, dt);
 
+			else if (world->name[entityID].name == "heart")
+				scriptHeart(world, entityID);
+
 			else
 				printf("ERROR: Could Not Find Entity AI: %s\n", world->name[entityID].name.c_str());
 

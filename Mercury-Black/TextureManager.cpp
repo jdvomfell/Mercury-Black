@@ -173,13 +173,11 @@ void TextureManager::loadAllTextures() {
 	
 	/////PLAY//////
 
-	loadTexture("toriiGate_1", "Textures/Test/ToriiGate1.png");
-	loadTexture("toriiGate_2", "Textures/Test/ToriiGate2.png");
-	loadTexture("toriiGate_3", "Textures/Test/ToriiGate3.png");
-	loadTexture("toriiGate_4", "Textures/Test/ToriiGate4.png");
-	loadTexture("toriiGate_5", "Textures/Test/ToriiGate5.png");
-	loadTexture("treeTest_1", "Textures/Test/TreeTest1.png");
-	loadTexture("Background", "Textures/Test/Background.png");
-	loadTexture("tree", "Textures/Test/tree.png");
+	loadTexture("spring_cliff_1", "Textures/Test/spring_cliff_1.png");
+	loadTexture("spring_cliff_2", "Textures/Test/spring_cliff_2.png");
+	loadTexture("spring_tree_1", "Textures/Test/spring_tree_1.png");
+	loadTexture("spring_tree_2", "Textures/Test/spring_tree_2.png");
+	loadTexture("spring_log_1", "Textures/Test/spring_log_1.png");
+	loadTexture("heart", "Textures/Test/heart.png");
 
 }

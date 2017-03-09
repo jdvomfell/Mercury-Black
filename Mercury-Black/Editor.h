@@ -73,6 +73,7 @@ private:
 	int mode;
 	int tool;
 
+	bool doSpeedUp;
 	bool doLeft;
 	bool doRight;
 	bool doUp;
