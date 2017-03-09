@@ -9,6 +9,8 @@
 
 Editor Editor::editor;
 
+#define DEFAULT_TEXT_SIZE 60.0f
+
 void Editor::init() {
 
 	selector = Selector();
@@ -17,14 +19,17 @@ void Editor::init() {
 	mode = POINT;
 	tool = PLACE;
 
-	modeText = sf::Text("Mode: Point", engine->textureManager.font, 60);
+	modeText = sf::Text("Mode: Point", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
 	modeText.setFillColor(sf::Color::Black);
 
-	toolText = sf::Text("Tool: Place", engine->textureManager.font, 60);
+	toolText = sf::Text("Tool: Place", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
 	toolText.setFillColor(sf::Color::Black);
 
-	textureText = sf::Text("", engine->textureManager.font, 60);
+	textureText = sf::Text("", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
 	textureText.setFillColor(sf::Color::Black);
+
+	morphText = sf::Text("", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
+	morphText.setFillColor(sf::Color::Black);
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
@@ -32,8 +37,8 @@ void Editor::init() {
 
 	platformMap.load();
 
-	zoom = 2;
-	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2, engine->window.getDefaultView().getSize().y * 2));
+	zoom = 2.0f;
+	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2.0f, engine->window.getDefaultView().getSize().y * 2.0f));
 
 }
 
@@ -64,10 +69,17 @@ void Editor::handleEvent() {
 			zoom += event.mouseWheelScroll.delta;
 		}
 
-		if (zoom < 1)
-			zoom = 1;
+		if (zoom < 1.0f)
+			zoom = 1.0f;
+
+		if (zoom > 5.0f)
+			zoom = 5.0f;
 
 		view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * zoom, engine->window.getDefaultView().getSize().y * zoom));
+		modeText.setCharacterSize(DEFAULT_TEXT_SIZE * zoom / 2.0f);
+		toolText.setCharacterSize(DEFAULT_TEXT_SIZE * zoom / 2.0f);
+		textureText.setCharacterSize(DEFAULT_TEXT_SIZE * zoom / 2.0f);
+		morphText.setCharacterSize(DEFAULT_TEXT_SIZE * zoom / 2.0f);
 
 		break;
 
@@ -103,7 +115,7 @@ void Editor::handleEvent() {
 
 				if (platformMap.selected != platformMap.map.end())
 					platformMap.selected->second->setOutlineThickness(0);
-
+					
 				platformMap.selected = platformMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
 				if (platformMap.selected != platformMap.map.end()) {
@@ -126,6 +138,14 @@ void Editor::handleEvent() {
 
 			}
 
+		}
+		
+		if (mode == PLATFORM && platformMap.selected != platformMap.map.end()) {
+			morphText.setString("Point 0: X: " + std::to_string(platformMap.selected->second->getPoint(0).x) + " Y: " + std::to_string(platformMap.selected->second->getPoint(0).y) + "\nFallthrough: N\A\n");
+		}
+
+		else if (mode == OBJECT && objectMap.selected != objectMap.map.end()) {
+			morphText.setString("Point 0: X: "+std::to_string(objectMap.selected->second->position.x)+" Y: "+std::to_string(objectMap.selected->second->position.y) + "\nFallthrough: N\A\n");
 		}
 
 		break;
@@ -274,10 +294,10 @@ void Editor::update(const float dt) {
 
 	engine->window.setView(view);
 
-	modeText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 50);
-	toolText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 200);
-	textureText.setPosition(view.getCenter().x - view.getSize().x / 2 + 50, view.getCenter().y - view.getSize().y / 2 + 350);
-
+	modeText.setPosition(view.getCenter().x - view.getSize().x / 2.0f + 50 * zoom / 2.0f, view.getCenter().y - view.getSize().y / 2.0f + 50 * zoom / 2.0f);
+	toolText.setPosition(view.getCenter().x - view.getSize().x / 2.0f + 50 * zoom / 2.0f, view.getCenter().y - view.getSize().y / 2.0f + 200 * zoom / 2.0f);
+	textureText.setPosition(view.getCenter().x - view.getSize().x / 2.0f + 50 * zoom / 2.0f, view.getCenter().y - view.getSize().y / 2.0f + 350 * zoom / 2.0f);
+	morphText.setPosition(view.getCenter().x - view.getSize().x / 2.0f + 50 * zoom / 2.0f, view.getCenter().y - view.getSize().y / 2.0f + 500 * zoom / 2.0f);
 	view.move(viewVelX, viewVelY);
 
 }
@@ -294,6 +314,7 @@ void Editor::render(const float dt) {
 	engine->window.draw(modeText);
 	engine->window.draw(toolText);
 	engine->window.draw(textureText);
+	engine->window.draw(morphText);
 }
 
 void Editor::rotateMode() {
@@ -301,18 +322,22 @@ void Editor::rotateMode() {
 	if (mode == POINT) {
 		mode = OBJECT;
 		modeText.setString("Mode: Object");
+		morphText.setString("Points: N\A");
 	}
 	else if (mode == OBJECT) {
 		mode = PLATFORM;
 		modeText.setString("Mode: Platform");
+		morphText.setString("Points: N\A");
 	}
 	else if (mode == PLATFORM) {
 		mode = POINT;
 		modeText.setString("Mode: Point");
+		morphText.setString("Points: N\A");
 	}
 	else {
 		mode = POINT;
 		modeText.setString("Mode: Point");
+		morphText.setString("Point: N\A");
 	}
 
 }
