@@ -126,25 +126,26 @@ void Game::update(const float dt) {
 	movementSystem(&world);
 	damageSystem(&world, dt);
 
-	//listener.setPosition(world.position[0].x, world.position[0].y, 0);
 	sf::Listener::setPosition(world.position[0].x, 0, world.position[0].y);
 
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 3.5f, engine->window.getDefaultView().getSize().y * 3.5f));
 	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y - view.getSize().y / 4));
 	engine->window.setView(view);
 
-	rect.setSize(sf::Vector2f(world.sprite[0].sprite.getLocalBounds().width, world.sprite[0].sprite.getLocalBounds().height));
-	rect.setPosition(sf::Vector2f(world.sprite[0].sprite.getGlobalBounds().left, world.sprite[0].sprite.getGlobalBounds().top));
+	/* Hitbox Temp */
+	//rect.setSize(sf::Vector2f(world.sprite[0].sprite.getLocalBounds().width, world.sprite[0].sprite.getLocalBounds().height));
+	//rect.setPosition(sf::Vector2f(world.sprite[0].sprite.getGlobalBounds().left, world.sprite[0].sprite.getGlobalBounds().top));
 
 }
 
 void Game::render(const float dt) {
 
-	objectMap.draw(&engine->window);
+	objectMap.drawBackground(&engine->window);
 
-	engine->window.draw(rect);
+	//engine->window.draw(rect);
 
 	renderSystem(&world, &engine->window);
+	objectMap.drawForeground(&engine->window);
 
 	if(drawPlatforms)
 		for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)

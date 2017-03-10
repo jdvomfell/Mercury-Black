@@ -16,10 +16,10 @@ void Editor::init() {
 	selector = Selector();
 
 	showLines = true;
-	mode = POINT;
+	mode = PLATFORM;
 	tool = PLACE;
 
-	modeText = sf::Text("Mode: Point", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
+	modeText = sf::Text("Mode: Platform", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
 	modeText.setFillColor(sf::Color::Black);
 
 	toolText = sf::Text("Tool: Place", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
@@ -58,16 +58,13 @@ void Editor::handleEvent() {
 	switch (event.type) {
 
 	case sf::Event::Closed:
-
 		engine->quit();
-
 		break;
 
 	case sf::Event::MouseWheelScrolled:
 
-		if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
+		if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
 			zoom += event.mouseWheelScroll.delta;
-		}
 
 		if (zoom < 1.0f)
 			zoom = 1.0f;
@@ -87,11 +84,16 @@ void Editor::handleEvent() {
 
 		if (event.mouseButton.button == sf::Mouse::Left) {
 
-			if (mode == OBJECT)
+			if (mode == OBJECT) {
 				objectMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
-			else if (mode == PLATFORM)
-				if (tool == BOX)
+			}
+
+			else if (mode == PLATFORM) {
+				
+				if (tool == BOX) {
 					corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+				}
+
 				else if (tool == GROUND) {
 					if (platformMap.selected != platformMap.map.end())
 						platformMap.selected->second->setOutlineThickness(0);
@@ -105,6 +107,8 @@ void Editor::handleEvent() {
 				}
 				else
 					platformMap.platformPoints.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+			}
+
 		}
 
 		if (event.mouseButton.button == sf::Mouse::Right) {
@@ -333,25 +337,20 @@ void Editor::render(const float dt) {
 
 void Editor::rotateMode() {
 
-	if (mode == POINT) {
+	if (mode == PLATFORM) {
 		mode = OBJECT;
 		modeText.setString("Mode: Object");
 		morphText.setString("Points: N\\A");
 	}
 	else if (mode == OBJECT) {
-		mode = PLATFORM;
-		modeText.setString("Mode: Platform");
-		morphText.setString("Points: N\\A");
-	}
-	else if (mode == PLATFORM) {
-		mode = POINT;
-		modeText.setString("Mode: Point");
+		mode = EVENT;
+		modeText.setString("Mode: Event");
 		morphText.setString("Points: N\\A");
 	}
 	else {
-		mode = POINT;
-		modeText.setString("Mode: Point");
-		morphText.setString("Point: N\\A");
+		mode = PLATFORM;
+		modeText.setString("Mode: Platform");
+		morphText.setString("Points: N\\A");
 	}
 
 }
@@ -378,6 +377,18 @@ void Editor::rotateTool() {
 		tool = PLACE;
 		toolText.setString("Tool: Place");
 	}
+
+}
+
+void Editor::deselect() {
+
+	selector.rect.setOutlineColor(sf::Color::Transparent);
+	
+	if (platformMap.selected != platformMap.map.end())
+		platformMap.selected->second->setOutlineThickness(0);
+
+	platformMap.selected = platformMap.map.end();
+	objectMap.selected = objectMap.map.end();
 
 }
 

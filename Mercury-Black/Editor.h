@@ -11,9 +11,9 @@
 
 /* Editing Types */
 
-#define POINT 1
-#define OBJECT 2
-#define PLATFORM 3
+#define OBJECT 1
+#define PLATFORM 2
+#define EVENT 3
 
 /* Editing Tools */
 
@@ -52,6 +52,7 @@ public:
 
 	void rotateMode();
 	void rotateTool();
+	void deselect();
 
 	/* Object */
 
@@ -93,6 +94,7 @@ private:
 	sf::Text toolText;
 	sf::Text textureText;
 	sf::Text morphText;
+
 };
 
 #endif
