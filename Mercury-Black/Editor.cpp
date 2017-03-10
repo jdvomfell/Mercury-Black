@@ -246,18 +246,18 @@ void Editor::handleEvent() {
 			}
 
 			else if (event.key.code == sf::Keyboard::I)
-				objectMap.flipx();
+				objectMap.flipx(objectMap.selected->second);
 
 			else if (event.key.code == sf::Keyboard::O)
-				objectMap.flipy();
+				objectMap.flipy(objectMap.selected->second);
 			else if (event.key.code == sf::Keyboard::Y)
-				objectMap.rotate(-.5);
+				objectMap.rotate(objectMap.selected->second, -.5);
 			else if (event.key.code == sf::Keyboard::U)
-				objectMap.rotate(.5);
+				objectMap.rotate(objectMap.selected->second, .5);
 			else if (event.key.code == sf::Keyboard::Equal)
-				objectMap.scale(.05);
+				objectMap.scale(objectMap.selected->second, .05);
 			else if (event.key.code == sf::Keyboard::Dash)
-				objectMap.scale(-.05);
+				objectMap.scale(objectMap.selected->second, -.05);
 		}
 		break;
 
