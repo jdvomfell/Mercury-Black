@@ -234,13 +234,27 @@ void Editor::handleEvent() {
 			rotateMode();
 		if (event.key.code == sf::Keyboard::N)
 			rotateTool();
-
-		if (mode == OBJECT)
+		
+		if (mode == OBJECT) {
 			if (event.key.code == sf::Keyboard::T) {
 				objectMap.changeObject();
 				textureText.setString(objectMap.object.textureName);
 			}
 
+			else if (event.key.code == sf::Keyboard::I)
+				objectMap.flipx();
+
+			else if (event.key.code == sf::Keyboard::O)
+				objectMap.flipy();
+			else if (event.key.code == sf::Keyboard::Y)
+				objectMap.rotate(-.5);
+			else if (event.key.code == sf::Keyboard::U)
+				objectMap.rotate(.5);
+			else if (event.key.code == sf::Keyboard::Equal)
+				objectMap.scale(.05);
+			else if (event.key.code == sf::Keyboard::Dash)
+				objectMap.scale(-.05);
+		}
 		break;
 
 	case sf::Event::KeyReleased:

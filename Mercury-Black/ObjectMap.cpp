@@ -224,3 +224,61 @@ ObjectMap::ObjectMap(TextureManager * textureManager) {
 	object.position = sf::Vector2f(0, 0);
 
 }
+
+void ObjectMap::flipx() {
+
+	if (selected == map.end()) return;
+
+	printf("Coo Coo\n");
+	selected->second->flipx = !selected->second->flipx;
+
+	if (selected->second->flipx == true) {
+		selected->second->sprite.setTextureRect(sf::IntRect((int) selected->second->sprite.getLocalBounds().width, 0, (int) -selected->second->sprite.getLocalBounds().width, (int) selected->second->sprite.getLocalBounds().height));
+	}
+
+	else {
+		selected->second->sprite.setTextureRect(sf::IntRect(0, 0, (int) selected->second->sprite.getLocalBounds().width, (int) selected->second->sprite.getLocalBounds().height));
+	}
+
+	return;
+}
+
+void ObjectMap::flipy() {
+	
+	if (selected == map.end()) return;
+
+	printf("cachoo\n");
+	flipx();
+	selected->second->sprite.setRotation(selected->second->rotate + 180);
+
+	selected->second->rotate += 180;
+
+	if(selected->second->rotate > 360)
+		selected->second->rotate = (int) selected->second->rotate % 360;
+
+	return;
+}
+
+void ObjectMap::rotate(float mod) {
+	
+	selected->second->rotate += mod;
+
+	selected->second->sprite.setRotation(selected->second->rotate);
+
+	if (selected->second->rotate > 360)
+		selected->second->rotate = (int) selected->second->rotate % 360;
+
+}
+
+void ObjectMap::scale(float mod) {
+
+	if (selected->second->scale + mod > 0) {
+
+		selected->second->scale += mod;
+
+		selected->second->sprite.setScale(sf::Vector2f(selected->second->scale, selected->second->scale));
+
+	}
+
+	return;
+}

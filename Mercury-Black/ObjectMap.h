@@ -13,6 +13,15 @@ struct Object {
 
 	sf::Sprite sprite;
 
+	//key: flipx 0 means no flip.
+	bool flipx = false;
+
+	//rotate 'rotate' degrees
+	float rotate = 0;
+
+	//scaling as a multiplier of the size (1 is natural scale);
+	float scale = 1;
+
 };
 
 class ObjectMap {
@@ -34,6 +43,12 @@ public:
 
 	void changeObject();
 	void selectObject(std::string textureName);
+	
+	void flipx();
+	void flipy();
+
+	void rotate(float);
+	void scale(float);
 
 	ObjectMap() {}
 	ObjectMap(TextureManager *);
@@ -44,7 +59,6 @@ public:
 	std::map<float, Object *> map;
 	std::multimap<int, Object *> layerMap;
 	std::map<float, Object *>::iterator selected;
-
 };
 
 #endif
