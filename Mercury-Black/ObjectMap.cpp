@@ -59,6 +59,7 @@ void ObjectMap::load() {
 
 		numObjects++;
 
+		object.layer = layer;
 		object.position = sf::Vector2f(x, y);
 		object.textureName = name;
 

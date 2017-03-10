@@ -37,8 +37,6 @@ void PlatformMap::load()
 	sf::Vector2f point;
 	unsigned int platformCount = 0;
 
-	PlatformPoints platformPoints;
-
 	std::ifstream ifstream;
 	std::string filename = "platform.dat";
 
@@ -199,6 +197,8 @@ void PlatformMap::clean() {
 	}
 
 	platformPoints.clean();
+
+	selected = map.end();
 
 	return;
 

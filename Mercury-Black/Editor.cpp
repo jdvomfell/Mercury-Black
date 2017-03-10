@@ -141,11 +141,11 @@ void Editor::handleEvent() {
 		}
 		
 		if (mode == PLATFORM && platformMap.selected != platformMap.map.end()) {
-			morphText.setString("Point 0: X: " + std::to_string(platformMap.selected->second->getPoint(0).x) + " Y: " + std::to_string(platformMap.selected->second->getPoint(0).y) + "\nFallthrough: N\A\n");
+			morphText.setString("Point 0: X: " + std::to_string(platformMap.selected->second->getPoint(0).x) + " Y: " + std::to_string(platformMap.selected->second->getPoint(0).y) + "\nFallthrough: N\\A\n");
 		}
 
 		else if (mode == OBJECT && objectMap.selected != objectMap.map.end()) {
-			morphText.setString("Point 0: X: "+std::to_string(objectMap.selected->second->position.x)+" Y: "+std::to_string(objectMap.selected->second->position.y) + "\nFallthrough: N\A\n");
+			morphText.setString("Point 0: X: "+std::to_string(objectMap.selected->second->position.x)+" Y: "+std::to_string(objectMap.selected->second->position.y) + "\nFallthrough: N\\A\n");
 		}
 
 		break;
@@ -322,22 +322,22 @@ void Editor::rotateMode() {
 	if (mode == POINT) {
 		mode = OBJECT;
 		modeText.setString("Mode: Object");
-		morphText.setString("Points: N\A");
+		morphText.setString("Points: N\\A");
 	}
 	else if (mode == OBJECT) {
 		mode = PLATFORM;
 		modeText.setString("Mode: Platform");
-		morphText.setString("Points: N\A");
+		morphText.setString("Points: N\\A");
 	}
 	else if (mode == PLATFORM) {
 		mode = POINT;
 		modeText.setString("Mode: Point");
-		morphText.setString("Points: N\A");
+		morphText.setString("Points: N\\A");
 	}
 	else {
 		mode = POINT;
 		modeText.setString("Mode: Point");
-		morphText.setString("Point: N\A");
+		morphText.setString("Point: N\\A");
 	}
 
 }

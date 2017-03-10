@@ -140,9 +140,7 @@ void Game::update(const float dt) {
 
 void Game::render(const float dt) {
 
-	std::map<float, Object *>::iterator it;
-	for (it = objectMap.map.begin(); it != objectMap.map.end(); it++)
-		engine->window.draw(it->second->sprite);
+	objectMap.draw(&engine->window);
 
 	engine->window.draw(rect);
 
