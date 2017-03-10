@@ -65,9 +65,8 @@ void Editor::handleEvent() {
 
 	case sf::Event::MouseWheelScrolled:
 
-		if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
+		if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
 			zoom += event.mouseWheelScroll.delta;
-		}
 
 		if (zoom < 1.0f)
 			zoom = 1.0f;

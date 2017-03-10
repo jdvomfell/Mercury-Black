@@ -55,8 +55,6 @@ void ObjectMap::load() {
 		if (ifstream.eof())
 			return;
 
-		//printf("%f %f %s\n", x, y, n.c_str());
-
 		numObjects++;
 
 		object.layer = layer;
@@ -147,6 +145,26 @@ void ObjectMap::draw(sf::RenderWindow * window) {
 
 	std::multimap<int, Object *>::iterator it;
 	for (it = layerMap.begin(); it != layerMap.end(); it++)
+		window->draw(it->second->sprite);
+
+	return;
+
+}
+
+void ObjectMap::drawForeground(sf::RenderWindow * window) {
+
+	std::multimap<int, Object *>::iterator it;
+	for (it = layerMap.lower_bound(30); it != layerMap.end(); it++)
+		window->draw(it->second->sprite);
+
+	return;
+
+}
+
+void ObjectMap::drawBackground(sf::RenderWindow * window) {
+
+	std::multimap<int, Object *>::iterator it;
+	for (it = layerMap.begin(); it != layerMap.lower_bound(30); it++)
 		window->draw(it->second->sprite);
 
 	return;

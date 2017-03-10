@@ -93,6 +93,7 @@ private:
 	sf::Text toolText;
 	sf::Text textureText;
 	sf::Text morphText;
+
 };
 
 #endif
