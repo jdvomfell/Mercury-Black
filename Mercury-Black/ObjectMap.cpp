@@ -16,6 +16,9 @@ void ObjectMap::save() {
 		printf("%d, %f, %f, %s\n", it->second->layer, it->second->position.x, it->second->position.y, it->second->textureName.c_str());
 
 		ofstream
+			<< it->second->flipx << std::endl
+			<< it->second->rotate << std::endl
+			<< it->second->scale << std::endl
 			<< it->second->layer << std::endl
 			<< it->second->position.x << std::endl
 			<< it->second->position.y << std::endl
@@ -34,6 +37,9 @@ void ObjectMap::load() {
 
 	Object * tempObject = NULL;
 
+	bool flipx;
+	float rotate;
+	float scale;
 	float x;
 	float y;
 	int layer;
@@ -50,13 +56,16 @@ void ObjectMap::load() {
 		return;
 	}
 
-	while (ifstream >> layer >> x >> y >> name) {
+	while (ifstream >> flipx >> rotate >> scale >> layer >> x >> y >> name) {
 
 		if (ifstream.eof())
 			return;
 
 		numObjects++;
 
+		object.flipx = flipx;
+		object.rotate = rotate;
+		object.scale = scale;
 		object.layer = layer;
 		object.position = sf::Vector2f(x, y);
 		object.textureName = name;
@@ -106,6 +115,10 @@ void ObjectMap::insert(sf::Vector2f position) {
 
 	Object * tempObject = new Object;
 
+	tempObject->flipx = !object.flipx;
+	tempObject->rotate = object.rotate;
+	tempObject->scale = object.scale;
+
 	tempObject->textureName = object.textureName;
 	tempObject->layer = object.layer;
 	tempObject->sprite.setTexture(textureManager->textures.find(object.textureName)->second);
@@ -116,6 +129,10 @@ void ObjectMap::insert(sf::Vector2f position) {
 
 	map.insert(std::make_pair(tempObject->position.x, tempObject));
 	layerMap.insert(std::make_pair(tempObject->layer, tempObject));
+
+	flipx(tempObject);
+	rotate(tempObject, 0);
+	scale(tempObject, 0);
 
 }
 
@@ -243,58 +260,60 @@ ObjectMap::ObjectMap(TextureManager * textureManager) {
 
 }
 
-void ObjectMap::flipx() {
+void ObjectMap::flipx(Object* object) {
 
-	if (selected == map.end()) return;
+	if (object == NULL) return;
 
-	printf("Coo Coo\n");
-	selected->second->flipx = !selected->second->flipx;
+	object->flipx = !object->flipx;
 
-	if (selected->second->flipx == true) {
-		selected->second->sprite.setTextureRect(sf::IntRect((int) selected->second->sprite.getLocalBounds().width, 0, (int) -selected->second->sprite.getLocalBounds().width, (int) selected->second->sprite.getLocalBounds().height));
+	if (object->flipx == true) {
+		object->sprite.setTextureRect(sf::IntRect((int) object->sprite.getLocalBounds().width, 0, (int) -object->sprite.getLocalBounds().width, (int) object->sprite.getLocalBounds().height));
 	}
 
 	else {
-		selected->second->sprite.setTextureRect(sf::IntRect(0, 0, (int) selected->second->sprite.getLocalBounds().width, (int) selected->second->sprite.getLocalBounds().height));
+		object->sprite.setTextureRect(sf::IntRect(0, 0, (int) object->sprite.getLocalBounds().width, (int) object->sprite.getLocalBounds().height));
 	}
 
 	return;
 }
 
-void ObjectMap::flipy() {
+void ObjectMap::flipy(Object* object) {
 	
-	if (selected == map.end()) return;
+	if (object == NULL) return;
 
-	printf("cachoo\n");
-	flipx();
-	selected->second->sprite.setRotation(selected->second->rotate + 180);
+	flipx(object);
+	object->sprite.setRotation(selected->second->rotate + 180);
 
-	selected->second->rotate += 180;
+	object->rotate += 180;
 
-	if(selected->second->rotate > 360)
-		selected->second->rotate = (int) selected->second->rotate % 360;
+	if(object->rotate > 360)
+		object->rotate = (int) object->rotate % 360;
 
 	return;
 }
 
-void ObjectMap::rotate(float mod) {
+void ObjectMap::rotate(Object* object, float mod) {
 	
-	selected->second->rotate += mod;
+	if (object == NULL) return;
 
-	selected->second->sprite.setRotation(selected->second->rotate);
+	object->rotate += mod;
 
-	if (selected->second->rotate > 360)
-		selected->second->rotate = (int) selected->second->rotate % 360;
+	object->sprite.setRotation(object->rotate);
+
+	if (object->rotate > 360)
+		object->rotate = (int) object->rotate % 360;
 
 }
 
-void ObjectMap::scale(float mod) {
+void ObjectMap::scale(Object* object, float mod) {
 
-	if (selected->second->scale + mod > 0) {
+	if (object == NULL) return;
 
-		selected->second->scale += mod;
+	if (object->scale + mod > 0) {
 
-		selected->second->sprite.setScale(sf::Vector2f(selected->second->scale, selected->second->scale));
+		object->scale += mod;
+
+		object->sprite.setScale(sf::Vector2f(object->scale, object->scale));
 
 	}
 

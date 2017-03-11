@@ -46,11 +46,11 @@ public:
 	void changeObject();
 	void selectObject(std::string textureName);
 	
-	void flipx();
-	void flipy();
+	void flipx(Object*);
+	void flipy(Object*);
 
-	void rotate(float);
-	void scale(float);
+	void rotate(Object*, float);
+	void scale(Object*, float);
 
 	ObjectMap() {}
 	ObjectMap(TextureManager *);

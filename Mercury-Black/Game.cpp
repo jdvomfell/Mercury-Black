@@ -1,9 +1,11 @@
 #include "Game.h"
 
+#include "EventHandler.h"
 #include "System.h"
 #include "MainMenu.h"
 #include "PauseMenu.h"
 #include "Editor.h"
+#include <map>
 
 Game Game::game;
 
@@ -16,25 +18,34 @@ void Game::init() {
 	createHeart(&world, 900, 500);
 	//createCeilingPlant(&world, 3000, 1000);
 
+
+
+	/*Sound insertion code TEMPORARY*/
+
+	sf::Vector2f size(800, 800);
+	sf::Vector2f size2(500, 500);
+	sf::RectangleShape * rectangle = new sf::RectangleShape(size);
+	sf::RectangleShape * rectangle2 = new sf::RectangleShape(size2);
+	//rectangle->setFillColor(sf::Color::Blue);
+	//rectangle2->setFillColor(sf::Color::Green);
+	eventMap.insertSound(rectangle, &world, "Music/frogs.ogg", 20.0, true);
+	eventMap.insertSound(rectangle2, &world, "Music/drank.ogg", 25.0, true);
+	rectangle->setPosition(1000, 1500);
+	rectangle2->setPosition(1000, 1500);
+
+	/* End of sound code*/
+
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	platformMap.load();
 
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
-
-	music.openFromFile("Music/drank.ogg");
-	music.setVolume(20);
-	music.setPosition(0, 0, 0);
-	music.setMinDistance(1500.0f);
-	music.setAttenuation(30);
-	music.setLoop(true);
-	music.play();
-
 }
 
 void Game::clean() {
 
+	eventMap.clean();
 	cleanWorld(&world);
 	platformMap.clean();
 	objectMap.clean();
@@ -126,6 +137,12 @@ void Game::update(const float dt) {
 	movementSystem(&world);
 	damageSystem(&world, dt);
 
+	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)	
+		if (eventMap.eit->second->isTriggered()) 
+			eventMap.eit->second->trigger();
+
+
+	//listener.setPosition(world.position[0].x, world.position[0].y, 0);
 	sf::Listener::setPosition(world.position[0].x, 0, world.position[0].y);
 
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 3.5f, engine->window.getDefaultView().getSize().y * 3.5f));
@@ -141,8 +158,15 @@ void Game::update(const float dt) {
 void Game::render(const float dt) {
 
 	objectMap.drawBackground(&engine->window);
+	int i = 0;
+	engine->window.draw(rect);
 
-	//engine->window.draw(rect);
+	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)
+	{
+		i++;
+		printf("%d", i);
+		engine->window.draw(*eventMap.eit->second->eventArea);
+	}
 
 	renderSystem(&world, &engine->window);
 	objectMap.drawForeground(&engine->window);

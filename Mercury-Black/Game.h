@@ -5,6 +5,7 @@
 
 #include "GameState.h"
 
+#include "EventHandler.h"
 #include "Entity.h"
 #include "ObjectMap.h"
 #include "PlatformMap.h"
@@ -40,7 +41,8 @@ private:
 
 	ObjectMap objectMap;
 	PlatformMap platformMap;
-	
+	EventHandler eventMap;
+
 	World world;
 
 	sf::RectangleShape rect;
