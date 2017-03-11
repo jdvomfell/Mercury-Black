@@ -6,19 +6,68 @@
 #include "Fade.h"
 #include <string>
 
-Button::Button(std::string name, float x, float y, sf::Color color, int size, sf::Font * font, eventFunction funcPtr){
+TextButton::TextButton(std::string name, float x, float y, int size, sf::Font * font, eventFunction funcPtr){
 
 	text = sf::Text(name, *font, size);
 	text.setPosition(x, y);
-	text.setFillColor(color);
 
 	text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
 	
 	 m_funcPtr = funcPtr;
 }
 
-void Button::interact(GameEngine * engine) {
-	(m_funcPtr)(engine);
+bool TextButton::isSelected(sf::Vector2f position) {
+
+	if (text.getGlobalBounds().contains(position)) {
+
+		text.setFillColor(sf::Color::Black);
+
+		return true;
+
+	}
+
+	text.setFillColor(sf::Color(100, 100, 100, 255));
+
+	return false;
+
+}
+
+void TextButton::draw(sf::RenderWindow * window) {
+
+	window->draw(text);
+
+}
+
+IconButton::IconButton(std::string name, float x, float y, sf::Texture * texture, eventFunction funcPtr) {
+
+	sprite.setTexture(*texture);
+	sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height);
+	sprite.setPosition(x, y);
+
+	m_funcPtr = funcPtr;
+
+}
+
+bool IconButton::isSelected(sf::Vector2f position) {
+
+	if (sprite.getGlobalBounds().contains(position)) {
+
+		sprite.setColor(sf::Color::Black);
+
+		return true;
+
+	}
+
+	sprite.setColor(sf::Color::White);
+
+	return false;
+
+}
+
+void IconButton::draw(sf::RenderWindow * window) {
+
+	window->draw(sprite);
+
 }
 
 // functions that the function pointer in Button will point to

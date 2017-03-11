@@ -180,4 +180,11 @@ void TextureManager::loadAllTextures() {
 	loadTexture("spring_log_1", "Textures/Test/spring_log_1.png");
 	loadTexture("heart", "Textures/Test/heart.png");
 
+	/////ICONS/////
+
+	loadTexture("boxTool", "Textures/boxTool.png");
+	loadTexture("freeTool", "Textures/freeTool.png");
+	loadTexture("groundTool", "Textures/groundTool.png");
+
+
 }

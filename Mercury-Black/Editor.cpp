@@ -9,7 +9,7 @@
 
 Editor Editor::editor;
 
-#define DEFAULT_TEXT_SIZE 60.0f
+#define DEFAULT_TEXT_SIZE 60
 
 void Editor::init() {
 

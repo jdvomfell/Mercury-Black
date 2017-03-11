@@ -9,21 +9,34 @@
 #include "Fade.h"
 
 
-class Button : public GUI {
+class TextButton : public GUI {
 
 public:
-    typedef void(*eventFunction)(GameEngine *);
 
-    Button() {}
-    Button(std::string name, float x, float y, sf::Color color, int size, sf::Font * font, eventFunction funcPtr);
+    TextButton() {}
+    TextButton(std::string name, float x, float y, int size, sf::Font * font, eventFunction funcPtr);
+	bool isSelected(sf::Vector2f position);
+	void draw(sf::RenderWindow *);
 	// A destructor
-    ~Button(){ m_funcPtr = NULL; }        
+    ~TextButton(){ m_funcPtr = NULL; }
 
-    // Invokes the registered function
-    void interact(GameEngine *);
+	sf::Text text;
 
-    private:
-        eventFunction m_funcPtr;
+};
+
+class IconButton : public GUI {
+
+public:
+
+	IconButton() {}
+	IconButton(std::string name, float x, float y, sf::Texture * texture, eventFunction funcPtr);
+	bool isSelected(sf::Vector2f position);
+	void draw(sf::RenderWindow *);
+	// A destructor
+	~IconButton() { m_funcPtr = NULL; }
+
+	sf::Sprite sprite;
+
 };
 
 void changeToGame(GameEngine * engine);
