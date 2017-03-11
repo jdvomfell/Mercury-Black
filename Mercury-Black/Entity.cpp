@@ -191,3 +191,26 @@ int createTest(World * world, float x, float y) {
 	return entityID;
 
 }
+
+int createHeart(World * world, float x, float y) {
+
+	int entityID = createEntity(world);
+
+	world->mask[entityID] = NAME | HEALTH | SCRIPT | SPRITE | POSITION;
+
+	world->name[entityID].name = "heart";
+
+	world->health[entityID].max = 1;
+	world->health[entityID].current = 1;
+	world->health[entityID].hurtTimer = 1;
+
+	world->scriptParameters[entityID].currentState = NO_STATE;
+
+	world->sprite[entityID].sprite.setTexture(*world->textureManager->getTexture("heart"));
+
+	world->position[entityID].x = x;
+	world->position[entityID].y = y;
+
+	return entityID;
+
+}

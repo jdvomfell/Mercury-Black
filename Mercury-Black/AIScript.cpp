@@ -215,11 +215,28 @@ void scriptTest(World * world, int entityID, float dt) {
 
 	if (i->left || i->right)
 		s->animationManager.changeAnimation("sheathedRun");
+	
 	else {
+
 		if (sp->currentState == ATTACK_STATE)
 			s->animationManager.changeAnimation("idleAttack");
 		else
 			s->animationManager.changeAnimation("idleUnsheathed");
+	
+	}
+
+}
+
+void scriptHeart(World * world, int entityID) {
+
+	ScriptParameters * sp;
+
+	sp = &(world->scriptParameters[entityID]);
+
+	if (sp->currentState == DEATH_STATE) {
+		world->health[0].max += 10;
+		world->health[0].current = world->health[0].max;
+		destroyEntity(world, entityID);
 	}
 
 }

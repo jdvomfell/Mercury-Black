@@ -47,6 +47,8 @@ private:
 
 	sf::RectangleShape rect;
 
+	bool drawPlatforms;
+
 	std::map <float, sf::ConvexShape *>::iterator pit;
 
 	sf::Music music;

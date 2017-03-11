@@ -15,6 +15,7 @@ void Game::init() {
 
 	createPlayer(&world, 900, 0);
 	createTest(&world, 2000, 0);
+	createHeart(&world, 900, 500);
 	//createCeilingPlant(&world, 3000, 1000);
 
 
@@ -75,6 +76,9 @@ void Game::handleEvent() {
 				world.input[PLAYER].left = true;
 			if (event.key.code == sf::Keyboard::D)
 				world.input[PLAYER].right = true;
+
+			if (event.key.code == sf::Keyboard::L)
+				drawPlatforms = !drawPlatforms;
 
 			if (event.key.code == sf::Keyboard::Space)
 				world.input[PLAYER].attack = true;
@@ -139,22 +143,24 @@ void Game::update(const float dt) {
 	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y - view.getSize().y / 4));
 	engine->window.setView(view);
 
-	rect.setSize(sf::Vector2f(world.sprite[0].sprite.getLocalBounds().width, world.sprite[0].sprite.getLocalBounds().height));
-	rect.setPosition(sf::Vector2f(world.sprite[0].sprite.getGlobalBounds().left, world.sprite[0].sprite.getGlobalBounds().top));
+	/* Hitbox Temp */
+	//rect.setSize(sf::Vector2f(world.sprite[0].sprite.getLocalBounds().width, world.sprite[0].sprite.getLocalBounds().height));
+	//rect.setPosition(sf::Vector2f(world.sprite[0].sprite.getGlobalBounds().left, world.sprite[0].sprite.getGlobalBounds().top));
 
 }
 
 void Game::render(const float dt) {
 
-	std::map<float, Object *>::iterator it;
-	for (it = objectMap.map.begin(); it != objectMap.map.end(); it++)
-		engine->window.draw(it->second->sprite);
+	objectMap.drawBackground(&engine->window);
 
 	engine->window.draw(rect);
 	engine->window.draw(*eventMap.events.begin()->second->eventArea);
 
 	renderSystem(&world, &engine->window);
+	objectMap.drawForeground(&engine->window);
 
-	for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)
-		engine->window.draw(*(pit->second));
+	if(drawPlatforms)
+		for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)
+			engine->window.draw(*(pit->second));
+
 }
