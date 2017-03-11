@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include <map>
 #include <string>
+#include <typeinfo>
 
 
 #ifndef EVENTHANDLER_H
@@ -16,6 +17,7 @@ public:
 	sf::RectangleShape * eventArea; 
 	virtual void trigger() = 0;
 	virtual bool isTriggered() = 0;
+	virtual void clean() = 0;
 	World * world; 
 
 };
@@ -26,6 +28,7 @@ public:
 
 	void trigger(); 
 	bool isTriggered();
+	void clean();
 
 };
 
@@ -36,6 +39,7 @@ public:
 	void trigger();
 	bool isTriggered();
 	sf::Music * sound;
+	void clean();
 	//bool loopSound; 
 	//bool isPlaying;
 
@@ -47,6 +51,7 @@ public:
 
 	void trigger();
 	bool isTriggered();
+	void clean();
 
 };
 
@@ -56,6 +61,7 @@ public:
 
 	void trigger();
 	bool isTriggered();
+	void clean();
 
 };
 
@@ -70,7 +76,7 @@ public:
 	void remove(std::map<float, Event *>::iterator oldEvent);
 	void clean();
 
-	std::map<float, Event *> events; 
+	std::multimap<float, Event *> events; 
 	std::map<float, Event *>::iterator eit;
 };
 

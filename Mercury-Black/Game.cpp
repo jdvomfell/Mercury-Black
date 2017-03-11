@@ -23,10 +23,15 @@ void Game::init() {
 	/*Sound insertion code TEMPORARY*/
 
 	sf::Vector2f size(800, 800);
+	sf::Vector2f size2(500, 500);
 	sf::RectangleShape * rectangle = new sf::RectangleShape(size);
-	rectangle->setFillColor(sf::Color::Blue);
-	eventMap.insertSound(rectangle, &world, "Music/drank.ogg", 80.0, true);
-	rectangle->setPosition(1000, 0);
+	sf::RectangleShape * rectangle2 = new sf::RectangleShape(size2);
+	//rectangle->setFillColor(sf::Color::Blue);
+	//rectangle2->setFillColor(sf::Color::Green);
+	eventMap.insertSound(rectangle, &world, "Music/frogs.ogg", 20.0, true);
+	eventMap.insertSound(rectangle2, &world, "Music/drank.ogg", 25.0, true);
+	rectangle->setPosition(1000, 1500);
+	rectangle2->setPosition(1000, 1500);
 
 	/* End of sound code*/
 
@@ -40,6 +45,7 @@ void Game::init() {
 
 void Game::clean() {
 
+	eventMap.clean();
 	cleanWorld(&world);
 	platformMap.clean();
 	objectMap.clean();
@@ -152,9 +158,15 @@ void Game::update(const float dt) {
 void Game::render(const float dt) {
 
 	objectMap.drawBackground(&engine->window);
-
+	int i = 0;
 	engine->window.draw(rect);
-	engine->window.draw(*eventMap.events.begin()->second->eventArea);
+
+	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)
+	{
+		i++;
+		printf("%d", i);
+		engine->window.draw(*eventMap.eit->second->eventArea);
+	}
 
 	renderSystem(&world, &engine->window);
 	objectMap.drawForeground(&engine->window);

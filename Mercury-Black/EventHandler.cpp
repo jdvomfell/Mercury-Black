@@ -21,10 +21,11 @@ void EventHandler::insertSound(sf::RectangleShape * rectangle, World * world, st
 
 	newEvent->eventArea = rectangle; 
 	newEvent->world = world;
-	pos = rectangle->getPosition().x;
 
 	rectangle->setOrigin(rectangle->getPosition().x + (rectangle->getGlobalBounds().width / 2.0),
 						 rectangle->getPosition().x + (rectangle->getGlobalBounds().height / 2.0));
+
+	pos = rectangle->getOrigin().x;
 
 	newEvent->sound = new sf::Music(); 
 	newEvent->sound->openFromFile(fileName);
@@ -68,8 +69,10 @@ void EventHandler::remove(std::map<float, Event *>::iterator oldEvent) {
 void EventHandler::clean() {
 
 	for (eit = events.begin(); eit != events.end(); eit++)
-		events.erase(eit); 
-
+	{
+		eit->second->clean();
+		
+	}
 }
 
 void Spawner::trigger() {
@@ -81,9 +84,14 @@ bool Spawner::isTriggered() {
 	return false;
 }
 
+void Spawner::clean() {
+
+
+
+}
+
 void Sound::trigger() {
 
-	eventArea->setFillColor(sf::Color::Red);
 	sound->play();
 
 }
@@ -105,6 +113,12 @@ bool Sound::isTriggered() {
 
 }
 
+void Sound::clean() {
+
+	sound->stop();
+
+}
+
 void Switch::trigger() {
 
 
@@ -114,6 +128,11 @@ bool Switch::isTriggered() {
 	return false;
 }
 
+void Switch::clean()
+{
+
+}
+
 void SwitchEffect::trigger() {
 
 }
@@ -121,5 +140,10 @@ void SwitchEffect::trigger() {
 bool SwitchEffect::isTriggered() {
 	
 	return false;
+
+}
+
+void SwitchEffect::clean()
+{
 
 }
