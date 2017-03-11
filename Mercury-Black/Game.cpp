@@ -1,9 +1,11 @@
 #include "Game.h"
 
+#include "EventHandler.h"
 #include "System.h"
 #include "MainMenu.h"
 #include "PauseMenu.h"
 #include "Editor.h"
+#include <map>
 
 Game Game::game;
 
@@ -15,21 +17,24 @@ void Game::init() {
 	createTest(&world, 2000, 0);
 	//createCeilingPlant(&world, 3000, 1000);
 
+
+
+	/*Sound insertion code TEMPORARY*/
+
+	sf::Vector2f size(800, 800);
+	sf::RectangleShape * rectangle = new sf::RectangleShape(size);
+	rectangle->setFillColor(sf::Color::Blue);
+	eventMap.insertSound(rectangle, &world, "Music/drank.ogg", 80.0, true);
+	rectangle->setPosition(1000, 0);
+
+	/* End of sound code*/
+
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	platformMap.load();
 
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
-
-	music.openFromFile("Music/drank.ogg");
-	music.setVolume(20);
-	music.setPosition(0, 0, 0);
-	music.setMinDistance(1500.0f);
-	music.setAttenuation(30);
-	music.setLoop(true);
-	music.play();
-
 }
 
 void Game::clean() {
@@ -122,6 +127,11 @@ void Game::update(const float dt) {
 	movementSystem(&world);
 	damageSystem(&world, dt);
 
+	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)	
+		if (eventMap.eit->second->isTriggered()) 
+			eventMap.eit->second->trigger();
+
+
 	//listener.setPosition(world.position[0].x, world.position[0].y, 0);
 	sf::Listener::setPosition(world.position[0].x, 0, world.position[0].y);
 
@@ -141,6 +151,7 @@ void Game::render(const float dt) {
 		engine->window.draw(it->second->sprite);
 
 	engine->window.draw(rect);
+	engine->window.draw(*eventMap.events.begin()->second->eventArea);
 
 	renderSystem(&world, &engine->window);
 
