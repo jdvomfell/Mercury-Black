@@ -63,14 +63,24 @@ void ObjectMap::load() {
 
 		numObjects++;
 
-		object.flipx = flipx;
-		object.rotate = rotate;
-		object.scale = scale;
-		object.layer = layer;
-		object.position = sf::Vector2f(x, y);
-		object.textureName = name;
+		tempObject = new Object;
 
-		insert(object.position);
+		tempObject->flipx = !flipx;
+		tempObject->rotate = rotate;
+		tempObject->scale = scale;
+		tempObject->layer = layer;
+		tempObject->position = sf::Vector2f(x, y);
+		tempObject->textureName = name;
+		
+		tempObject->sprite.setTexture(textureManager->textures.find(tempObject->textureName)->second);
+		tempObject->sprite.setOrigin(tempObject->sprite.getLocalBounds().width / 2, tempObject->sprite.getLocalBounds().height / 2);
+		tempObject->sprite.setPosition(tempObject->position);
+
+		objectFlipx(tempObject);
+		objectRotate(tempObject, 0);
+		objectScale(tempObject, 0);
+
+		insert(tempObject);
 
 	}
 
@@ -106,6 +116,13 @@ void ObjectMap::clean() {
 
 }
 
+void ObjectMap::insert(Object * tempObject) {
+
+	map.insert(std::make_pair(tempObject->position.x, tempObject));
+	layerMap.insert(std::make_pair(tempObject->layer, tempObject));
+
+}
+
 void ObjectMap::insert(sf::Vector2f position) {
 
 	if (textureManager->textures.find(object.textureName) == textureManager->textures.end()) {
@@ -113,7 +130,7 @@ void ObjectMap::insert(sf::Vector2f position) {
 		return;
 	}
 
-	Object * tempObject = new Object;
+	Object * tempObject = new Object(object);
 
 	tempObject->flipx = !object.flipx;
 	tempObject->rotate = object.rotate;
@@ -130,9 +147,9 @@ void ObjectMap::insert(sf::Vector2f position) {
 	map.insert(std::make_pair(tempObject->position.x, tempObject));
 	layerMap.insert(std::make_pair(tempObject->layer, tempObject));
 
-	flipx(tempObject);
-	rotate(tempObject, 0);
-	scale(tempObject, 0);
+	objectFlipx(tempObject);
+	objectRotate(tempObject, 0);
+	objectScale(tempObject, 0);
 
 }
 
@@ -260,7 +277,7 @@ ObjectMap::ObjectMap(TextureManager * textureManager) {
 
 }
 
-void ObjectMap::flipx(Object* object) {
+void ObjectMap::objectFlipx(Object* object) {
 
 	if (object == NULL) return;
 
@@ -277,11 +294,11 @@ void ObjectMap::flipx(Object* object) {
 	return;
 }
 
-void ObjectMap::flipy(Object* object) {
+void ObjectMap::objectFlipy(Object* object) {
 	
 	if (object == NULL) return;
 
-	flipx(object);
+	objectFlipx(object);
 	object->sprite.setRotation(selected->second->rotate + 180);
 
 	object->rotate += 180;
@@ -292,7 +309,7 @@ void ObjectMap::flipy(Object* object) {
 	return;
 }
 
-void ObjectMap::rotate(Object* object, float mod) {
+void ObjectMap::objectRotate(Object* object, float mod) {
 	
 	if (object == NULL) return;
 
@@ -305,7 +322,7 @@ void ObjectMap::rotate(Object* object, float mod) {
 
 }
 
-void ObjectMap::scale(Object* object, float mod) {
+void ObjectMap::objectScale(Object* object, float mod) {
 
 	if (object == NULL) return;
 

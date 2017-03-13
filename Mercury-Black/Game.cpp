@@ -161,15 +161,15 @@ void Game::render(const float dt) {
 	int i = 0;
 	engine->window.draw(rect);
 
+	renderSystem(&world, &engine->window);
+	objectMap.drawForeground(&engine->window);
+
 	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)
 	{
 		i++;
-		printf("%d", i);
+		//printf("%d", i);
 		engine->window.draw(*eventMap.eit->second->eventArea);
 	}
-
-	renderSystem(&world, &engine->window);
-	objectMap.drawForeground(&engine->window);
 
 	if(drawPlatforms)
 		for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)

@@ -3,11 +3,6 @@
 
 #include "GUI.h"
 #include "Buttons.h"
-#include "Editor.h"
-#include "Game.h"
-#include "HitboxEditor.h"
-#include "Fade.h"
-
 
 class TextButton : public GUI {
 
@@ -29,7 +24,7 @@ class IconButton : public GUI {
 public:
 
 	IconButton() {}
-	IconButton(std::string name, float x, float y, sf::Texture * texture, eventFunction funcPtr);
+	IconButton(float x, float y, sf::Texture * texture, eventFunction funcPtr);
 	bool isSelected(sf::Vector2f position);
 	void draw(sf::RenderWindow *);
 	// A destructor

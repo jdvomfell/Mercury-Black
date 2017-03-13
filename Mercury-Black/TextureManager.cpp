@@ -173,6 +173,7 @@ void TextureManager::loadAllTextures() {
 	
 	/////PLAY//////
 
+	loadTexture("spring_background", "Textures/Test/spring_background.png");
 	loadTexture("spring_cliff_1", "Textures/Test/spring_cliff_1.png");
 	loadTexture("spring_cliff_2", "Textures/Test/spring_cliff_2.png");
 	loadTexture("spring_tree_1", "Textures/Test/spring_tree_1.png");

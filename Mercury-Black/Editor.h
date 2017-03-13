@@ -8,6 +8,8 @@
 #include "ObjectMap.h"
 #include "GameState.h"
 #include "PlatformMap.h"
+#include "GUI.h"
+#include "Buttons.h"
 
 /* Editing Types */
 
@@ -36,8 +38,6 @@ public:
 class Editor : public GameState {
 
 public:
-
-	sf::View view;
 
 	void init();
 	void clean();
@@ -79,21 +79,27 @@ private:
 	bool doUp;
 	bool doDown;
 
-	bool showLines;
-
 	float viewVelX;
 	float viewVelY;
 
 	float zoom;
 
+	sf::View view;
+	sf::View toolBoxView;
+
 	sf::Vector2f corner1;
 	sf::Vector2f corner2;
-	sf::RectangleShape rect;
 
 	sf::Text modeText;
 	sf::Text toolText;
 	sf::Text textureText;
 	sf::Text morphText;
+
+	GUI_Handler guiHandler;
+	sf::RectangleShape toolBox;
+	IconButton boxTool;
+	IconButton freeTool;
+	IconButton groundTool;
 
 };
 

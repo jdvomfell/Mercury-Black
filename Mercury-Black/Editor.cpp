@@ -9,13 +9,12 @@
 
 Editor Editor::editor;
 
-#define DEFAULT_TEXT_SIZE 60
+#define DEFAULT_TEXT_SIZE 30
 
 void Editor::init() {
 
 	selector = Selector();
 
-	showLines = true;
 	mode = PLATFORM;
 	tool = PLACE;
 
@@ -40,6 +39,17 @@ void Editor::init() {
 	zoom = 2.0f;
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2.0f, engine->window.getDefaultView().getSize().y * 2.0f));
 
+	toolBox.setFillColor(sf::Color::White);
+	boxTool = IconButton(0, 0, engine->textureManager.getTexture("boxTool"), &doNothing);
+	freeTool = IconButton(0, 0, engine->textureManager.getTexture("freeTool"), &doNothing);
+	groundTool = IconButton(0, 0, engine->textureManager.getTexture("groundTool"), &doNothing);
+
+	guiHandler.buttons.resize(3);
+	guiHandler.buttons = { &boxTool, &freeTool, &groundTool };
+
+	toolBoxView.setViewport(sf::FloatRect(0, 0, 0.2f, 1));
+	toolBoxView.setSize(toolBoxView.getViewport().width * engine->window.getSize().x, toolBoxView.getViewport().height * engine->window.getSize().y);
+
 }
 
 void Editor::clean() {
@@ -61,6 +71,12 @@ void Editor::handleEvent() {
 		engine->quit();
 		break;
 
+	case sf::Event::MouseMoved:
+		engine->window.setView(toolBoxView);
+		guiHandler.isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y)));
+		engine->window.setView(view);
+		break;
+
 	case sf::Event::MouseWheelScrolled:
 
 		if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
@@ -73,16 +89,40 @@ void Editor::handleEvent() {
 			zoom = 5.0f;
 
 		view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * zoom, engine->window.getDefaultView().getSize().y * zoom));
-		modeText.setCharacterSize(DEFAULT_TEXT_SIZE * zoom / 2.0f);
-		toolText.setCharacterSize(DEFAULT_TEXT_SIZE * zoom / 2.0f);
-		textureText.setCharacterSize(DEFAULT_TEXT_SIZE * zoom / 2.0f);
-		morphText.setCharacterSize(DEFAULT_TEXT_SIZE * zoom / 2.0f);
 
 		break;
 
 	case sf::Event::MouseButtonPressed:
 
 		if (event.mouseButton.button == sf::Mouse::Left) {
+
+			engine->window.setView(toolBoxView);
+
+			if (boxTool.isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)))) {
+				mode = PLATFORM;
+				tool = BOX;
+				modeText.setString("Mode: Platform");
+				toolText.setString("Tool: Box Place");
+				break;
+			}
+
+			else if (freeTool.isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)))) {
+				mode = PLATFORM;
+				tool = PLACE;
+				modeText.setString("Mode: Platform");
+				toolText.setString("Tool: Free Place");
+				break;
+			}
+
+			else if (groundTool.isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)))) {
+				mode = PLATFORM;
+				tool = GROUND;
+				modeText.setString("Mode: Platform");
+				toolText.setString("Tool: Ground Place");
+				break;
+			}
+
+			engine->window.setView(view);
 
 			if (mode == OBJECT) {
 				objectMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
@@ -222,9 +262,6 @@ void Editor::handleEvent() {
 		if (event.key.code == sf::Keyboard::S)
 			doDown = true;
 
-		if (event.key.code == sf::Keyboard::L)
-			showLines = !showLines;
-
 		if (event.key.code == sf::Keyboard::J) {
 			objectMap.save();
 			platformMap.save();
@@ -245,19 +282,18 @@ void Editor::handleEvent() {
 				textureText.setString(objectMap.object.textureName);
 			}
 
-			else if (event.key.code == sf::Keyboard::I)
-				objectMap.flipx(objectMap.selected->second);
-
-			else if (event.key.code == sf::Keyboard::O)
-				objectMap.flipy(objectMap.selected->second);
-			else if (event.key.code == sf::Keyboard::Y)
-				objectMap.rotate(objectMap.selected->second, -.5);
-			else if (event.key.code == sf::Keyboard::U)
-				objectMap.rotate(objectMap.selected->second, .5);
-			else if (event.key.code == sf::Keyboard::Equal)
-				objectMap.scale(objectMap.selected->second, .05);
-			else if (event.key.code == sf::Keyboard::Dash)
-				objectMap.scale(objectMap.selected->second, -.05);
+			else if (event.key.code == sf::Keyboard::I && objectMap.selected != objectMap.map.end())
+				objectMap.objectFlipx(objectMap.selected->second);
+			else if (event.key.code == sf::Keyboard::O && objectMap.selected != objectMap.map.end())
+				objectMap.objectFlipy(objectMap.selected->second);
+			else if (event.key.code == sf::Keyboard::Y && objectMap.selected != objectMap.map.end())
+				objectMap.objectRotate(objectMap.selected->second, -.5);
+			else if (event.key.code == sf::Keyboard::U && objectMap.selected != objectMap.map.end())
+				objectMap.objectRotate(objectMap.selected->second, .5);
+			else if (event.key.code == sf::Keyboard::Equal && objectMap.selected != objectMap.map.end())
+				objectMap.objectScale(objectMap.selected->second, .05);
+			else if (event.key.code == sf::Keyboard::Dash && objectMap.selected != objectMap.map.end())
+				objectMap.objectScale(objectMap.selected->second, -.05);
 		}
 		break;
 
@@ -312,27 +348,39 @@ void Editor::update(const float dt) {
 
 	engine->window.setView(view);
 
-	modeText.setPosition(view.getCenter().x - view.getSize().x / 2.0f + 50 * zoom / 2.0f, view.getCenter().y - view.getSize().y / 2.0f + 50 * zoom / 2.0f);
-	toolText.setPosition(view.getCenter().x - view.getSize().x / 2.0f + 50 * zoom / 2.0f, view.getCenter().y - view.getSize().y / 2.0f + 200 * zoom / 2.0f);
-	textureText.setPosition(view.getCenter().x - view.getSize().x / 2.0f + 50 * zoom / 2.0f, view.getCenter().y - view.getSize().y / 2.0f + 350 * zoom / 2.0f);
-	morphText.setPosition(view.getCenter().x - view.getSize().x / 2.0f + 50 * zoom / 2.0f, view.getCenter().y - view.getSize().y / 2.0f + 500 * zoom / 2.0f);
+	modeText.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 20);
+	toolText.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 70);
+	textureText.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 120);
+	morphText.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 170);
+	toolBox.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2);
+	toolBox.setSize(toolBoxView.getSize());
+	boxTool.sprite.setPosition(toolBoxView.getCenter().x + toolBoxView.getSize().x / 2.0f - 50, toolBox.getPosition().y);
+	freeTool.sprite.setPosition(toolBox.getPosition().x + toolBox.getLocalBounds().width - 50, toolBox.getPosition().y + 50);
+	groundTool.sprite.setPosition(toolBox.getPosition().x + toolBox.getLocalBounds().width - 50, toolBox.getPosition().y + 100);
 	view.move(viewVelX, viewVelY);
 
 }
 
 void Editor::render(const float dt) {
 
+	engine->window.setView(view);
+	
 	objectMap.draw(&engine->window);
-
 	platformMap.draw(&engine->window);
 	platformMap.platformPoints.draw(&engine->window);
-
 	engine->window.draw(selector.rect);
 
+	engine->window.setView(toolBoxView);
+
+	engine->window.draw(toolBox);
 	engine->window.draw(modeText);
 	engine->window.draw(toolText);
 	engine->window.draw(textureText);
 	engine->window.draw(morphText);
+	guiHandler.draw(&engine->window);
+
+	engine->window.setView(view);
+
 }
 
 void Editor::rotateMode() {

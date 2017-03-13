@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "HitboxEditor.h"
 #include "MainMenu.h"
+#include "HitboxEditor.h"
 #include "Fade.h"
 #include <string>
 
@@ -38,10 +39,9 @@ void TextButton::draw(sf::RenderWindow * window) {
 
 }
 
-IconButton::IconButton(std::string name, float x, float y, sf::Texture * texture, eventFunction funcPtr) {
+IconButton::IconButton(float x, float y, sf::Texture * texture, eventFunction funcPtr) {
 
 	sprite.setTexture(*texture);
-	sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height);
 	sprite.setPosition(x, y);
 
 	m_funcPtr = funcPtr;
