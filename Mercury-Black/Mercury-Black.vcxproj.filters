@@ -108,9 +108,6 @@
     <ClCompile Include="OptionsMenu.cpp">
       <Filter>Source Files\GameStates</Filter>
     </ClCompile>
-    <ClCompile Include="Options.cpp">
-      <Filter>Source Files\GameUtility</Filter>
-    </ClCompile>
     <ClCompile Include="PauseMenu.cpp">
       <Filter>Source Files\GameStates</Filter>
     </ClCompile>
@@ -120,12 +117,12 @@
     <ClCompile Include="EventHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KeyBind.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
-      <Filter>Header Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="GameState.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="MainMenu.h">
@@ -170,9 +167,6 @@
     <ClInclude Include="PlatformMap.h">
       <Filter>Header Files\GameUtility</Filter>
     </ClInclude>
-    <ClInclude Include="AIScript.h">
-      <Filter>Header Files\Entity Component System</Filter>
-    </ClInclude>
     <ClInclude Include="Fade.h">
       <Filter>Header Files\GameStates</Filter>
     </ClInclude>
@@ -185,9 +179,6 @@
     <ClInclude Include="OptionsMenu.h">
       <Filter>Header Files\GameStates</Filter>
     </ClInclude>
-    <ClInclude Include="Options.h">
-      <Filter>Header Files\GameUtility</Filter>
-    </ClInclude>
     <ClInclude Include="PauseMenu.h">
       <Filter>Header Files\GameStates</Filter>
     </ClInclude>
@@ -196,6 +187,12 @@
     </ClInclude>
     <ClInclude Include="EventHandler.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files\Entity Component System</Filter>
+    </ClInclude>
+    <ClInclude Include="AIScript.h">
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

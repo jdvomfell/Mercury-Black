@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "HitboxEditor.h"
 #include "MainMenu.h"
+#include "OptionsMenu.h"
 #include "Fade.h"
 #include <string>
 
@@ -37,6 +38,10 @@ void changeToHitboxEditor(GameEngine * engine) {
 void changeToMainMenu(GameEngine * engine) {
 	engine->changeState(MainMenu::instance(engine));
 }
+void changeToOptionsMenu(GameEngine * engine) {
+	engine->changeState(OptionsMenu::instance(engine));
+}
+
 void quitGame(GameEngine * engine) {
 	engine->quit();
 }

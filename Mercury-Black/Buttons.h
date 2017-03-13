@@ -1,6 +1,7 @@
 #ifndef BUTTONS_H
 #define BUTTONS_H
 
+#include "OptionsMenu.h"
 #include "GUI.h"
 #include "Buttons.h"
 #include "Editor.h"
@@ -31,6 +32,7 @@ void popState(GameEngine * engine);
 void changeToEditor(GameEngine * engine);
 void changeToHitboxEditor(GameEngine * engine);
 void changeToMainMenu(GameEngine * engine);
+//void changeToOptionsMenu(GameEngine * engine);
 void quitGame(GameEngine * engine);
 void doNothing(GameEngine * engine);
 #endif

@@ -247,7 +247,6 @@ void Editor::handleEvent() {
 
 			else if (event.key.code == sf::Keyboard::I)
 				objectMap.flipx(objectMap.selected->second);
-
 			else if (event.key.code == sf::Keyboard::O)
 				objectMap.flipy(objectMap.selected->second);
 			else if (event.key.code == sf::Keyboard::Y)
