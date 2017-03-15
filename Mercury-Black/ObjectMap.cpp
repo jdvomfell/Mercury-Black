@@ -248,7 +248,7 @@ std::map <float, Object *>::iterator ObjectMap::findClosest(sf::Vector2f positio
 
 }
 
-void ObjectMap::changeObject() {
+void ObjectMap::nextObject() {
 	
 	if (textureManager->textures.find(object.textureName) == --textureManager->textures.end())
 		object.textureName = textureManager->textures.begin()->first;
@@ -256,6 +256,17 @@ void ObjectMap::changeObject() {
 		object.textureName = textureManager->textures.begin()->first;
 	else
 		object.textureName = (++textureManager->textures.find(object.textureName))->first;
+
+}
+
+void ObjectMap::prevObject() {
+
+	if(textureManager->textures.find(object.textureName) == textureManager->textures.begin())
+		object.textureName = (--textureManager->textures.end())->first;
+	else if(textureManager->textures.find(object.textureName) == textureManager->textures.end())
+		object.textureName = textureManager->textures.begin()->first;
+	else
+		object.textureName = (--textureManager->textures.find(object.textureName))->first;
 
 }
 
@@ -272,7 +283,7 @@ ObjectMap::ObjectMap(TextureManager * textureManager) {
 
 	this->textureManager = textureManager;
 	object.textureName = this->textureManager->textures.begin()->first;
-	object.layer = 0;
+	object.layer = 15;
 	object.position = sf::Vector2f(0, 0);
 
 }

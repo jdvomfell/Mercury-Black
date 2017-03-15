@@ -186,6 +186,7 @@ void TextureManager::loadAllTextures() {
 	loadTexture("boxTool", "Textures/boxTool.png");
 	loadTexture("freeTool", "Textures/freeTool.png");
 	loadTexture("groundTool", "Textures/groundTool.png");
-
+	loadTexture("eventTool", "Textures/eventTool.png");
+	loadTexture("objectTool", "Textures/objectTool.png");
 
 }

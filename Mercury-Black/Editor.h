@@ -10,20 +10,7 @@
 #include "PlatformMap.h"
 #include "GUI.h"
 #include "Buttons.h"
-
-/* Editing Types */
-
-#define OBJECT 1
-#define PLATFORM 2
-#define EVENT 3
-
-/* Editing Tools */
-
-#define PLACE 1
-#define DELETE 2
-#define MOVE 3
-#define BOX 4
-#define GROUND 5
+#include "ToolBox.h"
 
 class Selector {
 
@@ -50,8 +37,6 @@ public:
 
 	/* Utility Functions */
 
-	void rotateMode();
-	void rotateTool();
 	void deselect();
 
 	/* Object */
@@ -70,9 +55,6 @@ private:
 	ObjectMap objectMap;
 	PlatformMap platformMap;
 
-	int mode;
-	int tool;
-
 	bool doSpeedUp;
 	bool doLeft;
 	bool doRight;
@@ -84,22 +66,12 @@ private:
 
 	float zoom;
 
+	ToolBox toolBox;
+
 	sf::View view;
-	sf::View toolBoxView;
 
 	sf::Vector2f corner1;
 	sf::Vector2f corner2;
-
-	sf::Text modeText;
-	sf::Text toolText;
-	sf::Text textureText;
-	sf::Text morphText;
-
-	GUI_Handler guiHandler;
-	sf::RectangleShape toolBox;
-	IconButton boxTool;
-	IconButton freeTool;
-	IconButton groundTool;
 
 };
 

@@ -9,46 +9,18 @@
 
 Editor Editor::editor;
 
-#define DEFAULT_TEXT_SIZE 30
-
 void Editor::init() {
 
 	selector = Selector();
 
-	mode = PLATFORM;
-	tool = PLACE;
-
-	modeText = sf::Text("Mode: Platform", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
-	modeText.setFillColor(sf::Color::Black);
-
-	toolText = sf::Text("Tool: Place", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
-	toolText.setFillColor(sf::Color::Black);
-
-	textureText = sf::Text("", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
-	textureText.setFillColor(sf::Color::Black);
-
-	morphText = sf::Text("", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
-	morphText.setFillColor(sf::Color::Black);
-
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
-	textureText.setString(objectMap.object.textureName);
-
 	platformMap.load();
 
 	zoom = 2.0f;
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2.0f, engine->window.getDefaultView().getSize().y * 2.0f));
 
-	toolBox.setFillColor(sf::Color::White);
-	boxTool = IconButton(0, 0, engine->textureManager.getTexture("boxTool"), &doNothing);
-	freeTool = IconButton(0, 0, engine->textureManager.getTexture("freeTool"), &doNothing);
-	groundTool = IconButton(0, 0, engine->textureManager.getTexture("groundTool"), &doNothing);
-
-	guiHandler.buttons.resize(3);
-	guiHandler.buttons = { &boxTool, &freeTool, &groundTool };
-
-	toolBoxView.setViewport(sf::FloatRect(0, 0, 0.2f, 1));
-	toolBoxView.setSize(toolBoxView.getViewport().width * engine->window.getSize().x, toolBoxView.getViewport().height * engine->window.getSize().y);
+	toolBox = ToolBox(engine);
 
 }
 
@@ -72,8 +44,7 @@ void Editor::handleEvent() {
 		break;
 
 	case sf::Event::MouseMoved:
-		engine->window.setView(toolBoxView);
-		guiHandler.isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y)));
+		toolBox.highlightButtons(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
 		engine->window.setView(view);
 		break;
 
@@ -85,8 +56,8 @@ void Editor::handleEvent() {
 		if (zoom < 1.0f)
 			zoom = 1.0f;
 
-		if (zoom > 5.0f)
-			zoom = 5.0f;
+		if (zoom > 10.0f)
+			zoom = 10.0f;
 
 		view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * zoom, engine->window.getDefaultView().getSize().y * zoom));
 
@@ -96,45 +67,21 @@ void Editor::handleEvent() {
 
 		if (event.mouseButton.button == sf::Mouse::Left) {
 
-			engine->window.setView(toolBoxView);
-
-			if (boxTool.isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)))) {
-				mode = PLATFORM;
-				tool = BOX;
-				modeText.setString("Mode: Platform");
-				toolText.setString("Tool: Box Place");
-				break;
-			}
-
-			else if (freeTool.isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)))) {
-				mode = PLATFORM;
-				tool = PLACE;
-				modeText.setString("Mode: Platform");
-				toolText.setString("Tool: Free Place");
-				break;
-			}
-
-			else if (groundTool.isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)))) {
-				mode = PLATFORM;
-				tool = GROUND;
-				modeText.setString("Mode: Platform");
-				toolText.setString("Tool: Ground Place");
-				break;
-			}
+			toolBox.clickButtons(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
 
 			engine->window.setView(view);
 
-			if (mode == OBJECT) {
+			if (toolBox.getMode() == OBJECT) {
 				objectMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 			}
 
-			else if (mode == PLATFORM) {
+			else if (toolBox.getMode() == PLATFORM) {
 				
-				if (tool == BOX) {
+				if (toolBox.getTool() == BOX_PLACE) {
 					corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
 				}
 
-				else if (tool == GROUND) {
+				else if (toolBox.getTool() == GROUND_PLACE) {
 					if (platformMap.selected != platformMap.map.end())
 						platformMap.selected->second->setOutlineThickness(0);
 
@@ -155,7 +102,7 @@ void Editor::handleEvent() {
 
 			selector.rect.setOutlineColor(sf::Color::Transparent);
 
-			if (mode == PLATFORM) {
+			if (toolBox.getMode() == PLATFORM) {
 
 				if (platformMap.selected != platformMap.map.end())
 					platformMap.selected->second->setOutlineThickness(0);
@@ -169,7 +116,7 @@ void Editor::handleEvent() {
 
 			}
 
-			else if (mode == OBJECT) {
+			else if (toolBox.getMode() == OBJECT) {
 
 				objectMap.selected = objectMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
@@ -184,12 +131,12 @@ void Editor::handleEvent() {
 
 		}
 		
-		if (mode == PLATFORM && platformMap.selected != platformMap.map.end()) {
-			morphText.setString("Point 0: X: " + std::to_string(platformMap.selected->second->getPoint(0).x) + " Y: " + std::to_string(platformMap.selected->second->getPoint(0).y) + "\nFallthrough: N\\A\n");
+		if (toolBox.getMode() == PLATFORM && platformMap.selected != platformMap.map.end()) {
+			toolBox.morphText1.setString("Point 0: X: " + std::to_string(platformMap.selected->second->getPoint(0).x) + "\nY: " + std::to_string(platformMap.selected->second->getPoint(0).y) + "\nFallthrough: N\\A\n");
 		}
 
-		else if (mode == OBJECT && objectMap.selected != objectMap.map.end()) {
-			morphText.setString("Point 0: X: "+std::to_string(objectMap.selected->second->position.x)+" Y: "+std::to_string(objectMap.selected->second->position.y) + "\nFallthrough: N\\A\n");
+		else if (toolBox.getMode() == OBJECT && objectMap.selected != objectMap.map.end()) {
+			toolBox.morphText1.setString("Point 0: X: "+std::to_string(objectMap.selected->second->position.x)+"\nY: "+std::to_string(objectMap.selected->second->position.y) + "\nFallthrough: N\\A\n");
 		}
 
 		break;
@@ -198,8 +145,8 @@ void Editor::handleEvent() {
 
 		if (event.mouseButton.button == sf::Mouse::Left) {
 
-			if (mode == PLATFORM) {
-				if (tool == BOX) {
+			if (toolBox.getMode() == PLATFORM) {
+				if (toolBox.getTool() == BOX_PLACE) {
 					corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
 					platformMap.insertBox(corner1, corner2);
 				}
@@ -216,12 +163,15 @@ void Editor::handleEvent() {
 
 		if (event.key.code == sf::Keyboard::Up) {
 			objectMap.object.layer++;
+			toolBox.morphText2.setString("Layer: " + std::to_string(objectMap.object.layer));
 			printf("Layer: %d", objectMap.object.layer);
 		}
 
 		if (event.key.code == sf::Keyboard::Down) {
-			if (objectMap.object.layer > 0)
+			if (objectMap.object.layer > 0) {
 				objectMap.object.layer--;
+				toolBox.morphText2.setString("Layer: " + std::to_string(objectMap.object.layer));
+			}
 			printf("Layer: %d", objectMap.object.layer);
 		}
 
@@ -233,10 +183,10 @@ void Editor::handleEvent() {
 
 		if (event.key.code == sf::Keyboard::Delete) {
 
-			if (mode == OBJECT)
+			if (toolBox.getMode() == OBJECT)
 				objectMap.remove();
-			else if (mode == PLATFORM) {
-				if (tool == PLACE)
+			else if (toolBox.getMode() == PLATFORM) {
+				if (toolBox.getTool() == PLACE)
 					platformMap.platformPoints.remove();
 				else
 					platformMap.remove();
@@ -248,7 +198,7 @@ void Editor::handleEvent() {
 
 		if (event.key.code == sf::Keyboard::Return) {
 
-			if (mode == PLATFORM)
+			if (toolBox.getMode() == PLATFORM)
 				platformMap.insert();
 
 		}
@@ -272,14 +222,18 @@ void Editor::handleEvent() {
 		}
 
 		if (event.key.code == sf::Keyboard::M)
-			rotateMode();
+			toolBox.nextMode();
 		if (event.key.code == sf::Keyboard::N)
-			rotateTool();
+			toolBox.nextTool();
 		
-		if (mode == OBJECT) {
+		if (toolBox.getMode() == OBJECT) {
+			if (event.key.code == sf::Keyboard::R) {
+				objectMap.prevObject();
+				toolBox.morphText3.setString(objectMap.object.textureName);
+			}
 			if (event.key.code == sf::Keyboard::T) {
-				objectMap.changeObject();
-				textureText.setString(objectMap.object.textureName);
+				objectMap.nextObject();
+				toolBox.morphText3.setString(objectMap.object.textureName);
 			}
 
 			else if (event.key.code == sf::Keyboard::I && objectMap.selected != objectMap.map.end())
@@ -346,17 +300,8 @@ void Editor::update(const float dt) {
 			viewVelY = 0.0f;
 	}
 
-	engine->window.setView(view);
+	toolBox.update();
 
-	modeText.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 20);
-	toolText.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 70);
-	textureText.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 120);
-	morphText.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 170);
-	toolBox.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2);
-	toolBox.setSize(toolBoxView.getSize());
-	boxTool.sprite.setPosition(toolBoxView.getCenter().x + toolBoxView.getSize().x / 2.0f - 50, toolBox.getPosition().y);
-	freeTool.sprite.setPosition(toolBox.getPosition().x + toolBox.getLocalBounds().width - 50, toolBox.getPosition().y + 50);
-	groundTool.sprite.setPosition(toolBox.getPosition().x + toolBox.getLocalBounds().width - 50, toolBox.getPosition().y + 100);
 	view.move(viewVelX, viewVelY);
 
 }
@@ -370,61 +315,9 @@ void Editor::render(const float dt) {
 	platformMap.platformPoints.draw(&engine->window);
 	engine->window.draw(selector.rect);
 
-	engine->window.setView(toolBoxView);
-
-	engine->window.draw(toolBox);
-	engine->window.draw(modeText);
-	engine->window.draw(toolText);
-	engine->window.draw(textureText);
-	engine->window.draw(morphText);
-	guiHandler.draw(&engine->window);
+	toolBox.render();
 
 	engine->window.setView(view);
-
-}
-
-void Editor::rotateMode() {
-
-	if (mode == PLATFORM) {
-		mode = OBJECT;
-		modeText.setString("Mode: Object");
-		morphText.setString("Points: N\\A");
-	}
-	else if (mode == OBJECT) {
-		mode = EVENT;
-		modeText.setString("Mode: Event");
-		morphText.setString("Points: N\\A");
-	}
-	else {
-		mode = PLATFORM;
-		modeText.setString("Mode: Platform");
-		morphText.setString("Points: N\\A");
-	}
-
-}
-
-void Editor::rotateTool() {
-
-	if (tool == PLACE) {
-		tool = DELETE;
-		toolText.setString("Tool: Delete");
-	}
-	else if (tool == DELETE) {
-		tool = MOVE;
-		toolText.setString("Tool: Move");
-	}
-	else if (tool == MOVE) {
-		tool = BOX;
-		toolText.setString("Tool: Box");
-	}
-	else if (tool == BOX) {
-		tool = GROUND;
-		toolText.setString("Tool: Ground");
-	}
-	else {
-		tool = PLACE;
-		toolText.setString("Tool: Place");
-	}
 
 }
 

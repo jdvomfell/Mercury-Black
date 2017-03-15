@@ -42,7 +42,8 @@ public:
 	std::map <float, Object *>::iterator findRight(float x);
 	std::map <float, Object *>::iterator findLeft(float x);
 
-	void changeObject();
+	void nextObject();
+	void prevObject();
 	void selectObject(std::string textureName);
 	
 	void objectFlipx(Object*);
