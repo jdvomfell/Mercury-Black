@@ -148,6 +148,7 @@
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="HitboxEditor.cpp" />
     <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Metaball.cpp" />
     <ClCompile Include="ObjectMap.cpp" />
     <ClCompile Include="Options.cpp" />
     <ClCompile Include="OptionsMenu.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="Hitbox.h" />
     <ClInclude Include="HitboxEditor.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Metaball.h" />
     <ClInclude Include="ObjectMap.h" />
     <ClInclude Include="Options.h" />
     <ClInclude Include="OptionsMenu.h" />

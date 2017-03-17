@@ -123,6 +123,9 @@
     <ClCompile Include="ToolBox.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Metaball.cpp">
+      <Filter>Source Files\GameUtility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -202,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="ToolBox.h">
       <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Metaball.h">
+      <Filter>Header Files\GameUtility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

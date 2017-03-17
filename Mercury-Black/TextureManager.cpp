@@ -99,6 +99,10 @@ void TextureManager::loadAllTextures() {
 	/* Idle Attack */
 
 	loadTextures("player_idleAttack", "Textures/Player/Idle-Attack/", 8);
+
+	/* Roll */
+
+	loadTextures("player_roll", "Textures/Player/Roll/", 5);
 	
 	///Ceiling Plant///
 

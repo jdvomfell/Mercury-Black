@@ -5,11 +5,9 @@
 
 void scriptFollow(World * world, int entityID, float x, float y) {
 
-	if (std::fabs(world->position[entityID].x - x) <=
-		world->scriptParameters[entityID].followDistMax &&
+	float distance = sqrt(pow(world->position[entityID].x - x, 2) + pow(world->position[entityID].y - y, 2));
 
-		std::fabs(world->position[entityID].x - x) >=
-		world->scriptParameters[entityID].followDistMin){
+	if (distance <= world->scriptParameters[entityID].followDistMax && distance >=world->scriptParameters[entityID].followDistMin){
 			
 		if (world->position[entityID].x < x) {
 			world->input[entityID].right = true;
@@ -19,13 +17,24 @@ void scriptFollow(World * world, int entityID, float x, float y) {
 			world->input[entityID].left = true;
 			world->input[entityID].right = false;
 		}
+
+		if (world->position[entityID].y > y) {
+			world->input[entityID].up = true;
+			world->input[entityID].down = false;
+		}
+		else {
+			world->input[entityID].down = true;
+			world->input[entityID].up = false;
+		}
 	}
 
 	else {
 		world->input[entityID].left = false;
 		world->input[entityID].right = false;
+		world->input[entityID].down = false;
+		world->input[entityID].up = false;
 	}
-	
+
 }
 
 void scriptAttack(World* world, int entityID, float x, float y) {
@@ -78,6 +87,11 @@ void scriptPlayer(World *world, float dt) {
 	v = &(world->velocity[0]);
 	i = &(world->input[0]);
 	sp = &(world->scriptParameters[0]);
+
+	if (sp->currentState == MOVEMENT_STATE)
+		v->speedUp = 1.5f;
+	else
+		v->speedUp = 1.0f;
 	
 	/* On Ground */
 	if (v->onGround) {
@@ -94,7 +108,9 @@ void scriptPlayer(World *world, float dt) {
 			//}
 			/* No Input */
 			else {
-				s->animationManager.changeAnimation("sheathedRun");
+				if (sp->currentState == NO_STATE) {
+					s->animationManager.changeAnimation("sheathedRun");
+				}
 			}
 		}
 		/* Not Moving*/
@@ -106,14 +122,23 @@ void scriptPlayer(World *world, float dt) {
 			}
 			/* Attack */
 			else if (i->attack) {
-				s->animationManager.changeAnimation("idleAttack");
-				sp->currentState = ATTACK_STATE;
+				if (sp->currentState == NO_STATE) {
+					s->animationManager.changeAnimation("idleAttack");
+					sp->currentState = ATTACK_STATE;
+				}
 			}
 			/* No Input */
 			else {
 				if (sp->currentState == NO_STATE) {
 					s->animationManager.changeAnimation("idleUnsheathed");
 				}
+			}
+		}
+		/* Roll */
+		if (i->down) {
+			if (sp->currentState == NO_STATE) {
+				s->animationManager.changeAnimation("roll");
+				sp->currentState = MOVEMENT_STATE;
 			}
 		}
 	}
@@ -227,6 +252,30 @@ void scriptTest(World * world, int entityID, float dt) {
 
 }
 
+void scriptWisp(World * world, int entityID, float dt) {
+
+	Sprite * s;
+	Position * p;
+	ScriptParameters * sp;
+
+	s = &(world->sprite[entityID]);
+	p = &(world->position[entityID]);
+	sp = &(world->scriptParameters[entityID]);
+
+	if (sp->currentState == DEATH_STATE) {
+		//SUNBURT
+		//KILL SPAWNER LIFESPAN
+		destroyEntity(world, entityID);
+		return;
+	}
+
+	scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
+
+	s->metaballSpawner->position.x = p->x;
+	s->metaballSpawner->position.y = p->y;
+
+}
+
 void scriptHeart(World * world, int entityID) {
 
 	ScriptParameters * sp;
@@ -234,6 +283,7 @@ void scriptHeart(World * world, int entityID) {
 	sp = &(world->scriptParameters[entityID]);
 
 	if (sp->currentState == DEATH_STATE) {
+		//SUNBURST
 		world->health[0].max += 10;
 		world->health[0].current = world->health[0].max;
 		destroyEntity(world, entityID);
