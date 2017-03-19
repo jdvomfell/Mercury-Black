@@ -44,6 +44,10 @@ void Editor::handleEvent() {
 		break;
 
 	case sf::Event::MouseMoved:
+		if (toolBox.getMode() == OBJECT) {
+			objectMap.object.sprite.setPosition(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y)));
+		}
+		zoomPosition = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
 		toolBox.highlightButtons(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
 		engine->window.setView(view);
 		break;
@@ -51,7 +55,7 @@ void Editor::handleEvent() {
 	case sf::Event::MouseWheelScrolled:
 
 		if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
-			zoom += event.mouseWheelScroll.delta;
+			zoom -= event.mouseWheelScroll.delta;
 
 		if (zoom < 1.0f)
 			zoom = 1.0f;
@@ -59,6 +63,8 @@ void Editor::handleEvent() {
 		if (zoom > 10.0f)
 			zoom = 10.0f;
 
+		if (event.mouseWheelScroll.delta > 0)
+			view.move((zoomPosition - view.getCenter()) / zoom);
 		view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * zoom, engine->window.getDefaultView().getSize().y * zoom));
 
 		break;
@@ -158,7 +164,7 @@ void Editor::handleEvent() {
 
 	case sf::Event::KeyPressed:
 		
-		if (event.key.code == sf::Keyboard::LShift)
+		if (event.key.code == sf::Keyboard::LShift|| event.key.code == sf::Keyboard::RShift)
 			doSpeedUp = true;
 
 		if (event.key.code == sf::Keyboard::Up) {
@@ -186,14 +192,16 @@ void Editor::handleEvent() {
 			if (toolBox.getMode() == OBJECT)
 				objectMap.remove();
 			else if (toolBox.getMode() == PLATFORM) {
-				if (toolBox.getTool() == PLACE)
-					platformMap.platformPoints.remove();
-				else
-					platformMap.remove();
+				platformMap.remove();
 			}
 
 			selector.rect.setOutlineColor(sf::Color::Transparent);
 
+		}
+
+		if (event.key.code == sf::Keyboard::BackSpace) {
+			if(toolBox.getMode() == PLATFORM)
+				platformMap.platformPoints.remove();
 		}
 
 		if (event.key.code == sf::Keyboard::Return) {
@@ -241,18 +249,18 @@ void Editor::handleEvent() {
 			else if (event.key.code == sf::Keyboard::O && objectMap.selected != objectMap.map.end())
 				objectMap.objectFlipy(objectMap.selected->second);
 			else if (event.key.code == sf::Keyboard::Y && objectMap.selected != objectMap.map.end())
-				objectMap.objectRotate(objectMap.selected->second, -.5);
+				objectMap.objectRotate(objectMap.selected->second, -0.5f);
 			else if (event.key.code == sf::Keyboard::U && objectMap.selected != objectMap.map.end())
-				objectMap.objectRotate(objectMap.selected->second, .5);
+				objectMap.objectRotate(objectMap.selected->second, 0.5f);
 			else if (event.key.code == sf::Keyboard::Equal && objectMap.selected != objectMap.map.end())
-				objectMap.objectScale(objectMap.selected->second, .05);
+				objectMap.objectScale(objectMap.selected->second, .05f);
 			else if (event.key.code == sf::Keyboard::Dash && objectMap.selected != objectMap.map.end())
-				objectMap.objectScale(objectMap.selected->second, -.05);
+				objectMap.objectScale(objectMap.selected->second, -.05f);
 		}
 		break;
 
 	case sf::Event::KeyReleased:
-		if (event.key.code == sf::Keyboard::LShift)
+		if (event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::RShift)
 			doSpeedUp = false;
 		if (event.key.code == sf::Keyboard::A)
 			doLeft = false;
@@ -314,6 +322,8 @@ void Editor::render(const float dt) {
 	platformMap.draw(&engine->window);
 	platformMap.platformPoints.draw(&engine->window);
 	engine->window.draw(selector.rect);
+	if (toolBox.getMode() == OBJECT)
+		engine->window.draw(objectMap.object.sprite);
 
 	toolBox.render();
 

@@ -70,6 +70,7 @@ private:
 
 	sf::View view;
 
+	sf::Vector2f zoomPosition;
 	sf::Vector2f corner1;
 	sf::Vector2f corner2;
 

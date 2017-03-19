@@ -89,7 +89,7 @@ void scriptPlayer(World *world, float dt) {
 	sp = &(world->scriptParameters[0]);
 
 	if (sp->currentState == MOVEMENT_STATE)
-		v->speedUp = 1.5f;
+		v->speedUp = 2.0f;
 	else
 		v->speedUp = 1.0f;
 	

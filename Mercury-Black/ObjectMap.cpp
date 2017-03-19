@@ -75,6 +75,7 @@ void ObjectMap::load() {
 		tempObject->sprite.setTexture(textureManager->textures.find(tempObject->textureName)->second);
 		tempObject->sprite.setOrigin(tempObject->sprite.getLocalBounds().width / 2, tempObject->sprite.getLocalBounds().height / 2);
 		tempObject->sprite.setPosition(tempObject->position);
+		tempObject->sprite.setColor(sf::Color::White);
 
 		objectFlipx(tempObject);
 		objectRotate(tempObject, 0);
@@ -143,6 +144,7 @@ void ObjectMap::insert(sf::Vector2f position) {
 
 	tempObject->position = position;
 	tempObject->sprite.setPosition(position);
+	tempObject->sprite.setColor(sf::Color::White);
 
 	map.insert(std::make_pair(tempObject->position.x, tempObject));
 	layerMap.insert(std::make_pair(tempObject->layer, tempObject));
@@ -257,6 +259,11 @@ void ObjectMap::nextObject() {
 	else
 		object.textureName = (++textureManager->textures.find(object.textureName))->first;
 
+	object.sprite.setTexture(textureManager->textures.at(object.textureName));
+	object.sprite.setTextureRect(sf::IntRect(0, 0, textureManager->textures.at(object.textureName).getSize().x, textureManager->textures.at(object.textureName).getSize().y));
+	object.sprite.setOrigin(object.sprite.getGlobalBounds().width / 2, object.sprite.getGlobalBounds().height / 2);
+	object.sprite.setColor(sf::Color(0, 0, 0, 100));
+
 }
 
 void ObjectMap::prevObject() {
@@ -267,6 +274,11 @@ void ObjectMap::prevObject() {
 		object.textureName = textureManager->textures.begin()->first;
 	else
 		object.textureName = (--textureManager->textures.find(object.textureName))->first;
+
+	object.sprite.setTexture(textureManager->textures.at(object.textureName));
+	object.sprite.setTextureRect(sf::IntRect(0, 0, textureManager->textures.at(object.textureName).getSize().x, textureManager->textures.at(object.textureName).getSize().y));
+	object.sprite.setOrigin(object.sprite.getGlobalBounds().width / 2, object.sprite.getGlobalBounds().height / 2);
+	object.sprite.setColor(sf::Color(0, 0, 0, 100));
 
 }
 
@@ -283,6 +295,7 @@ ObjectMap::ObjectMap(TextureManager * textureManager) {
 
 	this->textureManager = textureManager;
 	object.textureName = this->textureManager->textures.begin()->first;
+	object.sprite.setTexture(this->textureManager->textures.begin()->second);
 	object.layer = 15;
 	object.position = sf::Vector2f(0, 0);
 
