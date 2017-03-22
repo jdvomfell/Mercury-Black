@@ -157,6 +157,7 @@
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="ToolBox.cpp" />
+    <ClCompile Include="Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIScript.h" />
@@ -186,6 +187,7 @@
     <ClInclude Include="System.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="ToolBox.h" />
+    <ClInclude Include="Water.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

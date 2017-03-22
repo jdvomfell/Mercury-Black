@@ -190,7 +190,7 @@ void ObjectMap::draw(sf::RenderWindow * window) {
 void ObjectMap::drawForeground(sf::RenderWindow * window) {
 
 	std::multimap<int, Object *>::iterator it;
-	for (it = layerMap.lower_bound(30); it != layerMap.end(); it++)
+	for (it = layerMap.lower_bound(20); it != layerMap.end(); it++)
 		window->draw(it->second->sprite);
 
 	return;
@@ -200,7 +200,17 @@ void ObjectMap::drawForeground(sf::RenderWindow * window) {
 void ObjectMap::drawBackground(sf::RenderWindow * window) {
 
 	std::multimap<int, Object *>::iterator it;
-	for (it = layerMap.begin(); it != layerMap.lower_bound(30); it++)
+	for (it = layerMap.lower_bound(10); it != layerMap.lower_bound(19); it++)
+		window->draw(it->second->sprite);
+
+	return;
+
+}
+
+void ObjectMap::drawSuperBackground(sf::RenderWindow * window) {
+
+	std::multimap<int, Object *>::iterator it;
+	for (it = layerMap.begin(); it != layerMap.lower_bound(9); it++)
 		window->draw(it->second->sprite);
 
 	return;

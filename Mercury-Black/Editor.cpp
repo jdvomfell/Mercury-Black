@@ -22,12 +22,15 @@ void Editor::init() {
 
 	toolBox = ToolBox(engine);
 
+	waterHandler.load();
+
 }
 
 void Editor::clean() {
 
 	objectMap.clean();
 	platformMap.clean();
+	waterHandler.clean();
 
 }
 
@@ -71,93 +74,130 @@ void Editor::handleEvent() {
 
 	case sf::Event::MouseButtonPressed:
 
-		if (event.mouseButton.button == sf::Mouse::Left) {
+		if(toolBox.contains(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))) {
 
 			toolBox.clickButtons(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
 
 			engine->window.setView(view);
 
-			if (toolBox.getMode() == OBJECT) {
-				objectMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
-			}
+		}
 
-			else if (toolBox.getMode() == PLATFORM) {
-				
-				if (toolBox.getTool() == BOX_PLACE) {
+		else {
+
+			engine->window.setView(view);
+
+			if (event.mouseButton.button == sf::Mouse::Left) {
+
+				if (toolBox.getMode() == OBJECT) {
+					objectMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+				}
+
+				else if (toolBox.getMode() == PLATFORM) {
+
+					if (toolBox.getTool() == BOX_PLACE) {
+						corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+					}
+
+					else if (toolBox.getTool() == GROUND_PLACE) {
+						if (platformMap.selected != platformMap.map.end())
+							platformMap.selected->second->setOutlineThickness(0);
+
+						platformMap.insertGround(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+
+						if (platformMap.selected != platformMap.map.end()) {
+							platformMap.selected->second->setOutlineThickness(5);
+							platformMap.selected->second->setOutlineColor(sf::Color::Red);
+						}
+					}
+					else
+						platformMap.platformPoints.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+				}
+
+				else if (toolBox.getMode() == WATER) {
 					corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
 				}
 
-				else if (toolBox.getTool() == GROUND_PLACE) {
+			}
+
+			if (event.mouseButton.button == sf::Mouse::Right) {
+
+				selector.rect.setOutlineColor(sf::Color::Transparent);
+
+				if (toolBox.getMode() == PLATFORM) {
+
 					if (platformMap.selected != platformMap.map.end())
 						platformMap.selected->second->setOutlineThickness(0);
 
-					platformMap.insertGround(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+					platformMap.selected = platformMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
 					if (platformMap.selected != platformMap.map.end()) {
 						platformMap.selected->second->setOutlineThickness(5);
 						platformMap.selected->second->setOutlineColor(sf::Color::Red);
 					}
-				}
-				else
-					platformMap.platformPoints.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
-			}
 
-		}
-
-		if (event.mouseButton.button == sf::Mouse::Right) {
-
-			selector.rect.setOutlineColor(sf::Color::Transparent);
-
-			if (toolBox.getMode() == PLATFORM) {
-
-				if (platformMap.selected != platformMap.map.end())
-					platformMap.selected->second->setOutlineThickness(0);
-					
-				platformMap.selected = platformMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
-
-				if (platformMap.selected != platformMap.map.end()) {
-					platformMap.selected->second->setOutlineThickness(5);
-					platformMap.selected->second->setOutlineColor(sf::Color::Red);
 				}
 
-			}
+				else if (toolBox.getMode() == OBJECT) {
 
-			else if (toolBox.getMode() == OBJECT) {
+					objectMap.selected = objectMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
-				objectMap.selected = objectMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+					if (objectMap.selected != objectMap.map.end()) {
+						selector.rect.setSize(sf::Vector2f(objectMap.selected->second->sprite.getLocalBounds().width, objectMap.selected->second->sprite.getLocalBounds().height));
+						selector.rect.setOrigin(selector.rect.getSize() * 0.5f);
+						selector.rect.setPosition(objectMap.selected->second->position.x, objectMap.selected->second->position.y);
+						selector.rect.setOutlineColor(sf::Color::Blue);
+					}
 
-				if (objectMap.selected != objectMap.map.end()) {
-					selector.rect.setSize(sf::Vector2f(objectMap.selected->second->sprite.getLocalBounds().width, objectMap.selected->second->sprite.getLocalBounds().height));
-					selector.rect.setOrigin(selector.rect.getSize() * 0.5f);
-					selector.rect.setPosition(objectMap.selected->second->position.x, objectMap.selected->second->position.y);
-					selector.rect.setOutlineColor(sf::Color::Blue);
+				}
+
+				else if (toolBox.getMode() == WATER) {
+
+
+
 				}
 
 			}
 
-		}
-		
-		if (toolBox.getMode() == PLATFORM && platformMap.selected != platformMap.map.end()) {
-			toolBox.morphText1.setString("Point 0: X: " + std::to_string(platformMap.selected->second->getPoint(0).x) + "\nY: " + std::to_string(platformMap.selected->second->getPoint(0).y) + "\nFallthrough: N\\A\n");
-		}
+			if (toolBox.getMode() == PLATFORM && platformMap.selected != platformMap.map.end()) {
+				toolBox.morphText1.setString("Point 0: X: " + std::to_string(platformMap.selected->second->getPoint(0).x) + "\nY: " + std::to_string(platformMap.selected->second->getPoint(0).y) + "\nFallthrough: N\\A\n");
+			}
 
-		else if (toolBox.getMode() == OBJECT && objectMap.selected != objectMap.map.end()) {
-			toolBox.morphText1.setString("Point 0: X: "+std::to_string(objectMap.selected->second->position.x)+"\nY: "+std::to_string(objectMap.selected->second->position.y) + "\nFallthrough: N\\A\n");
+			else if (toolBox.getMode() == OBJECT && objectMap.selected != objectMap.map.end()) {
+				toolBox.morphText1.setString("Point 0: X: " + std::to_string(objectMap.selected->second->position.x) + "\nY: " + std::to_string(objectMap.selected->second->position.y) + "\nFallthrough: N\\A\n");
+			}
+
 		}
 
 		break;
 
 	case sf::Event::MouseButtonReleased:
 
-		if (event.mouseButton.button == sf::Mouse::Left) {
+		if (toolBox.contains(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))) {
 
-			if (toolBox.getMode() == PLATFORM) {
-				if (toolBox.getTool() == BOX_PLACE) {
-					corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
-					platformMap.insertBox(corner1, corner2);
+			engine->window.setView(view);
+
+		}
+
+		else {
+
+			engine->window.setView(view);
+
+			if (event.mouseButton.button == sf::Mouse::Left) {
+
+				if (toolBox.getMode() == PLATFORM) {
+					if (toolBox.getTool() == BOX_PLACE) {
+						corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+						platformMap.insertBox(corner1, corner2);
+					}
 				}
-			}
 
+				else if (toolBox.getMode() == WATER) {
+					corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+					waterHandler.insert(corner1, corner2);
+				}
+
+			}
+		
 		}
 
 		break;
@@ -223,6 +263,7 @@ void Editor::handleEvent() {
 		if (event.key.code == sf::Keyboard::J) {
 			objectMap.save();
 			platformMap.save();
+			waterHandler.save();
 		}
 		if (event.key.code == sf::Keyboard::K) {
 			objectMap.load();
@@ -310,6 +351,9 @@ void Editor::update(const float dt) {
 
 	toolBox.update();
 
+	waterHandler.updateWaves(dt);
+	waterHandler.update();
+
 	view.move(viewVelX, viewVelY);
 
 }
@@ -317,8 +361,11 @@ void Editor::update(const float dt) {
 void Editor::render(const float dt) {
 
 	engine->window.setView(view);
-	
-	objectMap.draw(&engine->window);
+
+	objectMap.drawSuperBackground(&engine->window);
+	waterHandler.draw(&engine->window);
+	objectMap.drawBackground(&engine->window);
+	objectMap.drawForeground(&engine->window);
 	platformMap.draw(&engine->window);
 	platformMap.platformPoints.draw(&engine->window);
 	engine->window.draw(selector.rect);

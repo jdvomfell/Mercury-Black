@@ -37,6 +37,7 @@ public:
 	void draw(sf::RenderWindow * window);
 	void drawForeground(sf::RenderWindow * window);
 	void drawBackground(sf::RenderWindow * window);
+	void drawSuperBackground(sf::RenderWindow * window);
 
 	std::map <float, Object *>::iterator findClosest(sf::Vector2f);
 	std::map <float, Object *>::iterator findRight(float x);

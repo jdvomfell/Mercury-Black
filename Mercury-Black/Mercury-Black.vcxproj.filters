@@ -126,6 +126,9 @@
     <ClCompile Include="Metaball.cpp">
       <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
+    <ClCompile Include="Water.cpp">
+      <Filter>Source Files\GameUtility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -207,6 +210,9 @@
       <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="Metaball.h">
+      <Filter>Header Files\GameUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="Water.h">
       <Filter>Header Files\GameUtility</Filter>
     </ClInclude>
   </ItemGroup>

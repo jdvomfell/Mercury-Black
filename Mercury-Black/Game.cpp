@@ -42,6 +42,8 @@ void Game::init() {
 	rect.setOutlineThickness(3);
 
 	metaballHandler.init(engine->window.getSize());
+	
+	waterHandler.load();
 
 }
 
@@ -52,6 +54,7 @@ void Game::clean() {
 	cleanWorld(&world);
 	platformMap.clean();
 	objectMap.clean();
+	waterHandler.clean();
 
 }
 
@@ -145,6 +148,9 @@ void Game::update(const float dt) {
 		if (eventMap.eit->second->isTriggered()) 
 			eventMap.eit->second->trigger();
 
+	waterHandler.update();
+	waterHandler.updateWaves(dt);
+
 	//listener.setPosition(world.position[0].x, world.position[0].y, 0);
 	sf::Listener::setPosition(world.position[0].x, 0, world.position[0].y);
 
@@ -164,16 +170,19 @@ void Game::update(const float dt) {
 
 void Game::render(const float dt) {
 
-	objectMap.drawBackground(&engine->window);
-	int i = 0;
-	engine->window.draw(rect);
+	objectMap.drawSuperBackground(&engine->window);
 
 	renderSystem(&world, &engine->window);
+
+	waterHandler.draw(&engine->window);
+
+	objectMap.drawBackground(&engine->window);
+	engine->window.draw(rect);
+
 	objectMap.drawForeground(&engine->window);
 
 	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)
 	{
-		i++;
 		engine->window.draw(*eventMap.eit->second->eventArea);
 	}
 

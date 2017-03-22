@@ -192,5 +192,6 @@ void TextureManager::loadAllTextures() {
 	loadTexture("groundTool", "Textures/groundTool.png");
 	loadTexture("eventTool", "Textures/eventTool.png");
 	loadTexture("objectTool", "Textures/objectTool.png");
+	loadTexture("waterTool", "Textures/waterTool.png");
 
 }

@@ -41,7 +41,7 @@ ToolBox::ToolBox(GameEngine * engine){
 	toolBox.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2);
 	
 	toolBarShade.setFillColor(sf::Color(200, 200, 200, 255));
-	toolBarShade.setSize(sf::Vector2f(30, engine->window.getSize().y));
+	toolBarShade.setSize(sf::Vector2f(30.0f, (float)engine->window.getSize().y));
 	toolBarShade.setPosition(toolBox.getGlobalBounds().left + toolBox.getLocalBounds().width - 30, toolBox.getGlobalBounds().top);
 
 	/* Buttons */
@@ -51,12 +51,14 @@ ToolBox::ToolBox(GameEngine * engine){
 	groundTool = IconButton(0, 0, engine->textureManager.getTexture("groundTool"), &doNothing);
 	eventTool = IconButton(0, 0, engine->textureManager.getTexture("eventTool"), &doNothing);
 	objectTool = IconButton(0, 0, engine->textureManager.getTexture("objectTool"), &doNothing);
+	waterTool = IconButton(0, 0, engine->textureManager.getTexture("waterTool"), &doNothing);
 
 	boxTool.sprite.setPosition(toolBox.getPosition().x + toolBox.getLocalBounds().width - 30, toolBox.getPosition().y);
 	freeTool.sprite.setPosition(toolBox.getPosition().x + toolBox.getLocalBounds().width - 30, toolBox.getPosition().y + 30);
 	groundTool.sprite.setPosition(toolBox.getPosition().x + toolBox.getLocalBounds().width - 30, toolBox.getPosition().y + 60);
 	eventTool.sprite.setPosition(toolBox.getPosition().x + toolBox.getLocalBounds().width - 30, toolBox.getPosition().y + 120);
 	objectTool.sprite.setPosition(toolBox.getPosition().x + toolBox.getLocalBounds().width - 30, toolBox.getPosition().y + 180);
+	waterTool.sprite.setPosition(toolBox.getPosition().x + toolBox.getLocalBounds().width - 30, toolBox.getPosition().y + 240);
 
 	//guiHandler.buttons.resize(5);
 	//guiHandler.buttons = { &boxTool, &freeTool, &groundTool, &eventTool, &objectTool };
@@ -72,6 +74,7 @@ void ToolBox::highlightButtons(sf::Vector2i position) {
 	groundTool.isSelected(engine->window.mapPixelToCoords(position));
 	eventTool.isSelected(engine->window.mapPixelToCoords(position));
 	objectTool.isSelected(engine->window.mapPixelToCoords(position));
+	waterTool.isSelected(engine->window.mapPixelToCoords(position));
 
 }
 
@@ -114,6 +117,21 @@ void ToolBox::clickButtons(sf::Vector2i position) {
 		toolText.setString("Tool: Place");
 	}
 
+	else if (waterTool.isSelected(engine->window.mapPixelToCoords(position))) {
+		mode = WATER;
+		tool = PLACE;
+		modeText.setString("Mode: Water");
+		toolText.setString("Tool: Place");
+	}
+
+}
+
+bool ToolBox::contains(sf::Vector2i position) {
+
+	engine->window.setView(toolBoxView);
+
+	return toolBox.getGlobalBounds().contains(engine->window.mapPixelToCoords(position));
+
 }
 
 void ToolBox::update() {
@@ -137,6 +155,7 @@ void ToolBox::render() {
 	engine->window.draw(groundTool.sprite);
 	engine->window.draw(objectTool.sprite);
 	engine->window.draw(eventTool.sprite);
+	engine->window.draw(waterTool.sprite);
 
 }
 
@@ -151,6 +170,11 @@ void ToolBox::nextMode() {
 	else if (mode == OBJECT) {
 		mode = EVENT;
 		modeText.setString("Mode: Event");
+		morphText1.setString("Points: N\\A");
+	}
+	else if (mode == EVENT) {
+		mode = WATER;
+		modeText.setString("Mode: Water");
 		morphText1.setString("Points: N\\A");
 	}
 	else {
@@ -182,6 +206,10 @@ void ToolBox::nextTool() {
 
 	else if (mode == OBJECT) {
 
+	}
+
+	else if (mode == WATER) {
+		
 	}
 
 	else if (mode == EVENT) {

@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <map>
 
+#include "Water.h"
 #include "CollisionMap.h"
 #include "ObjectMap.h"
 #include "GameState.h"
@@ -54,6 +55,7 @@ private:
 
 	ObjectMap objectMap;
 	PlatformMap platformMap;
+	WaterHandler waterHandler;
 
 	bool doSpeedUp;
 	bool doLeft;

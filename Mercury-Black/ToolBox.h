@@ -7,7 +7,8 @@
 const enum Mode {
 	PLATFORM = 0,
 	OBJECT,
-	EVENT
+	EVENT,
+	WATER
 };
 
 const enum Tool {
@@ -26,7 +27,11 @@ public:
 	ToolBox(GameEngine * engine);
 
 	void highlightButtons(sf::Vector2i);
+	/* Sets The View!!! */
 	void clickButtons(sf::Vector2i);
+	/* Sets The View!!! */
+	bool contains(sf::Vector2i);
+
 	void update();
 	void render();
 
@@ -63,6 +68,7 @@ private:
 	IconButton groundTool;
 	IconButton eventTool;
 	IconButton objectTool;
+	IconButton waterTool;
 
 };
 
