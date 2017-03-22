@@ -1,5 +1,9 @@
 #include "ToolBox.h"
 
+#include "PlatformMap.h"
+#include "ObjectMap.h"
+#include "Water.h"
+
 #define DEFAULT_TEXT_SIZE 15
 
 ToolBox::ToolBox(GameEngine * engine){
@@ -30,9 +34,10 @@ ToolBox::ToolBox(GameEngine * engine){
 
 	modeText.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 20);
 	toolText.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 70);
-	morphText1.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 170);
-	morphText2.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 220);
-	morphText3.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 120);
+	morphText1.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 200);
+	morphText2.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 250);
+	morphText3.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 300);
+	morphText4.setPosition(toolBoxView.getCenter().x - toolBoxView.getSize().x / 2.0f + 20, toolBoxView.getCenter().y - toolBoxView.getSize().y / 2.0f + 350);
 
 	/* Tool Box */
 
@@ -148,6 +153,7 @@ void ToolBox::render() {
 	engine->window.draw(morphText1);
 	engine->window.draw(morphText2);
 	engine->window.draw(morphText3);
+	engine->window.draw(morphText4);
 	engine->window.draw(toolBarShade);
 	//guiHandler.draw(&engine->window);
 	engine->window.draw(boxTool.sprite);
@@ -224,4 +230,37 @@ Mode ToolBox::getMode() {
 
 Tool ToolBox::getTool() {
 	return tool;
+}
+
+void ToolBox::selectPlatform(sf::ConvexShape * platform) {
+	//Position
+	morphText1.setString("Coordinate Position:\nX: " + std::to_string(platform->getPosition().x) + "\nY: " + std::to_string(platform->getPosition().y));
+	//
+	morphText2.setString("");
+	//
+	morphText3.setString("");
+	//
+	morphText4.setString("");
+}
+
+void ToolBox::selectObject(Object * object) {
+	//Position
+	morphText1.setString("Coordinate Position:\nX: " + std::to_string(object->position.x) + "\nY: " + std::to_string(object->position.y));
+	//Name
+	morphText2.setString(object->textureName);
+	//Rotation
+	morphText3.setString("Rotation: " + std::to_string(object->rotate));
+	//Scale
+	morphText4.setString("Scale: " + std::to_string(object->scale));
+}
+
+void ToolBox::selectWater(Water * water) {
+	//Position Top Left
+	morphText1.setString("Top Left Position:\nX: " + std::to_string(water->topLeft.x) + "\nY: " + std::to_string(water->topLeft.y));
+	//Position Bottom Right
+	morphText2.setString("Bottom Right Position:\nX: " + std::to_string(water->bottomRight.x) + "\nY: " + std::to_string(water->bottomRight.y));
+	//
+	morphText3.setString("");
+	//
+	morphText4.setString("");
 }

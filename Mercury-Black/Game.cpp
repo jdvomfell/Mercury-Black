@@ -13,7 +13,7 @@ void Game::init() {
 
 	world.textureManager = &engine->textureManager;
 
-	createPlayer(&world, 500, 500);
+	createPlayer(&world, 0, 0);
 	createTest(&world, 2000, 0);
 	createHeart(&world, 900, 500);
 	createWisp(&world, 500, 500, &metaballHandler);
@@ -21,16 +21,16 @@ void Game::init() {
 
 	/*Sound insertion code TEMPORARY*/
 
-	sf::Vector2f size(800, 800);
-	sf::Vector2f size2(500, 500);
-	sf::RectangleShape * rectangle = new sf::RectangleShape(size);
-	sf::RectangleShape * rectangle2 = new sf::RectangleShape(size2);
+	//sf::Vector2f size(800, 800);
+	//sf::Vector2f size2(500, 500);
+	//sf::RectangleShape * rectangle = new sf::RectangleShape(size);
+	//sf::RectangleShape * rectangle2 = new sf::RectangleShape(size2);
 	//rectangle->setFillColor(sf::Color::Blue);
 	//rectangle2->setFillColor(sf::Color::Green);
-	eventMap.insertSound(rectangle, &world, "Music/frogs.ogg", 20.0, true);
-	eventMap.insertSound(rectangle2, &world, "Music/drank.ogg", 25.0, true);
-	rectangle->setPosition(1000, 1500);
-	rectangle2->setPosition(1000, 1500);
+	//eventMap.insertSound(rectangle, &world, "Music/frogs.ogg", 20.0, true);
+	//eventMap.insertSound(rectangle2, &world, "Music/drank.ogg", 25.0, true);
+	//rectangle->setPosition(1000, 1500);
+	//rectangle2->setPosition(1000, 1500);
 
 	/* End of sound code*/
 
@@ -144,9 +144,9 @@ void Game::update(const float dt) {
 	movementSystem(&world);
 	damageSystem(&world, dt);
 
-	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)	
-		if (eventMap.eit->second->isTriggered()) 
-			eventMap.eit->second->trigger();
+	//for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)	
+		//if (eventMap.eit->second->isTriggered()) 
+			//eventMap.eit->second->trigger();
 
 	waterHandler.update();
 	waterHandler.updateWaves(dt);
@@ -172,11 +172,14 @@ void Game::render(const float dt) {
 
 	objectMap.drawSuperBackground(&engine->window);
 
+	objectMap.drawBackground(&engine->window);
+
 	renderSystem(&world, &engine->window);
+
+	metaballHandler.draw(&engine->window);
 
 	waterHandler.draw(&engine->window);
 
-	objectMap.drawBackground(&engine->window);
 	engine->window.draw(rect);
 
 	objectMap.drawForeground(&engine->window);
@@ -189,7 +192,5 @@ void Game::render(const float dt) {
 	if(drawPlatforms)
 		for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)
 			engine->window.draw(*(pit->second));
-
-	metaballHandler.draw(&engine->window);
 
 }

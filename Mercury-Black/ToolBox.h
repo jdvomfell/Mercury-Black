@@ -32,6 +32,10 @@ public:
 	/* Sets The View!!! */
 	bool contains(sf::Vector2i);
 
+	void selectPlatform(sf::ConvexShape *);
+	void selectObject(struct Object *);
+	void selectWater(class Water *);
+
 	void update();
 	void render();
 
@@ -48,6 +52,7 @@ public:
 	sf::Text morphText1;
 	sf::Text morphText2;
 	sf::Text morphText3;
+	sf::Text morphText4;
 
 private:
 	

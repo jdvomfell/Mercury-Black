@@ -131,6 +131,7 @@ void Editor::handleEvent() {
 					platformMap.selected = platformMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
 					if (platformMap.selected != platformMap.map.end()) {
+						toolBox.selectPlatform(platformMap.selected->second);
 						platformMap.selected->second->setOutlineThickness(5);
 						platformMap.selected->second->setOutlineColor(sf::Color::Red);
 					}
@@ -142,6 +143,7 @@ void Editor::handleEvent() {
 					objectMap.selected = objectMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
 					if (objectMap.selected != objectMap.map.end()) {
+						toolBox.selectObject(objectMap.selected->second);
 						selector.rect.setSize(sf::Vector2f(objectMap.selected->second->sprite.getLocalBounds().width, objectMap.selected->second->sprite.getLocalBounds().height));
 						selector.rect.setOrigin(selector.rect.getSize() * 0.5f);
 						selector.rect.setPosition(objectMap.selected->second->position.x, objectMap.selected->second->position.y);
@@ -156,14 +158,6 @@ void Editor::handleEvent() {
 
 				}
 
-			}
-
-			if (toolBox.getMode() == PLATFORM && platformMap.selected != platformMap.map.end()) {
-				toolBox.morphText1.setString("Point 0: X: " + std::to_string(platformMap.selected->second->getPoint(0).x) + "\nY: " + std::to_string(platformMap.selected->second->getPoint(0).y) + "\nFallthrough: N\\A\n");
-			}
-
-			else if (toolBox.getMode() == OBJECT && objectMap.selected != objectMap.map.end()) {
-				toolBox.morphText1.setString("Point 0: X: " + std::to_string(objectMap.selected->second->position.x) + "\nY: " + std::to_string(objectMap.selected->second->position.y) + "\nFallthrough: N\\A\n");
 			}
 
 		}
@@ -363,12 +357,19 @@ void Editor::render(const float dt) {
 	engine->window.setView(view);
 
 	objectMap.drawSuperBackground(&engine->window);
-	waterHandler.draw(&engine->window);
+
 	objectMap.drawBackground(&engine->window);
+
+	waterHandler.draw(&engine->window);
+
 	objectMap.drawForeground(&engine->window);
+
 	platformMap.draw(&engine->window);
+
 	platformMap.platformPoints.draw(&engine->window);
+
 	engine->window.draw(selector.rect);
+
 	if (toolBox.getMode() == OBJECT)
 		engine->window.draw(objectMap.object.sprite);
 
