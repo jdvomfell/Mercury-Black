@@ -103,11 +103,7 @@ void TextureManager::loadAllTextures() {
 	/* Roll */
 
 	loadTextures("player_roll", "Textures/Player/Roll/", 5);
-
-	/* Ink Arm Attack */
 	
-	loadTextures("player_inkArmAttack", "Textures/Player/Ink-Attack/", 9);
-
 	///Ceiling Plant///
 
 	/* Spawn */
@@ -188,16 +184,6 @@ void TextureManager::loadAllTextures() {
 	loadTexture("spring_tree_2", "Textures/Test/spring_tree_2.png");
 	loadTexture("spring_log_1", "Textures/Test/spring_log_1.png");
 	loadTexture("heart", "Textures/Test/heart.png");
-	loadTexture("spring_ground_1", "Textures/Test/spring_ground_1.png");
-	loadTexture("spring_ground_2", "Textures/Test/spring_ground_2.png");
-	loadTexture("spring_ground_3", "Textures/Test/spring_ground_3.png");
-	loadTexture("spring_ground_4", "Textures/Test/spring_ground_4.png");
-	loadTexture("bridgeBack_1", "Textures/Test/bridgeBack_1.png");
-	loadTexture("bridgeFront_1", "Textures/Test/bridgeFront_1.png");
-	loadTexture("toriiGateBack_1", "Textures/Test/toriiGateBack_1.png");
-	loadTexture("toriiGateFront_1", "Textures/Test/toriiGateFront_1.png");
-	loadTexture("statue_1", "Textures/Test/statue_1.png");
-
 
 	/////ICONS/////
 

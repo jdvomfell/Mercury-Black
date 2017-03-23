@@ -121,12 +121,6 @@ void scriptPlayer(World *world, float dt) {
 				sp->currentState = JUMP_STATE;
 			}
 			/* Attack */
-			else if (i->special) {
-				if (sp->currentState == NO_STATE) {
-					s->animationManager.changeAnimation("inkArmAttack");
-					sp->currentState = ATTACK_STATE;
-				}
-			}
 			else if (i->attack) {
 				if (sp->currentState == NO_STATE) {
 					s->animationManager.changeAnimation("idleAttack");
