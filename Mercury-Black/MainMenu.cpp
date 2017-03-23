@@ -26,12 +26,12 @@ void MainMenu::init() {
 
 	title.setPosition(view.getCenter().x, view.getCenter().y - (view.getSize().y / 5));
 
-	newButton.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 1 / 3, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
-	loadButton.text.setPosition(view.getCenter().x, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
-	editorButton.text.setPosition(view.getCenter().x + (view.getSize().x / 2) * 1 / 3, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
-	hitboxEditorButton.text.setPosition(view.getCenter().x, title.getPosition().y + (view.getSize().y / 2));
-	optionsButton.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 1 / 2, title.getPosition().y + (view.getSize().y / 2));
-	quitButton.text.setPosition(view.getCenter().x + (view.getSize().x / 2) * 1 / 2, title.getPosition().y + (view.getSize().y / 2));
+	newButton.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 1 / 3 - 135, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
+	loadButton.text.setPosition(view.getCenter().x - 40, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
+	editorButton.text.setPosition(view.getCenter().x + (view.getSize().x / 2) * 1 / 3 + 30, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
+	hitboxEditorButton.text.setPosition(view.getCenter().x - 80, title.getPosition().y + (view.getSize().y / 2));
+	optionsButton.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 1 / 2 - 175, title.getPosition().y + (view.getSize().y / 2));
+	quitButton.text.setPosition(view.getCenter().x + (view.getSize().x / 2) * 1 / 2 + 50, title.getPosition().y + (view.getSize().y / 2));
 
 	guiHandler.isSelected(sf::Vector2f(0, 0));
 
