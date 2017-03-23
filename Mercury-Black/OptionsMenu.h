@@ -4,49 +4,57 @@
 #include "GameState.h"
 #include "Buttons.h"
 
+#define KEYBIND_FONT_SIZE 15
 #define OPTION_FONT_SIZE 70
-#define OPTION_TITLE_SIZE 200
+#define KEYBIND_TITLE_SIZE 60
+#define	OPTION_TITLE_SIZE 200
 
-#define MUSIC_T 1
-#define SFX_T 2
-#define KEYS_T 3
+enum Key {
+	P_LEFT = 0,
+	P_RIGHT,
+	P_JUMP,
+	P_CROUCH,
+	P_ATTACK,
+	P_SPECIAL,
+	P_BLOCK,
+	E_SELECT,
+	E_QUICKPAN,
+	E_PANL,
+	E_PANR,
+	E_PANU,
+	E_PAND,
+	E_LAYERU,
+	E_LAYERD,
+	E_SAVE,
+	E_LOAD,
+	E_INSERT,
+	E_DELETE,
+	E_MODETYPE,
+	E_TOOLTYPE,
+	O_XFLIP,
+	O_YFLIP,
+	O_ROTATEC,
+	O_ROTATECC,
+	O_SCALEU,
+	O_SCALED,
+	O_PREVOBJECT,
+	O_NEXTOBJECT,
+	A_PMENU = 29
+};
 
-#define P_LEFT 0
-#define P_RIGHT 1
-#define P_JUMP 2
-#define P_CROUCH 3
-#define P_ATTACK 4
-#define P_SPECIAL 5 
-#define P_BLOCK 6
+/*
+enum InputType
+{
+	Keyboard,
+	Mouse
+};
 
-#define E_SELECT 7
-#define E_DESELECT 8
-#define E_ZOOM 9 
-#define E_QUICKPAN 10
-#define E_PANR 11
-#define E_PANL 12
-#define E_PANU 13
-#define E_PAND 14 
-#define E_LAYERU 15
-#define E_LAYERD 16
-#define E_SHOWLINE 17
-#define E_SAVE 18
-#define E_LOAD 19
-#define E_INSERT 20
-#define E_DELETE 21
-#define E_ENTITYTYPE 22
-#define E_ENTITYACTION 23
+class KeyPress {
+	InputType inputType;
+	sf::Event::EventType EventType;
 
-#define O_XFLIP 24
-#define O_YFLIP 25
-#define O_ROTATEC 26
-#define O_ROTATECC 27
-#define O_SCALEU 28
-#define O_SCALED 29
-
-#define A_BMENU 30
-#define A_FMENU 31
-
+};
+*/
 
 class Options {
 
@@ -56,7 +64,22 @@ public:
 	
 	bool musicToggle = 1;
 	bool sfxToggle = 1;
-	std::vector<sf::Keyboard> binding[32];
+	std::vector<sf::Keyboard::Key> binding;
+	std::vector<sf::Text> bindingString;
+	std::vector<std::string> oddBalls = { "Escape", "LControl", "LShift",
+		"LAlt", "LSystem", "RControl", "RShift", "RAlt", "RSystem", 
+		"Menu", "LBracket", "RBracket", "SemiColon", "Comma", "Period", 
+		"Quote", "Slash", "BackSlash", "Tilde", "Equal", "Dash", "Space", "Return", "BackSpace", "Tab", "PageUp", "PageDown",
+		"End", "Home", "Insert", "Delete",
+		"Add", "Subtract", "Multiply", "Divide",
+		"Left", "Right", "Up", "Down",
+		"Numpad0", "Numpad1", "Numpad2", "Numpad3",
+		"Numpad4", "Numpad5", "Numpad6", "Numpad7",
+		"Numpad8", "Numpad9", "F1", "F2",
+		"F3", "F4", "F5", "F6",
+		"F7", "F8", "F9", "F10",
+		"F11", "F12", "F13", "F14",
+		"F15" };
 };
 
 class OptionsMenu : public GameState {
@@ -79,17 +102,17 @@ protected:
 
 private:
 	
-	sf::Color hText;
-	sf::Color uText;
+	sf::Color hText = sf::Color::Black;
+	sf::Color uText = sf::Color(100, 100, 100, 255);
 
 	static OptionsMenu optionsMenu;
 
-	std::vector <GUI *> buttons;
+	GUI_Handler guiHandler;				//guiHandler.buttons
 
-	Button musicToggle;
-	Button sfxToggle;
-	Button changeBinding;
-	std::vector<Button> KeyBind;
+	TextButton musicToggle;
+	TextButton sfxToggle;
+	TextButton changeBinding;
+	std::vector<TextButton> KeyBind;
 	
 	sf::Text title;
 	
@@ -106,8 +129,11 @@ public:
 	void update(const float dt);
 	void render(const float dt);
 
+	void save();
+	void load();
+
 	void bindingCheck(int keyBinding, int setKey);
-	Options * options;
+	Options options;
 
 	static KeyBind * instance(GameEngine * engine) { keyBind.engine = engine; return &keyBind; }
 
@@ -117,54 +143,60 @@ protected:
 
 private:
 
-	sf::Color hText;
-	sf::Color uText;
+	int selected = -1;
+	sf::Keyboard::Key newKey;
 
 	static KeyBind keyBind;
 
 	//std::vector <GUI *> buttons;
 
-	Button changeBinding;
-	std::vector<Button> KeyBindings;
+	TextButton changeBinding;
+	std::vector<TextButton> KeyBindings;
 
 	sf::Text title;
-/*
-	Button p_left;
-	Button p_right;
-	Button p_jump;
-	Button p_crouch;
-	Button p_attack;
-	Button p_special;
-	Button p_block;
+	sf::Text player;
+	sf::Text editor;
+	sf::Text object;
+	sf::Text other;
 
-	Button e_select;
-	Button e_deselect;
-	Button e_zoom;
-	Button e_quickpan;
-	Button e_panr;
-	Button e_panl;
-	Button e_panu;
-	Button e_pand;
-	Button e_layeru;
-	Button e_layerd;
-	Button e_showline;
-	Button e_save;
-	Button e_load;
-	Button e_insert;
-	Button e_delete;
-	Button e_entitytype;
-	Button e_entityaction;
+	GUI_Handler guiHandler;
 
-	Button o_xflip;
-	Button o_yflip;
-	Button o_rotatec;
-	Button o_rotatecc;
-	Button o_scaleu;
-	Button o_scaled;
+	TextButton p_left;
+	TextButton p_right;
+	TextButton p_jump;
+	TextButton p_crouch;
+	TextButton p_attack;
+	TextButton p_special;
+	TextButton p_block;
 
-	Button a_bmenu;
-	Button a_fmenu;
-	*/
+	TextButton e_select;
+	TextButton e_deselect;
+	TextButton e_zoom;
+	TextButton e_quickpan;
+	TextButton e_panr;
+	TextButton e_panl;
+	TextButton e_panu;
+	TextButton e_pand;
+	TextButton e_layeru;
+	TextButton e_layerd;
+	TextButton e_showline;
+	TextButton e_save;
+	TextButton e_load;
+	TextButton e_insert;
+	TextButton e_delete;
+	TextButton e_modetype;
+	TextButton e_tooltype;
+
+	TextButton o_xflip;
+	TextButton o_yflip;
+	TextButton o_rotatec;
+	TextButton o_rotatecc;
+	TextButton o_scaleu;
+	TextButton o_scaled;
+	TextButton o_prevobj;
+	TextButton o_nextobj;
+
+	TextButton a_pmenu;
 
 	sf::View view;
 };

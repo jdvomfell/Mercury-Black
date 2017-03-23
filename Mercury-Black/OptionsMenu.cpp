@@ -1,10 +1,10 @@
 #include "OptionsMenu.h"
+#include <string>
 #include <iostream>
 
+OptionsMenu OptionsMenu::optionsMenu;
+
 void OptionsMenu::init(){
-	
-	hText = sf::Color::Black;
-	uText = sf::Color(100, 100, 100, 255);
 
 	title = sf::Text("Options", engine->textureManager.font, OPTION_TITLE_SIZE);
 	title.setFillColor(sf::Color::Black);
@@ -12,20 +12,20 @@ void OptionsMenu::init(){
 	title.setOutlineColor(uText);
 	title.setOrigin(title.getGlobalBounds().width / 2, title.getGlobalBounds().height / 2);
 
-	musicToggle = Button("Music... Not yet used.", 0, 0, uText, OPTION_FONT_SIZE, &engine->textureManager.font, &doNothing);
-	sfxToggle = Button("SFX ", 0, 0, uText, OPTION_FONT_SIZE, &engine->textureManager.font, &doNothing);
-	changeBinding = Button("", 0, 0, uText, OPTION_FONT_SIZE, &engine->textureManager.font, &doNothing);
+	musicToggle = TextButton("Music", 0, 0, OPTION_FONT_SIZE, &engine->textureManager.font, &doNothing);
+	sfxToggle = TextButton("SFX", 0, 0, OPTION_FONT_SIZE, &engine->textureManager.font, &doNothing);
+	changeBinding = TextButton("Key Bindings", 0, 0, OPTION_FONT_SIZE, &engine->textureManager.font, &changeToKeyBindings);
 	
-	buttons.resize(3);
-	buttons = { &musicToggle, &sfxToggle, &changeBinding};
+	guiHandler.buttons.resize(3);
+	guiHandler.buttons = { &musicToggle, &sfxToggle, &changeBinding};
 
 	view = engine->window.getDefaultView();
 	engine->window.setView(view);
 
 	title.setPosition(view.getCenter().x, view.getCenter().y - (view.getSize().y / 5));
 
-	musicToggle.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 1 / 3, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
-	sfxToggle.text.setPosition(view.getCenter().x, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
+	musicToggle.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 2 / 3, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
+	sfxToggle.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 2 / 3, title.getPosition().y + (view.getSize().y / 2));
 	changeBinding.text.setPosition(view.getCenter().x + (view.getSize().x / 2) * 1 / 3, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
 	
 }
@@ -43,29 +43,28 @@ void OptionsMenu::handleEvent(){
 		switch (event.type) {
 
 		case sf::Event::MouseMoved:
-
-			for (size_t i = 0; i < buttons.size(); i++) {
-
-				if (buttons[i]->isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y))))
-					buttons[i]->text.setFillColor(hText);
-				else
-					buttons[i]->text.setFillColor(uText);
-
-			}
+			
+			guiHandler.isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 			break;
 
 		case sf::Event::MouseButtonPressed:
 
 			if (event.mouseButton.button == sf::Mouse::Left) {
 
-				for (size_t i = 0; i < buttons.size(); i++) {
+				for (size_t i = 0; i < guiHandler.buttons.size(); i++) {
 
-					if (buttons[i]->isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))))
-						buttons[i]->interact(engine);
+					if (guiHandler.buttons[i]->isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))))
+						guiHandler.buttons[i]->interact(engine);
 
 				}
 
 			}
+
+		case sf::Event::KeyPressed:
+			
+			if (event.key.code == sf::Keyboard::Escape)
+				engine->popState();
+			
 			break;
 
 		case sf::Event::Closed:
@@ -83,7 +82,9 @@ void OptionsMenu::update(const float dt){
 
 void OptionsMenu::render(const float dt){
 	
-	for (size_t i = 0; i < buttons.size(); i++)
-		engine->window.draw(buttons[i]->text);
+	engine->window.clear(sf::Color(248, 240, 225));
+
+	guiHandler.draw(&engine->window);
+
 	engine->window.draw(title);
 }
