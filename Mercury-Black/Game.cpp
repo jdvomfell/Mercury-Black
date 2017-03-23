@@ -92,12 +92,14 @@ void Game::handleEvent() {
 			if (event.key.code == sf::Keyboard::L)
 				drawPlatforms = !drawPlatforms;
 
-			if (event.key.code == sf::Keyboard::Space)
+			if (event.key.code == sf::Keyboard::J)
 				world.input[PLAYER].attack = true;
+			if (event.key.code == sf::Keyboard::K) {
+				world.input[PLAYER].special = true;
+			}
 
 			if (event.key.code == sf::Keyboard::LShift)
 				metaballHandler.sunburst(sf::Vector2f(world.position[0].x, world.position[0].y), 20);
-				//world.input[PLAYER].special = true;
 
 			if (event.key.code == sf::Keyboard::R)
 				world.health[0].current = 0;
@@ -115,11 +117,11 @@ void Game::handleEvent() {
 			if (event.key.code == sf::Keyboard::D)
 				world.input[PLAYER].right = false;
 
-			if (event.key.code == sf::Keyboard::Space)
+			if (event.key.code == sf::Keyboard::J)
 				world.input[PLAYER].attack = false;
-
-			if (event.key.code == sf::Keyboard::LShift)
+			if (event.key.code == sf::Keyboard::K) {
 				world.input[PLAYER].special = false;
+			}
 
 			break;
 
