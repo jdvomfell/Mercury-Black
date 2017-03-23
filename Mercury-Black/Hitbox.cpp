@@ -1,7 +1,10 @@
 #include "Hitbox.h"
 #include <fstream>
 void HitboxMap::addHitbox(std::string textureID, sf::RectangleShape box, int type) {
-	
+	if (box.getSize().x < 0 || box.getSize().y < 0) {
+		box.setPosition(box.getPosition().x + box.getSize().x, box.getPosition().y + box.getSize().y);
+		box.setSize(sf::Vector2f(fabs(box.getSize().x), fabs(box.getSize().y)));
+	}
 	if (box.getSize().x > 5 && box.getSize().y > 5) {
 		Hitbox *hitbox = new Hitbox;
 

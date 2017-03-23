@@ -18,7 +18,7 @@ public:
 	void update(const float dt);
 	void render(const float dt);
 	void copy(std::string);
-	void nextAnim();
+	int parser(std::string, std::string);
 
 	static HitboxEditor * instance(GameEngine * engine) { hitboxEditor.engine = engine; return &hitboxEditor; }
 
@@ -39,7 +39,6 @@ private:
 	int leftPlacing;
 	int chooseCollision;
 	int chooseHitbox;
-	int selected;
 	sf::Vector2f initialPosition;
 	sf::Vector2f finalPosition;
 	sf::RectangleShape drawHitBox;
