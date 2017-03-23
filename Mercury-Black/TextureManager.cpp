@@ -185,4 +185,25 @@ void TextureManager::loadAllTextures() {
 	loadTexture("todd", "todd.JPG");
 	loadTexture("adriano", "adrian.JPG");
 
+	printf("LOAD TEXTURE\n");
+
+
+	/*
+	sf::Texture * t = new sf::Texture;
+	sf::Clock clock;
+	for (int i = 0; i < 100; i++) {
+		t->loadFromFile("Textures/Test/tree.png");
+	}
+	sf::Time elapsed1 = clock.getElapsedTime();
+	printf("TEXTURES LOADED %f\n", elapsed1.asSeconds());
+	clock.restart();
+	printf("Load Texture\n");
+	sf::Image s;
+	s.loadFromFile("Textures/Test/tree.png");
+	for (int i = 0; i < 100; i++) {
+		t->loadFromImage(s, sf::IntRect(0, 0, 10, 10));
+	}
+	elapsed1 = clock.getElapsedTime();
+	printf("TEXTURES LOADED %f\n", elapsed1.asSeconds());
+	*/
 }

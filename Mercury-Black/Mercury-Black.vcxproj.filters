@@ -27,9 +27,6 @@
     <Filter Include="Source Files\UI">
       <UniqueIdentifier>{41452a39-2307-49a9-a0fc-9c7cc5e52ab5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\GameUtility">
-      <UniqueIdentifier>{130d7294-9d86-4394-8c9e-74df74abc048}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\GameUtility">
       <UniqueIdentifier>{309f919f-f043-4e7f-8d44-986d08e84a1c}</UniqueIdentifier>
     </Filter>
@@ -48,6 +45,9 @@
     <Filter Include="Source Files\Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Resources\GameUtility">
+      <UniqueIdentifier>{130d7294-9d86-4394-8c9e-74df74abc048}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -70,7 +70,7 @@
       <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="CollisionMap.cpp">
-      <Filter>Source Files\GameUtility</Filter>
+      <Filter>Source Files\Resources\GameUtility</Filter>
     </ClCompile>
     <ClCompile Include="Entity.cpp">
       <Filter>Source Files\Entity Component System</Filter>
@@ -88,10 +88,10 @@
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ObjectMap.cpp">
-      <Filter>Source Files\GameUtility</Filter>
+      <Filter>Source Files\Resources\GameUtility</Filter>
     </ClCompile>
     <ClCompile Include="PlatformMap.cpp">
-      <Filter>Source Files\GameUtility</Filter>
+      <Filter>Source Files\Resources\GameUtility</Filter>
     </ClCompile>
     <ClCompile Include="AIScript.cpp">
       <Filter>Source Files\Entity Component System</Filter>
@@ -104,6 +104,9 @@
     </ClCompile>
     <ClCompile Include="Animation.cpp">
       <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Hitbox.cpp">
+      <Filter>Source Files\Resources\GameUtility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

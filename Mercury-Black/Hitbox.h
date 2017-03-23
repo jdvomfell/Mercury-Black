@@ -3,24 +3,30 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <map>
 
-class Hitboxes {
+#define	COLLISIONBOX 0
+#define HURTBOX 1
+#define DEFENCEBOX 2
+#define DAMAGEBOX 3
 
-	std::vector<sf::RectangleShape *> attackBoxes;
-	std::vector<sf::RectangleShape *> hurtBoxes;
-
+struct Hitbox {
+public:
+	sf::RectangleShape box;
+	int type;
 };
 
 class HitboxMap {
-
-	std::map<std::string, Hitboxes> map;
-
-	void addHitboxes(std::string ID, Hitboxes);
-
-	void addHitbox(std::string ID, sf::FloatRect hitbox);
+public:
+	void addHitbox(std::string textureID, sf::RectangleShape box, int type);
+	void deleteHitbox(std::string textureID);
+	void cycleHitbox(std::string textureID);
+	void save();
+	void load();
+	void draw(sf::RenderWindow *window, std::string textureID);
 	
-	void removeHitbox(std::string ID, );
-
+	std::multimap <std::string, Hitbox*> map;
+	std::multimap <std::string, Hitbox*>::iterator select;
 };
 
 #endif
