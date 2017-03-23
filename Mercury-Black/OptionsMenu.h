@@ -45,14 +45,12 @@ enum Key {
 /*
 enum InputType
 {
-	Keyboard,
-	Mouse
+Keyboard,
+Mouse
 };
-
 class KeyPress {
-	InputType inputType;
-	sf::Event::EventType EventType;
-
+InputType inputType;
+sf::Event::EventType EventType;
 };
 */
 
@@ -61,14 +59,14 @@ class Options {
 public:
 
 	//Bindings are defined in OptionsMenu.cpp
-	
+
 	bool musicToggle = 1;
 	bool sfxToggle = 1;
 	std::vector<sf::Keyboard::Key> binding;
 	std::vector<sf::Text> bindingString;
 	std::vector<std::string> oddBalls = { "Escape", "LControl", "LShift",
-		"LAlt", "LSystem", "RControl", "RShift", "RAlt", "RSystem", 
-		"Menu", "LBracket", "RBracket", "SemiColon", "Comma", "Period", 
+		"LAlt", "LSystem", "RControl", "RShift", "RAlt", "RSystem",
+		"Menu", "LBracket", "RBracket", "SemiColon", "Comma", "Period",
 		"Quote", "Slash", "BackSlash", "Tilde", "Equal", "Dash", "Space", "Return", "BackSpace", "Tab", "PageUp", "PageDown",
 		"End", "Home", "Insert", "Delete",
 		"Add", "Subtract", "Multiply", "Divide",
@@ -94,14 +92,14 @@ public:
 
 	Options * options;
 
-	static OptionsMenu * instance(GameEngine * engine) { optionsMenu.engine = engine; return &optionsMenu;}
+	static OptionsMenu * instance(GameEngine * engine) { optionsMenu.engine = engine; return &optionsMenu; }
 
 protected:
-	
+
 	OptionsMenu() {}
 
 private:
-	
+
 	sf::Color hText = sf::Color::Black;
 	sf::Color uText = sf::Color(100, 100, 100, 255);
 
@@ -113,9 +111,9 @@ private:
 	TextButton sfxToggle;
 	TextButton changeBinding;
 	std::vector<TextButton> KeyBind;
-	
+
 	sf::Text title;
-	
+
 	sf::View view;
 };
 

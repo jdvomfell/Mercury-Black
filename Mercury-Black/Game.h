@@ -10,7 +10,6 @@
 #include "ObjectMap.h"
 #include "PlatformMap.h"
 #include "CollisionMap.h"
-#include "Options.h"
 #include "Metaball.h"
 #include "Water.h"
 
@@ -36,8 +35,6 @@ protected:
 private:
 
 	static Game game;
-
-	Options * options = Options::instance();
 
 	sf::View view;
 

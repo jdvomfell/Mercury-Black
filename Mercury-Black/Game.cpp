@@ -42,7 +42,7 @@ void Game::init() {
 	rect.setOutlineThickness(3);
 
 	metaballHandler.init(engine->window.getSize());
-	
+
 	waterHandler.load();
 
 }
@@ -92,12 +92,14 @@ void Game::handleEvent() {
 			if (event.key.code == sf::Keyboard::L)
 				drawPlatforms = !drawPlatforms;
 
-			if (event.key.code == sf::Keyboard::Space)
+			if (event.key.code == sf::Keyboard::J)
 				world.input[PLAYER].attack = true;
+			if (event.key.code == sf::Keyboard::K) {
+				world.input[PLAYER].special = true;
+			}
 
 			if (event.key.code == sf::Keyboard::LShift)
 				metaballHandler.sunburst(sf::Vector2f(world.position[0].x, world.position[0].y), 20);
-				//world.input[PLAYER].special = true;
 
 			if (event.key.code == sf::Keyboard::R)
 				world.health[0].current = 0;
@@ -115,11 +117,11 @@ void Game::handleEvent() {
 			if (event.key.code == sf::Keyboard::D)
 				world.input[PLAYER].right = false;
 
-			if (event.key.code == sf::Keyboard::Space)
+			if (event.key.code == sf::Keyboard::J)
 				world.input[PLAYER].attack = false;
-
-			if (event.key.code == sf::Keyboard::LShift)
+			if (event.key.code == sf::Keyboard::K) {
 				world.input[PLAYER].special = false;
+			}
 
 			break;
 
@@ -145,8 +147,8 @@ void Game::update(const float dt) {
 	damageSystem(&world, dt);
 
 	//for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)	
-		//if (eventMap.eit->second->isTriggered()) 
-			//eventMap.eit->second->trigger();
+	//if (eventMap.eit->second->isTriggered()) 
+	//eventMap.eit->second->trigger();
 
 	waterHandler.update();
 	waterHandler.updateWaves(dt);
@@ -189,7 +191,7 @@ void Game::render(const float dt) {
 		engine->window.draw(*eventMap.eit->second->eventArea);
 	}
 
-	if(drawPlatforms)
+	if (drawPlatforms)
 		for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)
 			engine->window.draw(*(pit->second));
 

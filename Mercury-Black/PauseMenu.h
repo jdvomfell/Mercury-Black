@@ -32,17 +32,13 @@ protected:
 
 private:
 
-	sf::Color hText;
-	sf::Color uText;
-
 	static PauseMenu pauseMenu;
 
-	std::vector <GUI *> buttons;
-
-	Button resumeButton;
-	Button optionsButton;
-	Button mainMenuButton;
-	Button quitButton;
+	GUI_Handler guiHandler;
+	TextButton resumeButton;
+	TextButton optionsButton;
+	TextButton mainMenuButton;
+	TextButton quitButton;
 
 	sf::Text title;
 

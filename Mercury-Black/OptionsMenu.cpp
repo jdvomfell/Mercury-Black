@@ -4,7 +4,7 @@
 
 OptionsMenu OptionsMenu::optionsMenu;
 
-void OptionsMenu::init(){
+void OptionsMenu::init() {
 
 	title = sf::Text("Options", engine->textureManager.font, OPTION_TITLE_SIZE);
 	title.setFillColor(sf::Color::Black);
@@ -15,9 +15,9 @@ void OptionsMenu::init(){
 	musicToggle = TextButton("Music", 0, 0, OPTION_FONT_SIZE, &engine->textureManager.font, &doNothing);
 	sfxToggle = TextButton("SFX", 0, 0, OPTION_FONT_SIZE, &engine->textureManager.font, &doNothing);
 	changeBinding = TextButton("Key Bindings", 0, 0, OPTION_FONT_SIZE, &engine->textureManager.font, &changeToKeyBindings);
-	
+
 	guiHandler.buttons.resize(3);
-	guiHandler.buttons = { &musicToggle, &sfxToggle, &changeBinding};
+	guiHandler.buttons = { &musicToggle, &sfxToggle, &changeBinding };
 
 	view = engine->window.getDefaultView();
 	engine->window.setView(view);
@@ -27,14 +27,14 @@ void OptionsMenu::init(){
 	musicToggle.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 2 / 3, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
 	sfxToggle.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 2 / 3, title.getPosition().y + (view.getSize().y / 2));
 	changeBinding.text.setPosition(view.getCenter().x + (view.getSize().x / 2) * 1 / 3, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
-	
-}
-
-void OptionsMenu::clean(){
 
 }
 
-void OptionsMenu::handleEvent(){
+void OptionsMenu::clean() {
+
+}
+
+void OptionsMenu::handleEvent() {
 
 	sf::Event event;
 
@@ -43,7 +43,7 @@ void OptionsMenu::handleEvent(){
 		switch (event.type) {
 
 		case sf::Event::MouseMoved:
-			
+
 			guiHandler.isSelected(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 			break;
 
@@ -61,10 +61,10 @@ void OptionsMenu::handleEvent(){
 			}
 
 		case sf::Event::KeyPressed:
-			
+
 			if (event.key.code == sf::Keyboard::Escape)
 				engine->popState();
-			
+
 			break;
 
 		case sf::Event::Closed:
@@ -76,12 +76,12 @@ void OptionsMenu::handleEvent(){
 	}
 }
 
-void OptionsMenu::update(const float dt){
+void OptionsMenu::update(const float dt) {
 
 }
 
-void OptionsMenu::render(const float dt){
-	
+void OptionsMenu::render(const float dt) {
+
 	engine->window.clear(sf::Color(248, 240, 225));
 
 	guiHandler.draw(&engine->window);

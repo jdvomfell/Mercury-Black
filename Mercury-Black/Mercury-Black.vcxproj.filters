@@ -96,9 +96,6 @@
     <ClCompile Include="AIScript.cpp">
       <Filter>Source Files\Entity Component System</Filter>
     </ClCompile>
-    <ClCompile Include="Fade.cpp">
-      <Filter>Source Files\GameStates</Filter>
-    </ClCompile>
     <ClCompile Include="HitboxEditor.cpp">
       <Filter>Source Files\GameStates</Filter>
     </ClCompile>
@@ -107,9 +104,6 @@
     </ClCompile>
     <ClCompile Include="OptionsMenu.cpp">
       <Filter>Source Files\GameStates</Filter>
-    </ClCompile>
-    <ClCompile Include="Options.cpp">
-      <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
     <ClCompile Include="PauseMenu.cpp">
       <Filter>Source Files\GameStates</Filter>
@@ -127,6 +121,12 @@
       <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
     <ClCompile Include="Water.cpp">
+      <Filter>Source Files\GameUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="Fade.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyBind.cpp">
       <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
   </ItemGroup>
@@ -193,9 +193,6 @@
     </ClInclude>
     <ClInclude Include="OptionsMenu.h">
       <Filter>Header Files\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="Options.h">
-      <Filter>Header Files\GameUtility</Filter>
     </ClInclude>
     <ClInclude Include="PauseMenu.h">
       <Filter>Header Files\GameStates</Filter>
