@@ -1,8 +1,11 @@
 #include "Game.h"
 
+#include "EventHandler.h"
 #include "System.h"
 #include "MainMenu.h"
+#include "PauseMenu.h"
 #include "Editor.h"
+#include <map>
 
 Game Game::game;
 
@@ -10,116 +13,48 @@ void Game::init() {
 
 	world.textureManager = &engine->textureManager;
 
-	createPlayer(&world, 900, 0);
-	//createTest(&world, 2000, 0);
-	//createCeilingPlant(&world, 100, 1000);
+	createPlayer(&world, 0, 0);
+	createTest(&world, 2000, 0);
+	createHeart(&world, 900, 500);
+	createWisp(&world, 500, 500, &metaballHandler);
+	//createCeilingPlant(&world, 3000, 1000);
+
+	/*Sound insertion code TEMPORARY*/
+
+	//sf::Vector2f size(800, 800);
+	//sf::Vector2f size2(500, 500);
+	//sf::RectangleShape * rectangle = new sf::RectangleShape(size);
+	//sf::RectangleShape * rectangle2 = new sf::RectangleShape(size2);
+	//rectangle->setFillColor(sf::Color::Blue);
+	//rectangle2->setFillColor(sf::Color::Green);
+	//eventMap.insertSound(rectangle, &world, "Music/frogs.ogg", 20.0, true);
+	//eventMap.insertSound(rectangle2, &world, "Music/drank.ogg", 25.0, true);
+	//rectangle->setPosition(1000, 1500);
+	//rectangle2->setPosition(1000, 1500);
+
+	/* End of sound code*/
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
-	collisionMap.load();
+	platformMap.load();
 
-	//platformMap.add(sf::Vector2f(0, 500), 3);
+	rect.setOutlineColor(sf::Color::Black);
+	rect.setOutlineThickness(3);
 
-	slide1.setFont(engine->textureManager.slideFont);
-	slide1.setStyle(sf::Text::Bold);
-	slide1.setCharacterSize(150);
-	slide1.setFillColor(sf::Color::Black);
-	slide1.setPosition(0, 0);
-	slide1.setString("DiaLog Studio\n");
+	metaballHandler.init(engine->window.getSize());
 
-	slide2 = sf::Text(slide1);
-	slide2.setCharacterSize(100);
-	slide2.setString("\n\n - Jesse Vomfell\n - Alex Bahna\n - Adriano Santos\n - Todd Selwitz\n");
-
-	slide3 = sf::Text(slide1);
-	slide3.setString("The Project\n");
-	slide3.setPosition(4000, 0);
-	
-	slide4 = sf::Text(slide2);
-	slide4.setString("\n\n - 2D Action Adventure Platformer\n - SFML Libraries\n - Hand Drawn Animations\n - An Orginal Soundtrack\n - A World of Ink Art\n - Inspiration...");
-	slide4.setPosition(4000, 0);
-
-	slide5 = sf::Text(slide1);
-	slide5.setString("Approaching The Project...\n");
-	slide5.setPosition(8000, -300);
-
-	slide6 = sf::Text(slide2);
-	slide6.setString("\n\n - Level Editor\n - Entity Component System\n - Convex Collision System\n - Animators / Composer\n");
-	slide6.setPosition(8000, -300);
-	platformMap.add(sf::Vector2f(9600, 200), 3);
-
-	slide7 = sf::Text(slide1);
-	slide7.setString("Jesse Vomfell - Lead Developer\n");
-	slide7.setPosition(10800, -900);
-
-	slide8 = sf::Text(slide2);
-	slide8.setString("\n\n -SFML\n - C/C++/JAVA\n - Game Development\n");
-	slide8.setPosition(10800, -900);
-
-	slide9 = sf::Text(slide1);
-	slide9.setString("Adriano Santos\n");
-	slide9.setPosition(14800, 0);
-
-	slide10 = sf::Text(slide2);
-	slide10.setString("\n\n - C/C++\n - AI Development\n - Level Editor Development\n");
-	slide10.setPosition(14800, 0);
-	createCeilingPlant(&world, 13300, 500);
-
-	slide11 = sf::Text(slide1);
-	slide11.setString("Todd Selwitz ;D\n");
-	slide11.setPosition(18800, 0);
-	int test = createTest(&world, 19000, 0);
-	
-	slide12 = sf::Text(slide2);
-	slide12.setString("\n\n - C/C++\n - Physics & Collision Development\n - AI Development\n");
-	slide12.setPosition(18800, 0);
-
-	slide13 = sf::Text(slide1);
-	slide13.setString("Alex Bahna\n");
-	slide13.setPosition(22800, 0);
-
-	slide14 = sf::Text(slide2);
-	slide14.setString("\n\n - C/C++\n - Sound Design\n - Collision & Physics Development\n - Level Design\n - FL Studio\n");
-	slide14.setPosition(22800, 0);
-
-	slide19 = sf::Text(slide1);
-	slide19.setString("Iterations\n");
-	slide19.setPosition(26800, -300);
-
-	slide20 = sf::Text(slide2);
-	slide20.setString("\n\n - Iteration 1 - Animations, Simple AI, Collisiion\n - Iteration 2 - Convex Collision, AI States\n   (Attack, Defend, Etc.)\n - Iteration 3 - Several Entities Working,\n   Interactable Objects, Hit Box Editor\n - Iteration 4 - Event Editor, Better Saves And Loads\n - Iteration 5 - \"Building The Game\"\n");
-	slide20.setPosition(26800, -300);
-
-	slide15 = sf::Text(slide1);
-	slide15.setString("Market Value\n");
-	slide15.setPosition(30800, -700);
-	
-	slide16 = sf::Text(slide2);
-	slide16.setString("\n\n - Market for 2D Games\n - Developed for PC\n - Unique Animations and Music\n");
-	slide16.setPosition(30800, -700);
-
-	slide17 = sf::Text(slide1);
-	slide17.setString("Stretch Goals\n");
-	slide17.setPosition(34800, -700);
-
-	slide18 = sf::Text(slide2);
-	slide18.setString("\n\n - Story Line\n - Polished Editor\n - Postprocessing Effects\n   - Sunrays\n   - Metaballs (INK)\n   - Canvas Texture\n - Steam Greenlight\n");
-	slide18.setPosition(34800, -700);
-
-	music.openFromFile("Music/drank.ogg");
-	music.setVolume(20);
-	music.setPosition(22800, 0, 0);
-	music.setMinDistance(1500.0f);
-	music.setAttenuation(30);
-	music.setLoop(true);
-	music.play();
+	waterHandler.load();
 
 }
 
 void Game::clean() {
 
+	metaballHandler.clean();
+	eventMap.clean();
 	cleanWorld(&world);
-	collisionMap.clean();
+	platformMap.clean();
+	objectMap.clean();
+	waterHandler.clean();
 
 }
 
@@ -140,7 +75,7 @@ void Game::handleEvent() {
 		case sf::Event::KeyPressed:
 
 			if (event.key.code == sf::Keyboard::Escape)
-				engine->changeState(MainMenu::instance(engine));
+				engine->pushState(PauseMenu::instance(engine));
 
 			if (event.key.code == sf::Keyboard::Tab)
 				engine->changeState(Editor::instance(engine));
@@ -154,11 +89,17 @@ void Game::handleEvent() {
 			if (event.key.code == sf::Keyboard::D)
 				world.input[PLAYER].right = true;
 
-			if (event.key.code == sf::Keyboard::Space)
+			if (event.key.code == sf::Keyboard::L)
+				drawPlatforms = !drawPlatforms;
+
+			if (event.key.code == sf::Keyboard::J)
 				world.input[PLAYER].attack = true;
+			if (event.key.code == sf::Keyboard::K) {
+				world.input[PLAYER].special = true;
+			}
 
 			if (event.key.code == sf::Keyboard::LShift)
-				world.input[PLAYER].special = true;
+				metaballHandler.sunburst(sf::Vector2f(world.position[0].x, world.position[0].y), 20);
 
 			if (event.key.code == sf::Keyboard::R)
 				world.health[0].current = 0;
@@ -176,11 +117,11 @@ void Game::handleEvent() {
 			if (event.key.code == sf::Keyboard::D)
 				world.input[PLAYER].right = false;
 
-			if (event.key.code == sf::Keyboard::Space)
+			if (event.key.code == sf::Keyboard::J)
 				world.input[PLAYER].attack = false;
-
-			if (event.key.code == sf::Keyboard::LShift)
+			if (event.key.code == sf::Keyboard::K) {
 				world.input[PLAYER].special = false;
+			}
 
 			break;
 
@@ -198,54 +139,60 @@ void Game::update(const float dt) {
 	}
 
 	aiSystem(&world, dt);
+	animationSystem(&world, dt);
 	inputSystem(&world);
 	gravitySystem(&world);
-	collisionSystem(&world, &collisionMap);
-	//PUT shapeCollisionSystem here
-	//animationSystem(&world, dt, PLAYER);
+	shapeCollSystem(&world, &platformMap);
 	movementSystem(&world);
 	damageSystem(&world, dt);
+
+	//for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)	
+	//if (eventMap.eit->second->isTriggered()) 
+	//eventMap.eit->second->trigger();
+
+	waterHandler.update();
+	waterHandler.updateWaves(dt);
 
 	//listener.setPosition(world.position[0].x, world.position[0].y, 0);
 	sf::Listener::setPosition(world.position[0].x, 0, world.position[0].y);
 
-	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2.5, engine->window.getDefaultView().getSize().y * 2.5));
+	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 3.5f, engine->window.getDefaultView().getSize().y * 3.5f));
 	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y - view.getSize().y / 4));
 	engine->window.setView(view);
+
+	metaballHandler.metaballAddTexture.setView(view);
+	metaballHandler.metaballShadedSprite.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2);
+	metaballHandler.update(dt);
+
+	/* Hitbox Temp */
+	//rect.setSize(sf::Vector2f(world.sprite[0].sprite.getLocalBounds().width, world.sprite[0].sprite.getLocalBounds().height));
+	//rect.setPosition(sf::Vector2f(world.sprite[0].sprite.getGlobalBounds().left, world.sprite[0].sprite.getGlobalBounds().top));
 
 }
 
 void Game::render(const float dt) {
 
-	std::map<float, Object *>::iterator it;
-	for (it = objectMap.map.begin(); it != objectMap.map.end(); it++)
-		engine->window.draw(it->second->sprite);
+	objectMap.drawSuperBackground(&engine->window);
 
-	engine->window.draw(collisionMap.lines);
-
-	engine->window.draw(slide1);
-	engine->window.draw(slide2);
-	engine->window.draw(slide3);
-	engine->window.draw(slide4);
-	engine->window.draw(slide5);
-	engine->window.draw(slide6);
-	engine->window.draw(slide7);
-	engine->window.draw(slide8);
-	engine->window.draw(slide9);
-	engine->window.draw(slide10);
-	engine->window.draw(slide11);
-	engine->window.draw(slide12);
-	engine->window.draw(slide13);
-	engine->window.draw(slide14);
-	engine->window.draw(slide15);
-	engine->window.draw(slide16);
-	engine->window.draw(slide17);
-	engine->window.draw(slide18);
-	engine->window.draw(slide19);
-	engine->window.draw(slide20);
+	objectMap.drawBackground(&engine->window);
 
 	renderSystem(&world, &engine->window);
 
-	for (platformMap.pit = platformMap.platformMap.begin(); platformMap.pit != platformMap.platformMap.end(); platformMap.pit++)
-		engine->window.draw(*(platformMap.pit->second->shape));
+	metaballHandler.draw(&engine->window);
+
+	waterHandler.draw(&engine->window);
+
+	engine->window.draw(rect);
+
+	objectMap.drawForeground(&engine->window);
+
+	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)
+	{
+		engine->window.draw(*eventMap.eit->second->eventArea);
+	}
+
+	if (drawPlatforms)
+		for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)
+			engine->window.draw(*(pit->second));
+
 }

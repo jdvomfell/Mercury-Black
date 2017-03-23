@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "TextureManager.h"
+#include "Metaball.h"
 
 #define MAX_ENTITIES 100
 
@@ -31,5 +32,8 @@ void destroyEntity(World * world, int entityID);
 int createTest(World * world, float x, float y);
 int createPlayer(World * world, float x, float y);
 int createCeilingPlant(World * world, float x, float y);
+int createWisp(World * world, float x, float y, MetaballHandler * metaballHandler);
+
+int createHeart(World * world, float x, float y);
 
 #endif

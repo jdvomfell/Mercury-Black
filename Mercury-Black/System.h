@@ -3,6 +3,7 @@
 
 #include "Entity.h"
 #include "CollisionMap.h"
+#include "PlatformMap.h"
 #include "AIScript.h"
 
 void aiSystem(World * world, float dt);
@@ -12,6 +13,6 @@ void damageSystem(World * world, float dt);
 void gravitySystem(World * world);
 void movementSystem(World * world);
 void animationSystem(World * world, float dt);
-void collisionSystem(World * world, CollisionMap * collisionMap);
+void shapeCollSystem(World * world, PlatformMap * platformMap);
 
 #endif

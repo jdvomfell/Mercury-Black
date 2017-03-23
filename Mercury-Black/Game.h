@@ -5,10 +5,13 @@
 
 #include "GameState.h"
 
+#include "EventHandler.h"
 #include "Entity.h"
 #include "ObjectMap.h"
 #include "PlatformMap.h"
 #include "CollisionMap.h"
+#include "Metaball.h"
+#include "Water.h"
 
 #define PLAYER (0)
 
@@ -36,33 +39,18 @@ private:
 	sf::View view;
 
 	ObjectMap objectMap;
+	EventHandler eventMap;
 	PlatformMap platformMap;
-	CollisionMap collisionMap;
-	
+	WaterHandler waterHandler;
+	MetaballHandler metaballHandler;
+
 	World world;
 
-	sf::Text slide1;
-	sf::Text slide2;
-	sf::Text slide3;
-	sf::Text slide4;
-	sf::Text slide5;
-	sf::Text slide6;
-	sf::Text slide7;
-	sf::Text slide8;
-	sf::Text slide9;
-	sf::Text slide10;
-	sf::Text slide11;
-	sf::Text slide12;
-	sf::Text slide13;
-	sf::Text slide14;
-	sf::Text slide15;
-	sf::Text slide16;
-	sf::Text slide17;
-	sf::Text slide18;
-	sf::Text slide19;
-	sf::Text slide20;
-	sf::Text slide21;
-	sf::Text slide22;
+	sf::RectangleShape rect;
+
+	bool drawPlatforms;
+
+	std::map <float, sf::ConvexShape *>::iterator pit;
 
 	sf::Music music;
 

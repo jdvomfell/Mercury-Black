@@ -1,4 +1,5 @@
 #include "HitboxEditor.h"
+#include "MainMenu.h"
 
 HitboxEditor HitboxEditor::hitboxEditor;
 

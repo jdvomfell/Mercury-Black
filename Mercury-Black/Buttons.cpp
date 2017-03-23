@@ -2,86 +2,100 @@
 #include "Editor.h"
 #include "Game.h"
 #include "HitboxEditor.h"
+#include "MainMenu.h"
+#include "HitboxEditor.h"
+#include "OptionsMenu.h"
 #include "Fade.h"
+#include <string>
 
-GUI_HitboxEditor::GUI_HitboxEditor(float x, float y, sf::Color color, int size, sf::Font * font) {
+TextButton::TextButton(std::string name, float x, float y, int size, sf::Font * font, eventFunction funcPtr) {
 
-	text = sf::Text("HB Editor", *font, size);
+	text = sf::Text(name, *font, size);
 	text.setPosition(x, y);
-	text.setFillColor(color);
+
+	text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
+
+	m_funcPtr = funcPtr;
+}
+
+bool TextButton::isSelected(sf::Vector2f position) {
+
+	if (text.getGlobalBounds().contains(position)) {
+
+		text.setFillColor(sf::Color::Black);
+
+		return true;
+
+	}
+
+	text.setFillColor(sf::Color(100, 100, 100, 255));
+
+	return false;
 
 }
 
-void GUI_HitboxEditor::interact(GameEngine * engine) {
+void TextButton::draw(sf::RenderWindow * window) {
 
-	engine->changeState(HitboxEditor::instance(engine));
-
-}
-
-GUI_NewGame::GUI_NewGame(float x, float y, sf::Color color, int size, sf::Font * font) {
-
-	text = sf::Text("New", *font, size);
-	text.setPosition(x, y);
-	text.setFillColor(color);
+	window->draw(text);
 
 }
 
-void GUI_NewGame::interact(GameEngine * engine) {
+IconButton::IconButton(float x, float y, sf::Texture * texture, eventFunction funcPtr) {
 
+	sprite.setTexture(*texture);
+	sprite.setPosition(x, y);
+
+	m_funcPtr = funcPtr;
+
+}
+
+bool IconButton::isSelected(sf::Vector2f position) {
+
+	if (sprite.getGlobalBounds().contains(position)) {
+
+		sprite.setColor(sf::Color::Black);
+
+		return true;
+
+	}
+
+	sprite.setColor(sf::Color::White);
+
+	return false;
+
+}
+
+void IconButton::draw(sf::RenderWindow * window) {
+
+	window->draw(sprite);
+
+}
+
+// functions that the function pointer in Button will point to
+void changeToGame(GameEngine * engine) {
 	engine->changeState(Game::instance(engine));
-
 }
-
-GUI_LoadGame::GUI_LoadGame(float x, float y, sf::Color color, int size, sf::Font * font) {
-
-	text = sf::Text("Load", *font, size);
-	text.setPosition(x, y);
-	text.setFillColor(color);
-
+void popState(GameEngine * engine) {
+	engine->popState();
 }
-
-void GUI_LoadGame::interact(GameEngine * engine) {
-
-}
-
-GUI_Editor::GUI_Editor(float x, float y, sf::Color color, int size, sf::Font * font) {
-
-	text = sf::Text("Editor", *font, size);
-	text.setPosition(x, y);
-	text.setFillColor(color);
-
-}
-
-void GUI_Editor::interact(GameEngine * engine) {
-
+void changeToEditor(GameEngine * engine) {
 	engine->changeState(Editor::instance(engine));
-
 }
-
-GUI_Options::GUI_Options(float x, float y, sf::Color color, int size, sf::Font * font) {
-
-	text = sf::Text("Options", *font, size);
-	text.setPosition(x, y);
-	text.setFillColor(color);
-
+void changeToHitboxEditor(GameEngine * engine) {
+	engine->changeState(HitboxEditor::instance(engine));
 }
-
-void GUI_Options::interact(GameEngine * engine) {
-
+void changeToMainMenu(GameEngine * engine) {
+	engine->changeState(MainMenu::instance(engine));
 }
-
-GUI_Quit::GUI_Quit(float x, float y, sf::Color color, int size, sf::Font * font) {
-
-	text = sf::Text("Quit", *font, size);
-	text.setPosition(x, y);
-	text.setFillColor(color);
-
-
-
+void changeToOptionsMenu(GameEngine * engine) {
+	engine->pushState(OptionsMenu::instance(engine));
 }
-
-void GUI_Quit::interact(GameEngine * engine) {
-
+void changeToKeyBindings(GameEngine * engine) {
+	engine->pushState(KeyBind::instance(engine));
+}
+void quitGame(GameEngine * engine) {
 	engine->quit();
-
+}
+void doNothing(GameEngine * engine) {
+	return;
 }

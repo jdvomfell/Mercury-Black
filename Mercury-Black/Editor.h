@@ -4,21 +4,14 @@
 #include <SFML/Graphics.hpp>
 #include <map>
 
+#include "Water.h"
 #include "CollisionMap.h"
 #include "ObjectMap.h"
 #include "GameState.h"
-
-/* Editing Types */
-
-#define POINT 1
-#define OBJECT 2
-#define PLATFORM 3
-
-/* Editing Tools */
-
-#define PLACE 1
-#define DELETE 2
-#define MOVE 3
+#include "PlatformMap.h"
+#include "GUI.h"
+#include "Buttons.h"
+#include "ToolBox.h"
 
 class Selector {
 
@@ -34,8 +27,6 @@ class Editor : public GameState {
 
 public:
 
-	sf::View view;
-
 	void init();
 	void clean();
 
@@ -47,8 +38,7 @@ public:
 
 	/* Utility Functions */
 
-	void rotateMode();
-	void rotateTool();
+	void deselect();
 
 	/* Object */
 
@@ -63,27 +53,28 @@ private:
 	Selector selector;
 	static Editor editor;
 
-	CollisionMap collisionMap;
 	ObjectMap objectMap;
+	PlatformMap platformMap;
+	WaterHandler waterHandler;
 
-	int mode;
-	int tool;
-
+	bool doSpeedUp;
 	bool doLeft;
 	bool doRight;
 	bool doUp;
 	bool doDown;
-
-	bool showLines;
 
 	float viewVelX;
 	float viewVelY;
 
 	float zoom;
 
-	sf::Text modeText;
-	sf::Text toolText;
-	sf::Text textureText;
+	ToolBox toolBox;
+
+	sf::View view;
+
+	sf::Vector2f zoomPosition;
+	sf::Vector2f corner1;
+	sf::Vector2f corner2;
 
 };
 

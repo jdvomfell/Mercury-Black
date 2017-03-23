@@ -42,6 +42,7 @@ void destroyEntity(World * world, int entityID) {
 	world->velocity[entityID].x = 0.0f;
 	world->velocity[entityID].y = 0.0f;
 	world->velocity[entityID].speed = 0.0f;
+	world->velocity[entityID].speedUp = 1.0f;
 	world->velocity[entityID].canJump = false;
 	world->velocity[entityID].onGround = false;
 
@@ -82,6 +83,7 @@ int createPlayer(World * world, float x, float y) {
 	world->velocity[entityID].x = 0.0f;
 	world->velocity[entityID].y = 0.0f;
 	world->velocity[entityID].speed = 15.0f;
+	world->velocity[entityID].speedUp = 1.0f;
 	world->velocity[entityID].canJump = false;
 	world->velocity[entityID].onGround = false;
 
@@ -108,7 +110,13 @@ int createPlayer(World * world, float x, float y) {
 
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "inAir", 1, 0.001f);
+
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "roll", 5, 0.1f);
 	
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "inkArmAttack", 9, 0.1f);
+
 	return entityID;
 
 }
@@ -116,7 +124,6 @@ int createPlayer(World * world, float x, float y) {
 int createCeilingPlant(World * world, float x, float y) {
 
 	int entityID = createEntity(world);
-	int i;
 	std::string plantName, temp;
 
 	world->mask[entityID] = NAME | INPUT | POSITION | SPRITE | SCRIPT | STATS | HEALTH;
@@ -128,8 +135,12 @@ int createCeilingPlant(World * world, float x, float y) {
 
 	world->scriptParameters[entityID].attackRangeMax = 700.0f;
 	world->scriptParameters[entityID].attackRangeMin = 0.0f;
+
+	world->scriptParameters[entityID].followDistMax = 500.0f;
+	world->scriptParameters[entityID].followDistMin = 0.0f;
+
 	world->scriptParameters[entityID].spawnDistance = 500.0f;
-	world->scriptParameters[entityID].currentState = 5; //NOTSPAWNSTATE
+	world->scriptParameters[entityID].currentState = NOT_SPAWNED_STATE;
 	
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "idle", 11, 0.1f);
@@ -160,12 +171,13 @@ int createTest(World * world, float x, float y) {
 	world->velocity[entityID].x = 0.0f;
 	world->velocity[entityID].y = 0.0f;
 	world->velocity[entityID].speed = 8.0f;
+	world->velocity[entityID].speedUp = 1.0f;
 	world->velocity[entityID].canJump = false;
 	world->velocity[entityID].onGround = false;
 
 	world->gravity[entityID].weight = 1.0f;
 
-	world->stats[entityID].power = 0;
+	world->stats[entityID].power = 10;
 
 	world->health[entityID].max = 100;
 	world->health[entityID].current = world->health[entityID].max;
@@ -185,6 +197,58 @@ int createTest(World * world, float x, float y) {
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "idleAttack", 8, 0.1f);
 	
+	return entityID;
+
+}
+
+int createWisp(World * world, float x, float y, MetaballHandler * metaballHandler) {
+
+	int entityID = createEntity(world);
+
+	world->mask[entityID] = NAME | HEALTH | SCRIPT | POSITION | VELOCITY | STATS | INPUT | FLYING;
+
+	world->name[entityID].name = "wisp";
+
+	world->health[entityID].max = 100;
+	world->health[entityID].current = 100;
+
+	world->scriptParameters[entityID].followDistMin = 0;
+	world->scriptParameters[entityID].followDistMax = 1000;
+	world->scriptParameters[entityID].currentState = NO_STATE;
+
+	world->position[entityID].x = x;
+	world->position[entityID].x = y;
+
+	world->velocity[entityID].speed = 10.0f;
+	world->velocity[entityID].speedUp = 1.0f;
+
+	world->stats[entityID].power = 5;
+
+	world->sprite[entityID].metaballSpawner = new MetaballSpawner(metaballHandler, sf::Vector2f(x, y), sf::Vector2f(0, 0.5f), -0.03f, 1.5f, 13, 5, 5);
+	metaballHandler->addSpawner(world->sprite[entityID].metaballSpawner);
+
+	return entityID;
+
+}
+
+int createHeart(World * world, float x, float y) {
+
+	int entityID = createEntity(world);
+
+	world->mask[entityID] = NAME | HEALTH | SCRIPT | SPRITE | POSITION;
+
+	world->name[entityID].name = "heart";
+
+	world->health[entityID].max = 1;
+	world->health[entityID].current = 1;
+
+	world->scriptParameters[entityID].currentState = NO_STATE;
+
+	world->sprite[entityID].sprite.setTexture(*world->textureManager->getTexture("heart"));
+
+	world->position[entityID].x = x;
+	world->position[entityID].y = y;
+
 	return entityID;
 
 }

@@ -32,23 +32,19 @@ protected:
 
 private:
 
-	sf::Color hText;
-	sf::Color uText;
-
 	static MainMenu mainMenu;
-
-	std::vector <GUI *> buttons;
-
-	GUI_NewGame newButton;
-	GUI_LoadGame loadButton;
-	GUI_Editor editorButton;
-	GUI_HitboxEditor hitboxEditorButton;
-	GUI_Options optionsButton;
-	GUI_Quit quitButton;
 
 	sf::Text title;
 
 	sf::View view;
+
+	GUI_Handler guiHandler;
+	TextButton newButton;
+	TextButton loadButton;
+	TextButton editorButton;
+	TextButton hitboxEditorButton;
+	TextButton optionsButton;
+	TextButton quitButton;
 
 };
 

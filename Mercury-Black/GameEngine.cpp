@@ -23,8 +23,10 @@ void GameEngine::clean() {
 void GameEngine::changeState(GameState * state) {
 
 	if (!states.empty()) {
-		states.back()->clean();
-		states.pop_back();
+		for (size_t i = 0; i < states.size(); i++) {
+			states[i]->clean();
+		}
+		states.clear();
 	}
 
 	states.push_back(state);
@@ -62,7 +64,6 @@ void GameEngine::update(const float dt) {
 
 void GameEngine::render(const float dt) {
 
-	//window.clear(sf::Color::White);
 	window.clear(sf::Color(248, 240, 225));
 
 	for (size_t i = 0; i < states.size(); i++)

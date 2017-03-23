@@ -99,7 +99,15 @@ void TextureManager::loadAllTextures() {
 	/* Idle Attack */
 
 	loadTextures("player_idleAttack", "Textures/Player/Idle-Attack/", 8);
+
+	/* Roll */
+
+	loadTextures("player_roll", "Textures/Player/Roll/", 5);
 	
+	/* InkAttack */
+
+	loadTextures("player_inkArmAttack", "Textures/Player/Ink-Attack/", 9);
+
 	///Ceiling Plant///
 
 	/* Spawn */
@@ -173,17 +181,31 @@ void TextureManager::loadAllTextures() {
 	
 	/////PLAY//////
 
-	loadTexture("toriiGate_1", "Textures/Test/ToriiGate1.png");
-	loadTexture("toriiGate_2", "Textures/Test/ToriiGate2.png");
-	loadTexture("toriiGate_3", "Textures/Test/ToriiGate3.png");
-	loadTexture("toriiGate_4", "Textures/Test/ToriiGate4.png");
-	loadTexture("toriiGate_5", "Textures/Test/ToriiGate5.png");
-	loadTexture("treeTest_1", "Textures/Test/TreeTest1.png");
-	loadTexture("Background", "Textures/Test/Background.png");
-	loadTexture("tree", "Textures/Test/tree.png");
-	loadTexture("alex", "alex.jpg");
-	loadTexture("todd", "todd.JPG");
-	loadTexture("adriano", "adrian.JPG");
+	loadTexture("spring_background_1", "Textures/Test/spring_background_1.png");
+	loadTexture("spring_cliff_1", "Textures/Test/spring_cliff_1.png");
+	loadTexture("spring_cliff_2", "Textures/Test/spring_cliff_2.png");
+	loadTexture("spring_tree_1", "Textures/Test/spring_tree_1.png");
+	loadTexture("spring_tree_2", "Textures/Test/spring_tree_2.png");
+	loadTexture("spring_log_1", "Textures/Test/spring_log_1.png");
+	loadTexture("heart", "Textures/Test/heart.png");
+	loadTexture("spring_ground_1", "Textures/Test/spring_ground_1.png");
+	loadTexture("spring_ground_2", "Textures/Test/spring_ground_2.png");
+	loadTexture("spring_ground_3", "Textures/Test/spring_ground_3.png");
+	loadTexture("spring_ground_4", "Textures/Test/spring_ground_4.png");
+	loadTexture("toriiGate_1_back", "Textures/Test/toriiGate_1_back.png");
+	loadTexture("toriiGate_1_front", "Textures/Test/toriiGate_1_front.png");
+	loadTexture("statue_1", "Textures/Test/statue_1.png");
+	loadTexture("bridge_1_back", "Textures/Test/bridge_1_back.png");
+	loadTexture("bridge_1_front", "Textures/Test/bridge_1_front.png");
+
+	/////ICONS/////
+
+	loadTexture("boxTool", "Textures/boxTool.png");
+	loadTexture("freeTool", "Textures/freeTool.png");
+	loadTexture("groundTool", "Textures/groundTool.png");
+	loadTexture("eventTool", "Textures/eventTool.png");
+	loadTexture("objectTool", "Textures/objectTool.png");
+	loadTexture("waterTool", "Textures/waterTool.png");
 
 	printf("LOAD TEXTURE\n");
 
