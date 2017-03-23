@@ -63,14 +63,25 @@ void ObjectMap::load() {
 
 		numObjects++;
 
-		object.flipx = flipx;
-		object.rotate = rotate;
-		object.scale = scale;
-		object.layer = layer;
-		object.position = sf::Vector2f(x, y);
-		object.textureName = name;
+		tempObject = new Object;
 
-		insert(object.position);
+		tempObject->flipx = !flipx;
+		tempObject->rotate = rotate;
+		tempObject->scale = scale;
+		tempObject->layer = layer;
+		tempObject->position = sf::Vector2f(x, y);
+		tempObject->textureName = name;
+		
+		tempObject->sprite.setTexture(textureManager->textures.find(tempObject->textureName)->second);
+		tempObject->sprite.setOrigin(tempObject->sprite.getLocalBounds().width / 2, tempObject->sprite.getLocalBounds().height / 2);
+		tempObject->sprite.setPosition(tempObject->position);
+		tempObject->sprite.setColor(sf::Color::White);
+
+		objectFlipx(tempObject);
+		objectRotate(tempObject, 0);
+		objectScale(tempObject, 0);
+
+		insert(tempObject);
 
 	}
 
@@ -106,6 +117,13 @@ void ObjectMap::clean() {
 
 }
 
+void ObjectMap::insert(Object * tempObject) {
+
+	map.insert(std::make_pair(tempObject->position.x, tempObject));
+	layerMap.insert(std::make_pair(tempObject->layer, tempObject));
+
+}
+
 void ObjectMap::insert(sf::Vector2f position) {
 
 	if (textureManager->textures.find(object.textureName) == textureManager->textures.end()) {
@@ -113,7 +131,7 @@ void ObjectMap::insert(sf::Vector2f position) {
 		return;
 	}
 
-	Object * tempObject = new Object;
+	Object * tempObject = new Object(object);
 
 	tempObject->flipx = !object.flipx;
 	tempObject->rotate = object.rotate;
@@ -126,13 +144,14 @@ void ObjectMap::insert(sf::Vector2f position) {
 
 	tempObject->position = position;
 	tempObject->sprite.setPosition(position);
+	tempObject->sprite.setColor(sf::Color::White);
 
 	map.insert(std::make_pair(tempObject->position.x, tempObject));
 	layerMap.insert(std::make_pair(tempObject->layer, tempObject));
 
-	flipx(tempObject);
-	rotate(tempObject, 0);
-	scale(tempObject, 0);
+	objectFlipx(tempObject);
+	objectRotate(tempObject, 0);
+	objectScale(tempObject, 0);
 
 }
 
@@ -171,7 +190,7 @@ void ObjectMap::draw(sf::RenderWindow * window) {
 void ObjectMap::drawForeground(sf::RenderWindow * window) {
 
 	std::multimap<int, Object *>::iterator it;
-	for (it = layerMap.lower_bound(30); it != layerMap.end(); it++)
+	for (it = layerMap.lower_bound(20); it != layerMap.end(); it++)
 		window->draw(it->second->sprite);
 
 	return;
@@ -181,7 +200,17 @@ void ObjectMap::drawForeground(sf::RenderWindow * window) {
 void ObjectMap::drawBackground(sf::RenderWindow * window) {
 
 	std::multimap<int, Object *>::iterator it;
-	for (it = layerMap.begin(); it != layerMap.lower_bound(30); it++)
+	for (it = layerMap.lower_bound(10); it != layerMap.lower_bound(20); it++)
+		window->draw(it->second->sprite);
+
+	return;
+
+}
+
+void ObjectMap::drawSuperBackground(sf::RenderWindow * window) {
+
+	std::multimap<int, Object *>::iterator it;
+	for (it = layerMap.begin(); it != layerMap.lower_bound(10); it++)
 		window->draw(it->second->sprite);
 
 	return;
@@ -231,7 +260,7 @@ std::map <float, Object *>::iterator ObjectMap::findClosest(sf::Vector2f positio
 
 }
 
-void ObjectMap::changeObject() {
+void ObjectMap::nextObject() {
 	
 	if (textureManager->textures.find(object.textureName) == --textureManager->textures.end())
 		object.textureName = textureManager->textures.begin()->first;
@@ -239,6 +268,27 @@ void ObjectMap::changeObject() {
 		object.textureName = textureManager->textures.begin()->first;
 	else
 		object.textureName = (++textureManager->textures.find(object.textureName))->first;
+
+	object.sprite.setTexture(textureManager->textures.at(object.textureName));
+	object.sprite.setTextureRect(sf::IntRect(0, 0, textureManager->textures.at(object.textureName).getSize().x, textureManager->textures.at(object.textureName).getSize().y));
+	object.sprite.setOrigin(object.sprite.getGlobalBounds().width / 2, object.sprite.getGlobalBounds().height / 2);
+	object.sprite.setColor(sf::Color(0, 0, 0, 100));
+
+}
+
+void ObjectMap::prevObject() {
+
+	if(textureManager->textures.find(object.textureName) == textureManager->textures.begin())
+		object.textureName = (--textureManager->textures.end())->first;
+	else if(textureManager->textures.find(object.textureName) == textureManager->textures.end())
+		object.textureName = textureManager->textures.begin()->first;
+	else
+		object.textureName = (--textureManager->textures.find(object.textureName))->first;
+
+	object.sprite.setTexture(textureManager->textures.at(object.textureName));
+	object.sprite.setTextureRect(sf::IntRect(0, 0, textureManager->textures.at(object.textureName).getSize().x, textureManager->textures.at(object.textureName).getSize().y));
+	object.sprite.setOrigin(object.sprite.getGlobalBounds().width / 2, object.sprite.getGlobalBounds().height / 2);
+	object.sprite.setColor(sf::Color(0, 0, 0, 100));
 
 }
 
@@ -255,12 +305,13 @@ ObjectMap::ObjectMap(TextureManager * textureManager) {
 
 	this->textureManager = textureManager;
 	object.textureName = this->textureManager->textures.begin()->first;
-	object.layer = 0;
+	object.sprite.setTexture(this->textureManager->textures.begin()->second);
+	object.layer = 15;
 	object.position = sf::Vector2f(0, 0);
 
 }
 
-void ObjectMap::flipx(Object* object) {
+void ObjectMap::objectFlipx(Object* object) {
 
 	if (object == NULL) return;
 
@@ -277,11 +328,11 @@ void ObjectMap::flipx(Object* object) {
 	return;
 }
 
-void ObjectMap::flipy(Object* object) {
+void ObjectMap::objectFlipy(Object* object) {
 	
 	if (object == NULL) return;
 
-	flipx(object);
+	objectFlipx(object);
 	object->sprite.setRotation(selected->second->rotate + 180);
 
 	object->rotate += 180;
@@ -292,7 +343,7 @@ void ObjectMap::flipy(Object* object) {
 	return;
 }
 
-void ObjectMap::rotate(Object* object, float mod) {
+void ObjectMap::objectRotate(Object* object, float mod) {
 	
 	if (object == NULL) return;
 
@@ -305,7 +356,7 @@ void ObjectMap::rotate(Object* object, float mod) {
 
 }
 
-void ObjectMap::scale(Object* object, float mod) {
+void ObjectMap::objectScale(Object* object, float mod) {
 
 	if (object == NULL) return;
 

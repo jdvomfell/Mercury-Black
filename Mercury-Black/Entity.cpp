@@ -42,6 +42,7 @@ void destroyEntity(World * world, int entityID) {
 	world->velocity[entityID].x = 0.0f;
 	world->velocity[entityID].y = 0.0f;
 	world->velocity[entityID].speed = 0.0f;
+	world->velocity[entityID].speedUp = 1.0f;
 	world->velocity[entityID].canJump = false;
 	world->velocity[entityID].onGround = false;
 
@@ -82,6 +83,7 @@ int createPlayer(World * world, float x, float y) {
 	world->velocity[entityID].x = 0.0f;
 	world->velocity[entityID].y = 0.0f;
 	world->velocity[entityID].speed = 15.0f;
+	world->velocity[entityID].speedUp = 1.0f;
 	world->velocity[entityID].canJump = false;
 	world->velocity[entityID].onGround = false;
 
@@ -108,6 +110,9 @@ int createPlayer(World * world, float x, float y) {
 
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "inAir", 1, 0.001f);
+
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "roll", 5, 0.1f);
 	
 	return entityID;
 
@@ -163,6 +168,7 @@ int createTest(World * world, float x, float y) {
 	world->velocity[entityID].x = 0.0f;
 	world->velocity[entityID].y = 0.0f;
 	world->velocity[entityID].speed = 8.0f;
+	world->velocity[entityID].speedUp = 1.0f;
 	world->velocity[entityID].canJump = false;
 	world->velocity[entityID].onGround = false;
 
@@ -192,6 +198,36 @@ int createTest(World * world, float x, float y) {
 
 }
 
+int createWisp(World * world, float x, float y, MetaballHandler * metaballHandler) {
+
+	int entityID = createEntity(world);
+
+	world->mask[entityID] = NAME | HEALTH | SCRIPT | POSITION | VELOCITY | STATS | INPUT | FLYING;
+
+	world->name[entityID].name = "wisp";
+
+	world->health[entityID].max = 100;
+	world->health[entityID].current = 100;
+
+	world->scriptParameters[entityID].followDistMin = 0;
+	world->scriptParameters[entityID].followDistMax = 1000;
+	world->scriptParameters[entityID].currentState = NO_STATE;
+
+	world->position[entityID].x = x;
+	world->position[entityID].x = y;
+
+	world->velocity[entityID].speed = 5.0f;
+	world->velocity[entityID].speedUp = 1.0f;
+
+	world->stats[entityID].power = 5;
+
+	world->sprite[entityID].metaballSpawner = new MetaballSpawner(metaballHandler, sf::Vector2f(x, y), sf::Vector2f(0, 0.5f), -0.08f, 2.0f, 10, 5, 1);
+	metaballHandler->addSpawner(world->sprite[entityID].metaballSpawner);
+
+	return entityID;
+
+}
+
 int createHeart(World * world, float x, float y) {
 
 	int entityID = createEntity(world);
@@ -202,7 +238,6 @@ int createHeart(World * world, float x, float y) {
 
 	world->health[entityID].max = 1;
 	world->health[entityID].current = 1;
-	world->health[entityID].hurtTimer = 1;
 
 	world->scriptParameters[entityID].currentState = NO_STATE;
 

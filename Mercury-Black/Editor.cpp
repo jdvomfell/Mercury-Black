@@ -9,36 +9,20 @@
 
 Editor Editor::editor;
 
-#define DEFAULT_TEXT_SIZE 60.0f
-
 void Editor::init() {
 
 	selector = Selector();
 
-	showLines = true;
-	mode = PLATFORM;
-	tool = PLACE;
-
-	modeText = sf::Text("Mode: Platform", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
-	modeText.setFillColor(sf::Color::Black);
-
-	toolText = sf::Text("Tool: Place", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
-	toolText.setFillColor(sf::Color::Black);
-
-	textureText = sf::Text("", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
-	textureText.setFillColor(sf::Color::Black);
-
-	morphText = sf::Text("", engine->textureManager.slideFont, DEFAULT_TEXT_SIZE);
-	morphText.setFillColor(sf::Color::Black);
-
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
-	textureText.setString(objectMap.object.textureName);
-
 	platformMap.load();
 
 	zoom = 2.0f;
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2.0f, engine->window.getDefaultView().getSize().y * 2.0f));
+
+	toolBox = ToolBox(engine);
+
+	waterHandler.load();
 
 }
 
@@ -46,6 +30,7 @@ void Editor::clean() {
 
 	objectMap.clean();
 	platformMap.clean();
+	waterHandler.clean();
 
 }
 
@@ -61,127 +46,172 @@ void Editor::handleEvent() {
 		engine->quit();
 		break;
 
+	case sf::Event::MouseMoved:
+		if (toolBox.getMode() == OBJECT) {
+			objectMap.object.sprite.setPosition(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y)));
+		}
+		zoomPosition = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
+		toolBox.highlightButtons(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
+		engine->window.setView(view);
+		break;
+
 	case sf::Event::MouseWheelScrolled:
 
 		if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
-			zoom += event.mouseWheelScroll.delta;
+			zoom -= event.mouseWheelScroll.delta;
 
 		if (zoom < 1.0f)
 			zoom = 1.0f;
 
-		if (zoom > 5.0f)
-			zoom = 5.0f;
+		if (zoom > 10.0f)
+			zoom = 10.0f;
 
+		if (event.mouseWheelScroll.delta > 0)
+			view.move((zoomPosition - view.getCenter()) / zoom);
 		view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * zoom, engine->window.getDefaultView().getSize().y * zoom));
-		modeText.setCharacterSize(DEFAULT_TEXT_SIZE * zoom / 2.0f);
-		toolText.setCharacterSize(DEFAULT_TEXT_SIZE * zoom / 2.0f);
-		textureText.setCharacterSize(DEFAULT_TEXT_SIZE * zoom / 2.0f);
-		morphText.setCharacterSize(DEFAULT_TEXT_SIZE * zoom / 2.0f);
 
 		break;
 
 	case sf::Event::MouseButtonPressed:
 
-		if (event.mouseButton.button == sf::Mouse::Left) {
+		if(toolBox.contains(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))) {
 
-			if (mode == OBJECT) {
-				objectMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
-			}
+			toolBox.clickButtons(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
 
-			else if (mode == PLATFORM) {
-				
-				if (tool == BOX) {
+			engine->window.setView(view);
+
+		}
+
+		else {
+
+			engine->window.setView(view);
+
+			if (event.mouseButton.button == sf::Mouse::Left) {
+
+				if (toolBox.getMode() == OBJECT) {
+					objectMap.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+				}
+
+				else if (toolBox.getMode() == PLATFORM) {
+
+					if (toolBox.getTool() == BOX_PLACE) {
+						corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+					}
+
+					else if (toolBox.getTool() == GROUND_PLACE) {
+						if (platformMap.selected != platformMap.map.end())
+							platformMap.selected->second->setOutlineThickness(0);
+
+						platformMap.insertGround(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+
+						if (platformMap.selected != platformMap.map.end()) {
+							platformMap.selected->second->setOutlineThickness(5);
+							platformMap.selected->second->setOutlineColor(sf::Color::Red);
+						}
+					}
+					else
+						platformMap.platformPoints.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+				}
+
+				else if (toolBox.getMode() == WATER) {
 					corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
 				}
 
-				else if (tool == GROUND) {
+			}
+
+			if (event.mouseButton.button == sf::Mouse::Right) {
+
+				selector.rect.setOutlineColor(sf::Color::Transparent);
+
+				if (toolBox.getMode() == PLATFORM) {
+
 					if (platformMap.selected != platformMap.map.end())
 						platformMap.selected->second->setOutlineThickness(0);
 
-					platformMap.insertGround(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+					platformMap.selected = platformMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
 					if (platformMap.selected != platformMap.map.end()) {
+						toolBox.selectPlatform(platformMap.selected->second);
 						platformMap.selected->second->setOutlineThickness(5);
 						platformMap.selected->second->setOutlineColor(sf::Color::Red);
 					}
-				}
-				else
-					platformMap.platformPoints.insert(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
-			}
 
-		}
-
-		if (event.mouseButton.button == sf::Mouse::Right) {
-
-			selector.rect.setOutlineColor(sf::Color::Transparent);
-
-			if (mode == PLATFORM) {
-
-				if (platformMap.selected != platformMap.map.end())
-					platformMap.selected->second->setOutlineThickness(0);
-					
-				platformMap.selected = platformMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
-
-				if (platformMap.selected != platformMap.map.end()) {
-					platformMap.selected->second->setOutlineThickness(5);
-					platformMap.selected->second->setOutlineColor(sf::Color::Red);
 				}
 
-			}
+				else if (toolBox.getMode() == OBJECT) {
 
-			else if (mode == OBJECT) {
+					objectMap.selected = objectMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
-				objectMap.selected = objectMap.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+					if (objectMap.selected != objectMap.map.end()) {
+						toolBox.selectObject(objectMap.selected->second);
+						selector.rect.setSize(sf::Vector2f(objectMap.selected->second->sprite.getLocalBounds().width, objectMap.selected->second->sprite.getLocalBounds().height));
+						selector.rect.setOrigin(selector.rect.getSize() * 0.5f);
+						selector.rect.setPosition(objectMap.selected->second->position.x, objectMap.selected->second->position.y);
+						selector.rect.setOutlineColor(sf::Color::Blue);
+					}
 
-				if (objectMap.selected != objectMap.map.end()) {
-					selector.rect.setSize(sf::Vector2f(objectMap.selected->second->sprite.getLocalBounds().width, objectMap.selected->second->sprite.getLocalBounds().height));
-					selector.rect.setOrigin(selector.rect.getSize() * 0.5f);
-					selector.rect.setPosition(objectMap.selected->second->position.x, objectMap.selected->second->position.y);
-					selector.rect.setOutlineColor(sf::Color::Blue);
+				}
+
+				else if (toolBox.getMode() == WATER) {
+
+
+
 				}
 
 			}
 
-		}
-		
-		if (mode == PLATFORM && platformMap.selected != platformMap.map.end()) {
-			morphText.setString("Point 0: X: " + std::to_string(platformMap.selected->second->getPoint(0).x) + " Y: " + std::to_string(platformMap.selected->second->getPoint(0).y) + "\nFallthrough: N\\A\n");
-		}
-
-		else if (mode == OBJECT && objectMap.selected != objectMap.map.end()) {
-			morphText.setString("Point 0: X: "+std::to_string(objectMap.selected->second->position.x)+" Y: "+std::to_string(objectMap.selected->second->position.y) + "\nFallthrough: N\\A\n");
 		}
 
 		break;
 
 	case sf::Event::MouseButtonReleased:
 
-		if (event.mouseButton.button == sf::Mouse::Left) {
+		if (toolBox.contains(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))) {
 
-			if (mode == PLATFORM) {
-				if (tool == BOX) {
-					corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
-					platformMap.insertBox(corner1, corner2);
+			engine->window.setView(view);
+
+		}
+
+		else {
+
+			engine->window.setView(view);
+
+			if (event.mouseButton.button == sf::Mouse::Left) {
+
+				if (toolBox.getMode() == PLATFORM) {
+					if (toolBox.getTool() == BOX_PLACE) {
+						corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+						platformMap.insertBox(corner1, corner2);
+					}
 				}
-			}
 
+				else if (toolBox.getMode() == WATER) {
+					corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+					waterHandler.insert(corner1, corner2);
+				}
+
+			}
+		
 		}
 
 		break;
 
 	case sf::Event::KeyPressed:
 		
-		if (event.key.code == sf::Keyboard::LShift)
+		if (event.key.code == sf::Keyboard::LShift|| event.key.code == sf::Keyboard::RShift)
 			doSpeedUp = true;
 
 		if (event.key.code == sf::Keyboard::Up) {
 			objectMap.object.layer++;
+			toolBox.morphText2.setString("Layer: " + std::to_string(objectMap.object.layer));
 			printf("Layer: %d", objectMap.object.layer);
 		}
 
 		if (event.key.code == sf::Keyboard::Down) {
-			if (objectMap.object.layer > 0)
+			if (objectMap.object.layer > 0) {
 				objectMap.object.layer--;
+				toolBox.morphText2.setString("Layer: " + std::to_string(objectMap.object.layer));
+			}
 			printf("Layer: %d", objectMap.object.layer);
 		}
 
@@ -193,22 +223,24 @@ void Editor::handleEvent() {
 
 		if (event.key.code == sf::Keyboard::Delete) {
 
-			if (mode == OBJECT)
+			if (toolBox.getMode() == OBJECT)
 				objectMap.remove();
-			else if (mode == PLATFORM) {
-				if (tool == PLACE)
-					platformMap.platformPoints.remove();
-				else
-					platformMap.remove();
+			else if (toolBox.getMode() == PLATFORM) {
+				platformMap.remove();
 			}
 
 			selector.rect.setOutlineColor(sf::Color::Transparent);
 
 		}
 
+		if (event.key.code == sf::Keyboard::BackSpace) {
+			if(toolBox.getMode() == PLATFORM)
+				platformMap.platformPoints.remove();
+		}
+
 		if (event.key.code == sf::Keyboard::Return) {
 
-			if (mode == PLATFORM)
+			if (toolBox.getMode() == PLATFORM)
 				platformMap.insert();
 
 		}
@@ -222,12 +254,10 @@ void Editor::handleEvent() {
 		if (event.key.code == sf::Keyboard::S)
 			doDown = true;
 
-		if (event.key.code == sf::Keyboard::L)
-			showLines = !showLines;
-
 		if (event.key.code == sf::Keyboard::J) {
 			objectMap.save();
 			platformMap.save();
+			waterHandler.save();
 		}
 		if (event.key.code == sf::Keyboard::K) {
 			objectMap.load();
@@ -235,33 +265,37 @@ void Editor::handleEvent() {
 		}
 
 		if (event.key.code == sf::Keyboard::M)
-			rotateMode();
+			toolBox.nextMode();
 		if (event.key.code == sf::Keyboard::N)
-			rotateTool();
+			toolBox.nextTool();
 		
-		if (mode == OBJECT) {
+		if (toolBox.getMode() == OBJECT) {
+			if (event.key.code == sf::Keyboard::R) {
+				objectMap.prevObject();
+				toolBox.morphText3.setString(objectMap.object.textureName);
+			}
 			if (event.key.code == sf::Keyboard::T) {
-				objectMap.changeObject();
-				textureText.setString(objectMap.object.textureName);
+				objectMap.nextObject();
+				toolBox.morphText3.setString(objectMap.object.textureName);
 			}
 
-			else if (event.key.code == sf::Keyboard::I)
-				objectMap.flipx(objectMap.selected->second);
-			else if (event.key.code == sf::Keyboard::O)
-				objectMap.flipy(objectMap.selected->second);
-			else if (event.key.code == sf::Keyboard::Y)
-				objectMap.rotate(objectMap.selected->second, -.5);
-			else if (event.key.code == sf::Keyboard::U)
-				objectMap.rotate(objectMap.selected->second, .5);
-			else if (event.key.code == sf::Keyboard::Equal)
-				objectMap.scale(objectMap.selected->second, .05);
-			else if (event.key.code == sf::Keyboard::Dash)
-				objectMap.scale(objectMap.selected->second, -.05);
+			else if (event.key.code == sf::Keyboard::I && objectMap.selected != objectMap.map.end())
+				objectMap.objectFlipx(objectMap.selected->second);
+			else if (event.key.code == sf::Keyboard::O && objectMap.selected != objectMap.map.end())
+				objectMap.objectFlipy(objectMap.selected->second);
+			else if (event.key.code == sf::Keyboard::Y && objectMap.selected != objectMap.map.end())
+				objectMap.objectRotate(objectMap.selected->second, -0.5f);
+			else if (event.key.code == sf::Keyboard::U && objectMap.selected != objectMap.map.end())
+				objectMap.objectRotate(objectMap.selected->second, 0.5f);
+			else if (event.key.code == sf::Keyboard::Equal && objectMap.selected != objectMap.map.end())
+				objectMap.objectScale(objectMap.selected->second, .05f);
+			else if (event.key.code == sf::Keyboard::Dash && objectMap.selected != objectMap.map.end())
+				objectMap.objectScale(objectMap.selected->second, -.05f);
 		}
 		break;
 
 	case sf::Event::KeyReleased:
-		if (event.key.code == sf::Keyboard::LShift)
+		if (event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::RShift)
 			doSpeedUp = false;
 		if (event.key.code == sf::Keyboard::A)
 			doLeft = false;
@@ -309,73 +343,39 @@ void Editor::update(const float dt) {
 			viewVelY = 0.0f;
 	}
 
-	engine->window.setView(view);
+	toolBox.update();
 
-	modeText.setPosition(view.getCenter().x - view.getSize().x / 2.0f + 50 * zoom / 2.0f, view.getCenter().y - view.getSize().y / 2.0f + 50 * zoom / 2.0f);
-	toolText.setPosition(view.getCenter().x - view.getSize().x / 2.0f + 50 * zoom / 2.0f, view.getCenter().y - view.getSize().y / 2.0f + 200 * zoom / 2.0f);
-	textureText.setPosition(view.getCenter().x - view.getSize().x / 2.0f + 50 * zoom / 2.0f, view.getCenter().y - view.getSize().y / 2.0f + 350 * zoom / 2.0f);
-	morphText.setPosition(view.getCenter().x - view.getSize().x / 2.0f + 50 * zoom / 2.0f, view.getCenter().y - view.getSize().y / 2.0f + 500 * zoom / 2.0f);
+	waterHandler.updateWaves(dt);
+	waterHandler.update();
+
 	view.move(viewVelX, viewVelY);
 
 }
 
 void Editor::render(const float dt) {
 
-	objectMap.draw(&engine->window);
+	engine->window.setView(view);
+
+	objectMap.drawSuperBackground(&engine->window);
+
+	objectMap.drawBackground(&engine->window);
+
+	waterHandler.draw(&engine->window);
+
+	objectMap.drawForeground(&engine->window);
 
 	platformMap.draw(&engine->window);
+
 	platformMap.platformPoints.draw(&engine->window);
 
 	engine->window.draw(selector.rect);
 
-	engine->window.draw(modeText);
-	engine->window.draw(toolText);
-	engine->window.draw(textureText);
-	engine->window.draw(morphText);
-}
+	if (toolBox.getMode() == OBJECT)
+		engine->window.draw(objectMap.object.sprite);
 
-void Editor::rotateMode() {
+	toolBox.render();
 
-	if (mode == PLATFORM) {
-		mode = OBJECT;
-		modeText.setString("Mode: Object");
-		morphText.setString("Points: N\\A");
-	}
-	else if (mode == OBJECT) {
-		mode = EVENT;
-		modeText.setString("Mode: Event");
-		morphText.setString("Points: N\\A");
-	}
-	else {
-		mode = PLATFORM;
-		modeText.setString("Mode: Platform");
-		morphText.setString("Points: N\\A");
-	}
-
-}
-
-void Editor::rotateTool() {
-
-	if (tool == PLACE) {
-		tool = DELETE;
-		toolText.setString("Tool: Delete");
-	}
-	else if (tool == DELETE) {
-		tool = MOVE;
-		toolText.setString("Tool: Move");
-	}
-	else if (tool == MOVE) {
-		tool = BOX;
-		toolText.setString("Tool: Box");
-	}
-	else if (tool == BOX) {
-		tool = GROUND;
-		toolText.setString("Tool: Ground");
-	}
-	else {
-		tool = PLACE;
-		toolText.setString("Tool: Place");
-	}
+	engine->window.setView(view);
 
 }
 

@@ -11,6 +11,8 @@
 #include "PlatformMap.h"
 #include "CollisionMap.h"
 #include "Options.h"
+#include "Metaball.h"
+#include "Water.h"
 
 #define PLAYER (0)
 
@@ -40,8 +42,10 @@ private:
 	sf::View view;
 
 	ObjectMap objectMap;
-	PlatformMap platformMap;
 	EventHandler eventMap;
+	PlatformMap platformMap;
+	WaterHandler waterHandler;
+	MetaballHandler metaballHandler;
 
 	World world;
 

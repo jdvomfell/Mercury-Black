@@ -28,6 +28,9 @@ void aiSystem(World * world, float dt) {
 			else if (world->name[entityID].name == "heart")
 				scriptHeart(world, entityID);
 
+			else if (world->name[entityID].name == "wisp")
+				scriptWisp(world, entityID, dt);
+
 			else
 				printf("ERROR: Could Not Find Entity AI: %s\n", world->name[entityID].name.c_str());
 
@@ -125,26 +128,41 @@ void inputSystem(World * world) {
 			/* INPUT */
 
 			if (i->left)
-				v->x = -v->speed;
+				v->x = -v->speed * v->speedUp;
 			if (i->right)
-				v->x = v->speed;
+				v->x = v->speed * v->speedUp;
 			if ((i->left && i->right) || (!i->left && !i->right))
 				v->x = 0.0f;
 
-			if (i->jump) {
+			if ((world->mask[entityID] & FLYING) == FLYING) {
 
-				if (v->canJump) {
-					v->y = JUMP_CONST;
-					v->onGround = false;
-					v->canJump = false;
+				if (i->up)
+					v->y = -v->speed * v->speedUp;
+				if (i->down)
+					v->y = v->speed * v->speedUp;
+				if ((i->up && i->down) || (!i->up && !i->down))
+					v->y = 0.0f;
+			
+			}
+
+			else {
+
+				if (i->jump) {
+
+					if (v->canJump) {
+						v->y = JUMP_CONST;
+						v->onGround = false;
+						v->canJump = false;
+					}
+
+					else if (v->canDoubleJump) {
+						v->y = JUMP_CONST;
+						v->canDoubleJump = false;
+					}
+
+					i->jump = false;
+
 				}
-
-				else if (v->canDoubleJump) {
-					v->y = JUMP_CONST;
-					v->canDoubleJump = false;
-				}
-
-				i->jump = false;
 
 			}
 
@@ -217,7 +235,7 @@ void animationSystem(World * world, float dt) {
 				s->sprite.setTextureRect(sf::IntRect(0, 0, (int)s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
 
 			s->sprite.setTexture(*s->animationManager.getCurrentTexture());
-			s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height));
+			s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height / 2));
 
 			/* Allow Animation Changes If Current Animation Has Ended */
 			if (s->animationManager.updateAnimation(dt) == 1) {

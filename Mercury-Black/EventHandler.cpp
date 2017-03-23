@@ -22,8 +22,8 @@ void EventHandler::insertSound(sf::RectangleShape * rectangle, World * world, st
 	newEvent->eventArea = rectangle; 
 	newEvent->world = world;
 
-	rectangle->setOrigin(rectangle->getPosition().x + (rectangle->getGlobalBounds().width / 2.0),
-						 rectangle->getPosition().x + (rectangle->getGlobalBounds().height / 2.0));
+	rectangle->setOrigin(rectangle->getPosition().x + (rectangle->getGlobalBounds().width / 2.0f),
+						 rectangle->getPosition().x + (rectangle->getGlobalBounds().height / 2.0f));
 
 	pos = rectangle->getOrigin().x;
 

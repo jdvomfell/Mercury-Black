@@ -99,6 +99,10 @@ void TextureManager::loadAllTextures() {
 	/* Idle Attack */
 
 	loadTextures("player_idleAttack", "Textures/Player/Idle-Attack/", 8);
+
+	/* Roll */
+
+	loadTextures("player_roll", "Textures/Player/Roll/", 5);
 	
 	///Ceiling Plant///
 
@@ -173,11 +177,21 @@ void TextureManager::loadAllTextures() {
 	
 	/////PLAY//////
 
+	loadTexture("spring_background", "Textures/Test/spring_background.png");
 	loadTexture("spring_cliff_1", "Textures/Test/spring_cliff_1.png");
 	loadTexture("spring_cliff_2", "Textures/Test/spring_cliff_2.png");
 	loadTexture("spring_tree_1", "Textures/Test/spring_tree_1.png");
 	loadTexture("spring_tree_2", "Textures/Test/spring_tree_2.png");
 	loadTexture("spring_log_1", "Textures/Test/spring_log_1.png");
 	loadTexture("heart", "Textures/Test/heart.png");
+
+	/////ICONS/////
+
+	loadTexture("boxTool", "Textures/boxTool.png");
+	loadTexture("freeTool", "Textures/freeTool.png");
+	loadTexture("groundTool", "Textures/groundTool.png");
+	loadTexture("eventTool", "Textures/eventTool.png");
+	loadTexture("objectTool", "Textures/objectTool.png");
+	loadTexture("waterTool", "Textures/waterTool.png");
 
 }

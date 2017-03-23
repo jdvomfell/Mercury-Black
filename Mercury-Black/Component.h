@@ -3,15 +3,18 @@
 
 #include <SFML\Graphics.hpp>
 #include "AnimationManager.h"
+#include "Metaball.h"
 
-
-#define NO_STATE 0
-#define ATTACK_STATE 1
-#define DEFENCE_STATE 2
-#define JUMP_STATE 3
-#define SPAWN_STATE 4
-#define NOT_SPAWNED_STATE 5 
-#define DEATH_STATE 6
+const enum states {
+	NO_STATE = 0,
+	ATTACK_STATE,
+	DEFENCE_STATE,
+	JUMP_STATE,
+	SPAWN_STATE,
+	NOT_SPAWNED_STATE, 
+	DEATH_STATE,
+	MOVEMENT_STATE
+};
 
 enum Component {
 
@@ -26,7 +29,8 @@ enum Component {
 	COLLISION = 1 << 6,
 	SCRIPT = 1 << 7,
 	HEALTH = 1 << 8, 
-	STATS = 1 << 9
+	STATS = 1 << 9,
+	FLYING = 1 << 10
 
 };
 
@@ -53,6 +57,7 @@ struct Input {
 
 struct Sprite {
 
+	MetaballSpawner * metaballSpawner;
 	AnimationManager animationManager;
 	sf::Sprite sprite;
 
@@ -76,6 +81,7 @@ struct Velocity {
 	float x;
 	float y;
 	float speed;
+	float speedUp;
 	bool onGround;
 	bool canJump;
 	bool canDoubleJump;

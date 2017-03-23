@@ -149,12 +149,15 @@
     <ClCompile Include="HitboxEditor.cpp" />
     <ClCompile Include="KeyBind.cpp" />
     <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Metaball.cpp" />
     <ClCompile Include="ObjectMap.cpp" />
     <ClCompile Include="OptionsMenu.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="PlatformMap.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="ToolBox.cpp" />
+    <ClCompile Include="Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIScript.h" />
@@ -175,12 +178,15 @@
     <ClInclude Include="Hitbox.h" />
     <ClInclude Include="HitboxEditor.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Metaball.h" />
     <ClInclude Include="ObjectMap.h" />
     <ClInclude Include="OptionsMenu.h" />
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="PlatformMap.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="ToolBox.h" />
+    <ClInclude Include="Water.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
