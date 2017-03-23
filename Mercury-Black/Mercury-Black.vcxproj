@@ -147,10 +147,10 @@
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="HitboxEditor.cpp" />
+    <ClCompile Include="KeyBind.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Metaball.cpp" />
     <ClCompile Include="ObjectMap.cpp" />
-    <ClCompile Include="Options.cpp" />
     <ClCompile Include="OptionsMenu.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="PlatformMap.cpp" />
@@ -180,7 +180,6 @@
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Metaball.h" />
     <ClInclude Include="ObjectMap.h" />
-    <ClInclude Include="Options.h" />
     <ClInclude Include="OptionsMenu.h" />
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="PlatformMap.h" />

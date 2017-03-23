@@ -1,37 +1,30 @@
 #ifndef BUTTONS_H
 #define BUTTONS_H
 
+#include "OptionsMenu.h"
 #include "GUI.h"
 #include "Buttons.h"
+#include "Editor.h"
+#include "Game.h"
+#include "HitboxEditor.h"
+#include "Fade.h"
 
-class TextButton : public GUI {
 
-public:
-
-    TextButton() {}
-    TextButton(std::string name, float x, float y, int size, sf::Font * font, eventFunction funcPtr);
-	bool isSelected(sf::Vector2f position);
-	void draw(sf::RenderWindow *);
-	// A destructor
-    ~TextButton(){ m_funcPtr = NULL; }
-
-	sf::Text text;
-
-};
-
-class IconButton : public GUI {
+class Button : public GUI {
 
 public:
+    typedef void(*eventFunction)(GameEngine *);
 
-	IconButton() {}
-	IconButton(float x, float y, sf::Texture * texture, eventFunction funcPtr);
-	bool isSelected(sf::Vector2f position);
-	void draw(sf::RenderWindow *);
+    Button() {}
+    Button(std::string name, float x, float y, sf::Color color, int size, sf::Font * font, eventFunction funcPtr);
 	// A destructor
-	~IconButton() { m_funcPtr = NULL; }
+    ~Button(){ m_funcPtr = NULL; }        
 
-	sf::Sprite sprite;
+    // Invokes the registered function
+    void interact(GameEngine *);
 
+    private:
+        eventFunction m_funcPtr;
 };
 
 void changeToGame(GameEngine * engine);
@@ -39,6 +32,7 @@ void popState(GameEngine * engine);
 void changeToEditor(GameEngine * engine);
 void changeToHitboxEditor(GameEngine * engine);
 void changeToMainMenu(GameEngine * engine);
+//void changeToOptionsMenu(GameEngine * engine);
 void quitGame(GameEngine * engine);
 void doNothing(GameEngine * engine);
 #endif

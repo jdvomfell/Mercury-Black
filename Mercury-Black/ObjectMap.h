@@ -7,17 +7,19 @@
 
 struct Object {
 
-	int layer = 15;
-	sf::Vector2f position = sf::Vector2f(0, 0);
-	std::string textureName = "";
+	int layer;
+	sf::Vector2f position;
+	std::string textureName;
 
-	sf::Sprite sprite = sf::Sprite();
+	sf::Sprite sprite;
 
-	// False Means No Flip.
+	//key: flipx 0 means no flip.
 	bool flipx = false;
-	// Degrees Object Is Rotated
+
+	//rotate 'rotate' degrees
 	float rotate = 0;
-	// Scaling Multiplier Of The Size (1 Is Default Scale);
+
+	//scaling as a multiplier of the size (1 is natural scale);
 	float scale = 1;
 
 };
@@ -30,7 +32,6 @@ public:
 	void load();
 	void clean();
 
-	void insert(Object * tempObject);
 	void insert(sf::Vector2f position);
 	void remove();
 
@@ -47,11 +48,11 @@ public:
 	void prevObject();
 	void selectObject(std::string textureName);
 	
-	void objectFlipx(Object*);
-	void objectFlipy(Object*);
+	void flipx(Object*);
+	void flipy(Object*);
 
-	void objectRotate(Object*, float);
-	void objectScale(Object*, float);
+	void rotate(Object*, float);
+	void scale(Object*, float);
 
 	ObjectMap() {}
 	ObjectMap(TextureManager *);

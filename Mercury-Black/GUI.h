@@ -7,31 +7,14 @@
 class GUI {
 
 public:
+	
+	bool isSelected(sf::Vector2f position);
 
-	typedef void(*eventFunction)(GameEngine *);
+	virtual void interact(GameEngine * engine) {};
 
-	// Invokes the registered function
-	void interact(GameEngine * engine);
-	virtual void draw(sf::RenderWindow *) = 0;
-	virtual bool isSelected(sf::Vector2f position) = 0;
-
+	sf::Text text;
+	
 	GUI() {}
-
-protected:
-	eventFunction m_funcPtr;
-
-};
-
-class GUI_Handler {
-
-public:
-
-	std::vector<GUI *> buttons;
-
-	void addButton(GUI * button);
-	void isSelected(sf::Vector2f position);
-	void interact(sf::Vector2f position, GameEngine * engine);
-	void draw(sf::RenderWindow * window);
 
 };
 
