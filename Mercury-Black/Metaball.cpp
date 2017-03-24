@@ -49,12 +49,14 @@ void MetaballHandler::update(float dt) {
 
 }
 
-void MetaballHandler::draw(sf::RenderWindow * window) {
+void MetaballHandler::draw(sf::RenderWindow * window, sf::View * view) {
+
+	metaballAddTexture.setView(*view);
+	metaballAddSprite.setPosition(view->getCenter().x - view->getSize().x / 2, view->getCenter().y + view->getSize().y / 2);
 
 	metaballAddTexture.clear(sf::Color::Transparent);
-	metaballShadedTexture.clear(sf::Color::Transparent);
 
-	for (int i = 0; i < metaballList.size(); i++) {
+	for (size_t i = 0; i < metaballList.size(); i++) {
 
 		if (metaballList[i]->lifespan < DEFAULT_SCALE)
 			metaballSprite.setScale(sf::Vector2f(metaballList[i]->lifespan, metaballList[i]->lifespan));
@@ -67,9 +69,7 @@ void MetaballHandler::draw(sf::RenderWindow * window) {
 
 	}
 
-	metaballShadedTexture.draw(metaballAddSprite, &shader);
-
-	window->draw(metaballShadedSprite);
+	window->draw(metaballAddSprite, &shader);
 
 }
 
@@ -145,18 +145,25 @@ MetaballHandler::MetaballHandler() {
 	}
 
 	renderState.shader = &shader;
+	renderState.blendMode = sf::BlendAdd;
 
 	shader.setUniform("threshold", THRESHOLD);
 
 }
 
-void MetaballHandler::init(sf::Vector2u windowSize) {
+void MetaballHandler::init(sf::Vector2u windowSize, bool highResolution) {
 
-	metaballAddTexture.create(windowSize.x * 3.5, windowSize.y * 3.5);
-	metaballShadedTexture.create(windowSize.x * 3.5, windowSize.y * 3.5);
+	if (highResolution) {
+		metaballAddTexture.create(windowSize.x * 3.5, windowSize.y * 3.5);
+		metaballAddSprite.setScale(1.0f, -1.0f);
+	}
+
+	else {
+		metaballAddTexture.create(windowSize.x, windowSize.y);
+		metaballAddSprite.setScale(3.5f, -3.5f);
+	}
 
 	metaballAddSprite.setTexture(metaballAddTexture.getTexture());
-	metaballShadedSprite.setTexture(metaballShadedTexture.getTexture());
 
 }
 

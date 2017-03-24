@@ -46,7 +46,7 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Resources\GameUtility">
+    <Filter Include="Source Files\GameUtility">
       <UniqueIdentifier>{130d7294-9d86-4394-8c9e-74df74abc048}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -70,7 +70,7 @@
       <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="CollisionMap.cpp">
-      <Filter>Source Files\Resources\GameUtility</Filter>
+      <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
     <ClCompile Include="Entity.cpp">
       <Filter>Source Files\Entity Component System</Filter>
@@ -88,10 +88,10 @@
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ObjectMap.cpp">
-      <Filter>Source Files\Resources\GameUtility</Filter>
+      <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
     <ClCompile Include="PlatformMap.cpp">
-      <Filter>Source Files\Resources\GameUtility</Filter>
+      <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
     <ClCompile Include="AIScript.cpp">
       <Filter>Source Files\Entity Component System</Filter>
@@ -108,29 +108,29 @@
     <ClCompile Include="PauseMenu.cpp">
       <Filter>Source Files\GameStates</Filter>
     </ClCompile>
+    <ClCompile Include="ToolBox.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Fade.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Hitbox.cpp">
+      <Filter>Source Files\GameUtility</Filter>
+    </ClCompile>
     <ClCompile Include="CollisionHelper.cpp">
       <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
     <ClCompile Include="EventHandler.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
-    <ClCompile Include="ToolBox.cpp">
-      <Filter>Source Files\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Metaball.cpp">
+    <ClCompile Include="KeyBind.cpp">
       <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
     <ClCompile Include="Water.cpp">
       <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
-    <ClCompile Include="Fade.cpp">
-      <Filter>Source Files\GameStates</Filter>
-    </ClCompile>
-    <ClCompile Include="KeyBind.cpp">
+    <ClCompile Include="Metaball.cpp">
       <Filter>Source Files\GameUtility</Filter>
-    </ClCompile>
-    <ClCompile Include="Hitbox.cpp">
-      <Filter>Source Files\Resources\GameUtility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
