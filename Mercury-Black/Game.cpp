@@ -13,6 +13,8 @@ void Game::init() {
 
 	world.textureManager = &engine->textureManager;
 
+	metaballHandler.init(engine->window.getSize(), false);
+
 	createPlayer(&world, 0, 0);
 	createTest(&world, 2000, 0);
 	createHeart(&world, 900, 500);
@@ -40,8 +42,6 @@ void Game::init() {
 
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
-
-	metaballHandler.init(engine->window.getSize());
 
 	waterHandler.load();
 
@@ -160,8 +160,6 @@ void Game::update(const float dt) {
 	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y - view.getSize().y / 4));
 	engine->window.setView(view);
 
-	metaballHandler.metaballAddTexture.setView(view);
-	metaballHandler.metaballShadedSprite.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2);
 	metaballHandler.update(dt);
 
 	/* Hitbox Temp */
@@ -178,7 +176,7 @@ void Game::render(const float dt) {
 
 	renderSystem(&world, &engine->window);
 
-	metaballHandler.draw(&engine->window);
+	metaballHandler.draw(&engine->window, &view);
 
 	waterHandler.draw(&engine->window);
 

@@ -14,6 +14,8 @@ void HitboxEditor::init() {
 	spriteBox.setOutlineColor(sf::Color::Blue);
 	hitMap.select = hitMap.map.lower_bound(textureID);
 
+	view.setSize(engine->window.getSize().x, engine->window.getSize().y);
+
 	leftPlacing = 0;
 }
 
@@ -211,13 +213,23 @@ void HitboxEditor::update(const float dt) {
 }
 
 void HitboxEditor::render(const float dt) {
-	
-	sf::View spriteView;
+
+	if (sprite.getGlobalBounds().height > engine->window.getSize().y)
+		view.setSize(view.getSize().x, sprite.getGlobalBounds().height + 10);
+	else
+		view.setSize(view.getSize().x, engine->window.getSize().y + 10);
+
+	if (sprite.getGlobalBounds().width > engine->window.getSize().x)
+		view.setSize(sprite.getGlobalBounds().width + 10, view.getSize().y);
+	else
+		view.setSize(engine->window.getSize().x + 10, view.getSize().y);
+
+
 	//spriteView.setSize(sprite.getGlobalBounds().width, sprite.getGlobalBounds().height);
-	spriteView.setCenter(sprite.getPosition().x + sprite.getLocalBounds().width / 2, sprite.getPosition().y + sprite.getLocalBounds().height / 2);
+	view.setCenter(sprite.getPosition().x + sprite.getLocalBounds().width / 2, sprite.getPosition().y + sprite.getLocalBounds().height / 2);
 
 	engine->window.draw(sprite);
-	engine->window.setView(spriteView);
+	engine->window.setView(view);
 	engine->window.draw(spriteBox);
 	
 	if (leftPlacing) {

@@ -28,21 +28,18 @@ public:
 	sf::RenderTexture metaballAddTexture;
 	sf::Sprite metaballAddSprite;
 
-	sf::RenderTexture metaballShadedTexture;
-	sf::Sprite metaballShadedSprite;
-
 	sf::RenderStates renderState;
 	sf::Shader shader;
 
 	MetaballHandler();
-	void init(sf::Vector2u windowSize);
+	void init(sf::Vector2u windowSize, bool highResolution);
 
 	void addSpawner(class MetaballSpawner * metaballSpawner);
 	void addMetaball(sf::Vector2f position, sf::Vector2f velocity, float lifespan, float weight, int spreadX, int spreadY);
 	void sunburst(sf::Vector2f positon, int metaballs);
 
 	void update(float dt);
-	void draw(sf::RenderWindow * window);
+	void draw(sf::RenderWindow * window, sf::View * view);
 	void removeMetaball(int i);
 
 	void clean();
