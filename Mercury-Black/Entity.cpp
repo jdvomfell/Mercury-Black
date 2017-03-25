@@ -117,6 +117,9 @@ int createPlayer(World * world, float x, float y) {
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "inkArmAttack", 9, 0.1f);
 
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "runAttack", 6, 0.125f);
+
 	return entityID;
 
 }

@@ -108,6 +108,11 @@ void TextureManager::loadAllTextures() {
 
 	loadTextures("player_inkArmAttack", "Textures/Player/Ink-Attack/", 9);
 
+
+	/* RunAttack */
+
+	loadTextures("player_runAttack", "Textures/Player/Run-Attack/", 6);
+
 	///Ceiling Plant///
 
 	/* Spawn */
