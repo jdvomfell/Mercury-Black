@@ -214,7 +214,7 @@ void WaterHandler::load() {
 
 	}
 
-	printf("Loaded %d Objects\n", numObjects);
+	printf("Loaded %d Bodies Of Water\n", numObjects);
 
 	ifstream.close();
 }

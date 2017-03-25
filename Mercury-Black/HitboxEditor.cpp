@@ -114,29 +114,34 @@ void HitboxEditor::handleEvent() {
 			chooseCollision = 1;
 		}
 		
-		else if (chooseCollision) {
+		if (chooseCollision) {
+
+			printf("Choose\n");
 			//Collision Box
 			if (event.key.code == sf::Keyboard::Num1) {
-				chooseHitbox = 0;
+				chooseHitbox = COLLISIONBOX;
 				drawHitBox.setOutlineColor(sf::Color::Cyan);
+				chooseCollision = 0;
 			}
 			//Hurt Box
 			else if (event.key.code == sf::Keyboard::Num2) {
-				chooseHitbox = 1;
+				chooseHitbox = HURTBOX;
 				drawHitBox.setOutlineColor(sf::Color::Magenta);
+				chooseCollision = 0;
 			}
 			//Defence Box
 			else if (event.key.code == sf::Keyboard::Num3) {
-				chooseHitbox = 2;
+				chooseHitbox = DEFENCEBOX;
 				drawHitBox.setOutlineColor(sf::Color::Green);
+				chooseCollision = 0;
 			}
 			//Damage Box
 			else if (event.key.code == sf::Keyboard::Num4) {
-				chooseHitbox = 3;
+				chooseHitbox = DAMAGEBOX;
 				drawHitBox.setOutlineColor(sf::Color::Red);
+				chooseCollision = 0;
 			}
 			
-			chooseCollision = 0;
 		}
 		break;
 	case sf::Event::MouseButtonPressed:
@@ -159,7 +164,7 @@ void HitboxEditor::handleEvent() {
 	case sf::Event::MouseButtonReleased:
 		if (event.mouseButton.button == sf::Mouse::Left) {
 			leftPlacing = 0;
-			hitMap.addHitbox(textureID, drawHitBox, chooseCollision);
+			hitMap.addHitbox(textureID, drawHitBox, chooseHitbox);
 		}
 		break;
 	case sf::Event::MouseMoved:

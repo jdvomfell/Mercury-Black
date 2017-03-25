@@ -24,8 +24,14 @@ public:
 	void save();
 	void load();
 	void draw(sf::RenderWindow *window, std::string textureID);
+	void clean();
 	
 	std::multimap <std::string, Hitbox*> map;
+	std::multimap <std::string, Hitbox*> collisionBoxs;
+	std::multimap <std::string, Hitbox*> defenceBoxs;
+	std::multimap <std::string, Hitbox*> damageBoxs;
+	std::multimap <std::string, Hitbox*> hurtBoxs;
+
 	std::multimap <std::string, Hitbox*>::iterator select;
 };
 

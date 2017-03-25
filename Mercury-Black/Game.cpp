@@ -16,7 +16,7 @@ void Game::init() {
 	metaballHandler.init(engine->window.getSize(), false);
 
 	createPlayer(&world, 0, 0);
-	createTest(&world, 2000, 0);
+	createTest(&world, 2000, -1500);
 	createHeart(&world, 900, 500);
 	createWisp(&world, 500, 500, &metaballHandler);
 	//createCeilingPlant(&world, 3000, 1000);
@@ -39,6 +39,7 @@ void Game::init() {
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	platformMap.load();
+	hitboxMap.load();
 
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
@@ -144,7 +145,7 @@ void Game::update(const float dt) {
 	gravitySystem(&world);
 	shapeCollSystem(&world, &platformMap);
 	movementSystem(&world);
-	damageSystem(&world, dt);
+	damageSystem(&world, dt, &hitboxMap);
 
 	//for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)	
 	//if (eventMap.eit->second->isTriggered()) 

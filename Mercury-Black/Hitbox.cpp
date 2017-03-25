@@ -1,25 +1,45 @@
 #include "Hitbox.h"
 #include <fstream>
 void HitboxMap::addHitbox(std::string textureID, sf::RectangleShape box, int type) {
-	if (box.getSize().x < 0 || box.getSize().y < 0) {
-		box.setPosition(box.getPosition().x + box.getSize().x, box.getPosition().y + box.getSize().y);
-		box.setSize(sf::Vector2f(fabs(box.getSize().x), fabs(box.getSize().y)));
-	}
+	
 	if (box.getSize().x > 5 && box.getSize().y > 5) {
+		
 		Hitbox *hitbox = new Hitbox;
 
 		hitbox->box = box;
 		hitbox->type = type;
-		printf("Added");
+
+		/* Check To See If Box Already Exists */
+
 		for (select = map.lower_bound(textureID); select != map.upper_bound(textureID); select++) {
+
 			if (box.getSize() == select->second->box.getSize()) {
 				if (box.getPosition() == select->second->box.getPosition()) {
 					return;
 				}
 			}	
+
 		}
-		select = map.insert(std::pair<std::string, Hitbox*>(textureID, hitbox));
+
+		select = map.insert(std::make_pair(textureID, hitbox));
+
+		switch (type) {
+		case HURTBOX:
+			hurtBoxs.insert(std::make_pair(textureID, hitbox));
+			break;
+		case COLLISIONBOX:
+			collisionBoxs.insert(std::make_pair(textureID, hitbox));
+			break;
+		case DAMAGEBOX:
+			damageBoxs.insert(std::make_pair(textureID, hitbox));
+			break;
+		case DEFENCEBOX:
+			defenceBoxs.insert(std::make_pair(textureID, hitbox));
+			break;
+		}
+	
 	}
+
 }
 
 void HitboxMap::deleteHitbox(std::string textureID) {
@@ -47,23 +67,19 @@ void HitboxMap::cycleHitbox(std::string textureID) {
 		}
 	}
 
-	if (select != map.upper_bound(textureID)) {
-		printf("Upper\n");
-		select++;
-		//printf("Not upper");
-	} else {
-		printf("lower");
+	select++;
+
+	if (select == map.upper_bound(textureID))
 		select = map.lower_bound(textureID);
-		//printf("Lower\n");
-	}
-	printf("ohh yes\n");
+
 	if(select != map.end())
 		select->second->box.setOutlineColor(sf::Color::Yellow);
-	printf("Oh noooo\n");
+
 	return;
 }
 
 void HitboxMap::save() {
+
 	std::ofstream ofstream;
 	std::multimap<std::string, Hitbox*>::iterator it;
 	std::string hitBoxFilename = "hitbox.dat";
@@ -90,6 +106,7 @@ void HitboxMap::save() {
 } 
 
 void HitboxMap::load() {
+	
 	std::ifstream ifstream;
 	std::string hitBoxFilename = "hitbox.dat";
 	sf::Vector2f pos, size;
@@ -114,13 +131,13 @@ void HitboxMap::load() {
 		
 		numBox++;
 		
-		if (t == 0)
+		if (t == COLLISIONBOX)
 			rect.setOutlineColor(sf::Color::Cyan);
-		else if (t == 1)
+		else if (t == HURTBOX)
 			rect.setOutlineColor(sf::Color::Magenta);
-		else if (t == 2)
+		else if (t == DEFENCEBOX)
 			rect.setOutlineColor(sf::Color::Green);
-		else if (t == 3)
+		else if (t == DAMAGEBOX)
 			rect.setOutlineColor(sf::Color::Red);
 		addHitbox(s, rect, t);
 	}
