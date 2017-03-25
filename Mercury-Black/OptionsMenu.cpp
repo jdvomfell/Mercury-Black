@@ -24,8 +24,8 @@ void OptionsMenu::init() {
 
 	title.setPosition(view.getCenter().x, view.getCenter().y - (view.getSize().y / 5));
 
-	musicToggle.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 2 / 3, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
-	sfxToggle.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 2 / 3, title.getPosition().y + (view.getSize().y / 2));
+	musicToggle.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 2 / 3 - 50, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
+	sfxToggle.text.setPosition(view.getCenter().x - (view.getSize().x / 2) * 2 / 3 - 50, title.getPosition().y + (view.getSize().y / 2));
 	changeBinding.text.setPosition(view.getCenter().x + (view.getSize().x / 2) * 1 / 3, title.getPosition().y + (view.getSize().y / 2) * 2 / 3);
 
 }
