@@ -46,7 +46,7 @@ public:
 	void nextObject();
 	void prevObject();
 	void selectObject(std::string textureName);
-	
+
 	void objectFlipx(Object*);
 	void objectFlipy(Object*);
 

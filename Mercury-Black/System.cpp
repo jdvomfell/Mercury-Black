@@ -1,5 +1,7 @@
 #include "System.h"
 #include "CollisionHelper.h"
+#include "Hitbox.h"
+
 #include <cmath>
 
 /* Do Not Edit CONSTS Without Discussing Gameplay Implications First */
@@ -64,14 +66,60 @@ void renderSystem(World * world, sf::RenderWindow * window) {
 
 }
 
+#define ANIMATION_MASK (INPUT | SPRITE | SCRIPT)
+
+void animationSystem(World * world, float dt) {
+
+	Sprite * s;
+	Input * i;
+	ScriptParameters * sp;
+
+	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
+
+		if ((world->mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
+
+			s = &(world->sprite[entityID]);
+			i = &(world->input[entityID]);
+			sp = &(world->scriptParameters[entityID]);
+
+			if (i->left)
+				s->sprite.setTextureRect(sf::IntRect((int)s->sprite.getLocalBounds().width, 0, (int)-s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
+			else if (i->right)
+				s->sprite.setTextureRect(sf::IntRect(0, 0, (int)s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
+
+			s->sprite.setTexture(*s->animationManager.getCurrentTexture());
+			s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height / 2));
+
+			/* Allow Animation Changes If Current Animation Has Ended */
+			if (s->animationManager.updateAnimation(dt) == 1) {
+				sp->currentState = NO_STATE;
+
+			}
+
+		}
+
+	}
+
+}
+
 #define TAKE_DAMAGE_MASK (HEALTH)
 #define DEAL_DAMAGE_MASK (STATS | SCRIPT)
 
-void damageSystem(World * world, float dt) {
+void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 
 	Health * h;
 	Stats * st;
 	ScriptParameters * sp;
+
+	bool dealDamage;
+
+	std::string hurtID;
+	std::string damageID;
+	std::multimap<std::string, Hitbox *>::iterator hurtIt;
+	std::multimap<std::string, Hitbox *>::iterator damageIt;
+
+	sf::FloatRect hurtBox;
+	sf::FloatRect damageBox;
 
 	for (int damageTakerID = 0; damageTakerID < MAX_ENTITIES; damageTakerID++) {
 
@@ -81,11 +129,122 @@ void damageSystem(World * world, float dt) {
 
 			h = &(world->health[damageTakerID]);
 
+			if ((world->mask[damageTakerID] & ANIMATION_MASK) == ANIMATION_MASK) {
+				hurtID = world->sprite[damageTakerID].animationManager.getCurrentTextureID();
+				hurtIt = hitboxMap->hurtBoxes.find(hurtID);
+			}
+			else {
+				hurtIt = hitboxMap->hurtBoxes.end();
+			}
+
 			for (int damageDealerID = 0; damageDealerID < MAX_ENTITIES; damageDealerID++) {
+
+				dealDamage = false;
 
 				if ((world->mask[damageDealerID] & DEAL_DAMAGE_MASK) == DEAL_DAMAGE_MASK && world->scriptParameters[damageDealerID].currentState == ATTACK_STATE) {
 
-					if ((world->sprite[damageTakerID].sprite.getGlobalBounds().intersects(world->sprite[damageDealerID].sprite.getGlobalBounds()) == true) && (damageDealerID != damageTakerID)) {
+					if ((world->mask[damageDealerID] & ANIMATION_MASK) == ANIMATION_MASK) {
+						damageID = world->sprite[damageDealerID].animationManager.getCurrentTextureID();
+						damageIt = hitboxMap->damageBoxes.find(damageID);
+					}
+					else {
+						damageIt = hitboxMap->damageBoxes.end();
+					}
+
+					/* See If Damage Should Be Dealt */
+
+					//if (hurtIt == hitboxMap->hurtBoxs.end() && damageIt == hitboxMap->damageBoxs.end()) {
+
+						/* Check The Bounds Of The Damage Dealer And Damage Taker Against Each Other */
+
+					//	if ((world->sprite[damageTakerID].sprite.getGlobalBounds().intersects(world->sprite[damageDealerID].sprite.getGlobalBounds()) == true) && (damageDealerID != damageTakerID)) {
+					//		printf("No Boxes\n");
+					//		dealDamage = true;
+					//	}
+
+					//}
+
+					//else if (hurtIt == hitboxMap->hurtBoxs.end()) {
+
+						/* Check Each Hurt Box Against The Bounds Of The Damage Dealer */
+
+					//	do {
+							
+					//		damageBox = damageIt->second->box.getLocalBounds();
+					//		damageBox.top = world->position[damageDealerID].y;
+					//		damageBox.left = world->position[damageDealerID].x;
+
+					//		if (damageBox.intersects(world->sprite[damageTakerID].sprite.getGlobalBounds()) && (damageDealerID != damageTakerID)) {
+					//			printf("Only Damage\n");
+					//			dealDamage = true;
+					//			break;
+					//		}
+
+					//		damageIt++;
+
+					//	} while (damageIt != hitboxMap->damageBoxs.upper_bound(damageID));
+
+					//}
+
+					//else if (damageIt == hitboxMap->damageBoxs.end()) {
+
+						/* Check Each Damage Box Against The Bounds Of The Damage Taker */
+
+					//	do {
+
+					//		hurtBox = hurtIt->second->box.getLocalBounds();
+					//		hurtBox.top = world->position[damageTakerID].y;
+					//		hurtBox.left = world->position[damageTakerID].x;
+
+					//		if (hurtBox.intersects(world->sprite[damageDealerID].sprite.getGlobalBounds()) && (damageDealerID != damageTakerID)) {
+					//			printf("Only Hurt\n");
+					//			dealDamage = true;
+					//			break;
+					//		}
+
+					//		hurtIt++;
+
+					//	} while (hurtIt != hitboxMap->hurtBoxs.upper_bound(hurtID));
+
+					//}
+					
+					//else {
+					if (hurtIt != hitboxMap->hurtBoxes.end() && damageIt != hitboxMap->damageBoxes.end()) {
+
+						/* Check Each Damage Box Against Each Hurt Box */
+
+						do {
+
+							hurtIt = hitboxMap->hurtBoxes.find(hurtID);
+
+							damageBox = damageIt->second->box.getLocalBounds();
+							damageBox.top += world->sprite[damageDealerID].sprite.getGlobalBounds().top;
+							damageBox.left += world->sprite[damageDealerID].sprite.getGlobalBounds().left;
+
+							do {
+
+								hurtBox = hurtIt->second->box.getLocalBounds();
+								hurtBox.top += world->sprite[damageTakerID].sprite.getGlobalBounds().top;
+								hurtBox.left += world->sprite[damageTakerID].sprite.getGlobalBounds().left;
+
+								if (damageBox.intersects(hurtBox) && (damageDealerID != damageTakerID)) {
+									printf("YO\n");
+									dealDamage = true;
+									break;
+								}
+
+								hurtIt++;
+
+							} while (hurtIt != hitboxMap->hurtBoxes.upper_bound(hurtID));
+
+							damageIt++;
+						} while (damageIt != hitboxMap->damageBoxes.upper_bound(damageID));
+
+					}
+
+					/* If One Intersects Deal Damage */
+
+					if (dealDamage) {
 
 						st = &(world->stats[damageDealerID]);
 						sp = &(world->scriptParameters[damageDealerID]);
@@ -206,42 +365,6 @@ void movementSystem(World * world) {
 
 			p->x += v->x;
 			p->y += v->y;
-
-		}
-
-	}
-
-}
-
-#define ANIMATION_MASK (INPUT | SPRITE | SCRIPT)
-
-void animationSystem(World * world, float dt) {
-
-	Sprite * s;
-	Input * i;
-	ScriptParameters * sp;
-
-	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
-
-		if ((world->mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
-
-			s = &(world->sprite[entityID]);
-			i = &(world->input[entityID]);
-			sp = &(world->scriptParameters[entityID]);
-
-			if (i->left)
-				s->sprite.setTextureRect(sf::IntRect((int)s->sprite.getLocalBounds().width, 0, (int)-s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
-			else if (i->right)
-				s->sprite.setTextureRect(sf::IntRect(0, 0, (int)s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
-
-			s->sprite.setTexture(*s->animationManager.getCurrentTexture());
-			s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height / 2));
-
-			/* Allow Animation Changes If Current Animation Has Ended */
-			if (s->animationManager.updateAnimation(dt) == 1) {
-				sp->currentState = NO_STATE;
-
-			}
 
 		}
 

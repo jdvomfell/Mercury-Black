@@ -6,8 +6,9 @@ Animation::Animation(float animationTime) {
 
 }
 
-void Animation::addFrame(sf::Texture * texture) {
+void Animation::addFrame(sf::Texture * texture, std::string textureID) {
 
 	textures.push_back(texture);
+	textureIDs.push_back(textureID);
 
 }

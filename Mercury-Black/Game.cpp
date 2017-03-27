@@ -13,30 +13,33 @@ void Game::init() {
 
 	world.textureManager = &engine->textureManager;
 
+	metaballHandler.init(engine->window.getSize(), false);
+
 	createPlayer(&world, 0, 0);
-	createTest(&world, 2000, 0);
+	createTest(&world, 2000, -1500);
 	createHeart(&world, 900, 500);
 	createWisp(&world, 500, 500, &metaballHandler);
 	//createCeilingPlant(&world, 3000, 1000);
 
 	/*Sound insertion code TEMPORARY*/
 
-	//sf::Vector2f size(800, 800);
-	//sf::Vector2f size2(500, 500);
-	//sf::RectangleShape * rectangle = new sf::RectangleShape(size);
-	//sf::RectangleShape * rectangle2 = new sf::RectangleShape(size2);
-	//rectangle->setFillColor(sf::Color::Blue);
-	//rectangle2->setFillColor(sf::Color::Green);
-	//eventMap.insertSound(rectangle, &world, "Music/frogs.ogg", 20.0, true);
-	//eventMap.insertSound(rectangle2, &world, "Music/drank.ogg", 25.0, true);
-	//rectangle->setPosition(1000, 1500);
-	//rectangle2->setPosition(1000, 1500);
+	sf::Vector2f size(800, 800);
+	sf::Vector2f size2(500, 500);
+	sf::RectangleShape * rectangle = new sf::RectangleShape(size);
+	sf::RectangleShape * rectangle2 = new sf::RectangleShape(size2);
+	rectangle->setFillColor(sf::Color::Blue);
+	rectangle2->setFillColor(sf::Color::Green);
+	eventMap.insertSound(rectangle, &world, "Music/frogs.ogg", 20.0, true);
+	eventMap.insertSound(rectangle2, &world, "Music/drank.ogg", 25.0, true);
+	rectangle->setPosition(1000, 1500);
+	rectangle2->setPosition(1000, 1500);
 
 	/* End of sound code*/
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	platformMap.load();
+	hitboxMap.load();
 
 	eventMap.world = &world;
 	eventMap.load();
@@ -45,8 +48,6 @@ void Game::init() {
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
 
-	metaballHandler.init(engine->window.getSize());
-	
 	waterHandler.load();
 }
 
@@ -58,6 +59,8 @@ void Game::clean() {
 	platformMap.clean();
 	objectMap.clean();
 	waterHandler.clean();
+	hitboxMap.clean();
+
 	eventMap.clean();
 }
 
@@ -95,12 +98,14 @@ void Game::handleEvent() {
 			if (event.key.code == sf::Keyboard::L)
 				drawPlatforms = !drawPlatforms;
 
-			if (event.key.code == sf::Keyboard::Space)
+			if (event.key.code == sf::Keyboard::J)
 				world.input[PLAYER].attack = true;
+			if (event.key.code == sf::Keyboard::K) {
+				world.input[PLAYER].special = true;
+			}
 
 			if (event.key.code == sf::Keyboard::LShift)
 				metaballHandler.sunburst(sf::Vector2f(world.position[0].x, world.position[0].y), 20);
-				//world.input[PLAYER].special = true;
 
 			if (event.key.code == sf::Keyboard::R)
 				world.health[0].current = 0;
@@ -118,11 +123,11 @@ void Game::handleEvent() {
 			if (event.key.code == sf::Keyboard::D)
 				world.input[PLAYER].right = false;
 
-			if (event.key.code == sf::Keyboard::Space)
+			if (event.key.code == sf::Keyboard::J)
 				world.input[PLAYER].attack = false;
-
-			if (event.key.code == sf::Keyboard::LShift)
+			if (event.key.code == sf::Keyboard::K) {
 				world.input[PLAYER].special = false;
+			}
 
 			break;
 
@@ -145,7 +150,7 @@ void Game::update(const float dt) {
 	gravitySystem(&world);
 	shapeCollSystem(&world, &platformMap);
 	movementSystem(&world);
-	damageSystem(&world, dt);
+	damageSystem(&world, dt, &hitboxMap);
 
 	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end();) {
 
@@ -167,8 +172,6 @@ void Game::update(const float dt) {
 	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y - view.getSize().y / 4));
 	engine->window.setView(view);
 
-	metaballHandler.metaballAddTexture.setView(view);
-	metaballHandler.metaballShadedSprite.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2);
 	metaballHandler.update(dt);
 
 	/* Hitbox Temp */
@@ -185,7 +188,7 @@ void Game::render(const float dt) {
 
 	renderSystem(&world, &engine->window);
 
-	metaballHandler.draw(&engine->window);
+	metaballHandler.draw(&engine->window, &view);
 
 	waterHandler.draw(&engine->window);
 

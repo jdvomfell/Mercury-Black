@@ -114,6 +114,12 @@ int createPlayer(World * world, float x, float y) {
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "roll", 5, 0.1f);
 	
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "inkArmAttack", 9, 0.1f);
+
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "runAttack", 6, 0.125f);
+
 	return entityID;
 
 }
@@ -216,12 +222,12 @@ int createWisp(World * world, float x, float y, MetaballHandler * metaballHandle
 	world->position[entityID].x = x;
 	world->position[entityID].x = y;
 
-	world->velocity[entityID].speed = 5.0f;
+	world->velocity[entityID].speed = 10.0f;
 	world->velocity[entityID].speedUp = 1.0f;
 
 	world->stats[entityID].power = 5;
 
-	world->sprite[entityID].metaballSpawner = new MetaballSpawner(metaballHandler, sf::Vector2f(x, y), sf::Vector2f(0, 0.5f), -0.08f, 2.0f, 10, 5, 1);
+	world->sprite[entityID].metaballSpawner = new MetaballSpawner(metaballHandler, sf::Vector2f(x, y), sf::Vector2f(0, 0.5f), -0.05f, 1.5f, 13, 5, 5);
 	metaballHandler->addSpawner(world->sprite[entityID].metaballSpawner);
 
 	return entityID;

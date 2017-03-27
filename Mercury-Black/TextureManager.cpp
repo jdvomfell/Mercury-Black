@@ -104,6 +104,15 @@ void TextureManager::loadAllTextures() {
 
 	loadTextures("player_roll", "Textures/Player/Roll/", 5);
 	
+	/* InkAttack */
+
+	loadTextures("player_inkArmAttack", "Textures/Player/Ink-Attack/", 9);
+
+
+	/* RunAttack */
+
+	loadTextures("player_runAttack", "Textures/Player/Run-Attack/", 6);
+
 	///Ceiling Plant///
 
 	/* Spawn */
@@ -177,13 +186,23 @@ void TextureManager::loadAllTextures() {
 	
 	/////PLAY//////
 
-	loadTexture("spring_background", "Textures/Test/spring_background.png");
+	loadTexture("spring_background_1", "Textures/Test/spring_background_1.png");
 	loadTexture("spring_cliff_1", "Textures/Test/spring_cliff_1.png");
 	loadTexture("spring_cliff_2", "Textures/Test/spring_cliff_2.png");
 	loadTexture("spring_tree_1", "Textures/Test/spring_tree_1.png");
 	loadTexture("spring_tree_2", "Textures/Test/spring_tree_2.png");
 	loadTexture("spring_log_1", "Textures/Test/spring_log_1.png");
 	loadTexture("heart", "Textures/Test/heart.png");
+	loadTexture("spring_ground_1", "Textures/Test/spring_ground_1.png");
+	loadTexture("spring_ground_2", "Textures/Test/spring_ground_2.png");
+	loadTexture("spring_ground_3", "Textures/Test/spring_ground_3.png");
+	loadTexture("spring_ground_4", "Textures/Test/spring_ground_4.png");
+	loadTexture("toriiGate_1_back", "Textures/Test/toriiGate_1_back.png");
+	loadTexture("toriiGate_1_front", "Textures/Test/toriiGate_1_front.png");
+	loadTexture("statue_1", "Textures/Test/statue_1.png");
+	loadTexture("bridge_1_back", "Textures/Test/bridge_1_back.png");
+	loadTexture("bridge_1_front", "Textures/Test/bridge_1_front.png");
+	loadTexture("spring_rock_1", "Textures/Test/spring_rock_1.png");
 
 	/////ICONS/////
 
@@ -194,4 +213,25 @@ void TextureManager::loadAllTextures() {
 	loadTexture("objectTool", "Textures/objectTool.png");
 	loadTexture("waterTool", "Textures/waterTool.png");
 
+	printf("LOAD TEXTURE\n");
+
+
+	/*
+	sf::Texture * t = new sf::Texture;
+	sf::Clock clock;
+	for (int i = 0; i < 100; i++) {
+		t->loadFromFile("Textures/Test/tree.png");
+	}
+	sf::Time elapsed1 = clock.getElapsedTime();
+	printf("TEXTURES LOADED %f\n", elapsed1.asSeconds());
+	clock.restart();
+	printf("Load Texture\n");
+	sf::Image s;
+	s.loadFromFile("Textures/Test/tree.png");
+	for (int i = 0; i < 100; i++) {
+		t->loadFromImage(s, sf::IntRect(0, 0, 10, 10));
+	}
+	elapsed1 = clock.getElapsedTime();
+	printf("TEXTURES LOADED %f\n", elapsed1.asSeconds());
+	*/
 }

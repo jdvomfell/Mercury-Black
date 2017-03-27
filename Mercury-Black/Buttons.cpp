@@ -4,17 +4,16 @@
 #include "HitboxEditor.h"
 #include "MainMenu.h"
 #include "HitboxEditor.h"
+#include "OptionsMenu.h"
 #include "Fade.h"
 #include <string>
 
-TextButton::TextButton(std::string name, float x, float y, int size, sf::Font * font, eventFunction funcPtr){
+TextButton::TextButton(std::string name, float x, float y, int size, sf::Font * font, eventFunction funcPtr) {
 
 	text = sf::Text(name, *font, size);
 	text.setPosition(x, y);
 
-	text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
-	
-	 m_funcPtr = funcPtr;
+	m_funcPtr = funcPtr;
 }
 
 bool TextButton::isSelected(sf::Vector2f position) {
@@ -85,6 +84,12 @@ void changeToHitboxEditor(GameEngine * engine) {
 }
 void changeToMainMenu(GameEngine * engine) {
 	engine->changeState(MainMenu::instance(engine));
+}
+void changeToOptionsMenu(GameEngine * engine) {
+	engine->pushState(OptionsMenu::instance(engine));
+}
+void changeToKeyBindings(GameEngine * engine) {
+	engine->pushState(KeyBind::instance(engine));
 }
 void quitGame(GameEngine * engine) {
 	engine->quit();

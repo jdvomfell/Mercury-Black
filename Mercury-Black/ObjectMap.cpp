@@ -12,7 +12,7 @@ void ObjectMap::save() {
 	ofstream.open(objectFilename, std::ios::out | std::ios::binary);
 
 	for (std::map<float, Object *>::iterator it = map.begin(); it != map.end(); it++) {
-		
+
 		printf("%d, %f, %f, %s\n", it->second->layer, it->second->position.x, it->second->position.y, it->second->textureName.c_str());
 
 		ofstream
@@ -71,7 +71,7 @@ void ObjectMap::load() {
 		tempObject->layer = layer;
 		tempObject->position = sf::Vector2f(x, y);
 		tempObject->textureName = name;
-		
+
 		tempObject->sprite.setTexture(textureManager->textures.find(tempObject->textureName)->second);
 		tempObject->sprite.setOrigin(tempObject->sprite.getLocalBounds().width / 2, tempObject->sprite.getLocalBounds().height / 2);
 		tempObject->sprite.setPosition(tempObject->position);
@@ -96,10 +96,10 @@ void ObjectMap::clean() {
 	std::map<float, Object *>::iterator it;
 	it = map.begin();
 
-	while(it != map.end()) {
+	while (it != map.end()) {
 
 		delete(it->second);
-		
+
 		map.erase(it++);
 
 	}
@@ -261,7 +261,7 @@ std::map <float, Object *>::iterator ObjectMap::findClosest(sf::Vector2f positio
 }
 
 void ObjectMap::nextObject() {
-	
+
 	if (textureManager->textures.find(object.textureName) == --textureManager->textures.end())
 		object.textureName = textureManager->textures.begin()->first;
 	else if (textureManager->textures.find(object.textureName) == textureManager->textures.end())
@@ -278,9 +278,9 @@ void ObjectMap::nextObject() {
 
 void ObjectMap::prevObject() {
 
-	if(textureManager->textures.find(object.textureName) == textureManager->textures.begin())
+	if (textureManager->textures.find(object.textureName) == textureManager->textures.begin())
 		object.textureName = (--textureManager->textures.end())->first;
-	else if(textureManager->textures.find(object.textureName) == textureManager->textures.end())
+	else if (textureManager->textures.find(object.textureName) == textureManager->textures.end())
 		object.textureName = textureManager->textures.begin()->first;
 	else
 		object.textureName = (--textureManager->textures.find(object.textureName))->first;
@@ -318,18 +318,18 @@ void ObjectMap::objectFlipx(Object* object) {
 	object->flipx = !object->flipx;
 
 	if (object->flipx == true) {
-		object->sprite.setTextureRect(sf::IntRect((int) object->sprite.getLocalBounds().width, 0, (int) -object->sprite.getLocalBounds().width, (int) object->sprite.getLocalBounds().height));
+		object->sprite.setTextureRect(sf::IntRect((int)object->sprite.getLocalBounds().width, 0, (int)-object->sprite.getLocalBounds().width, (int)object->sprite.getLocalBounds().height));
 	}
 
 	else {
-		object->sprite.setTextureRect(sf::IntRect(0, 0, (int) object->sprite.getLocalBounds().width, (int) object->sprite.getLocalBounds().height));
+		object->sprite.setTextureRect(sf::IntRect(0, 0, (int)object->sprite.getLocalBounds().width, (int)object->sprite.getLocalBounds().height));
 	}
 
 	return;
 }
 
 void ObjectMap::objectFlipy(Object* object) {
-	
+
 	if (object == NULL) return;
 
 	objectFlipx(object);
@@ -337,14 +337,14 @@ void ObjectMap::objectFlipy(Object* object) {
 
 	object->rotate += 180;
 
-	if(object->rotate > 360)
-		object->rotate = (int) object->rotate % 360;
+	if (object->rotate > 360)
+		object->rotate = (int)object->rotate % 360;
 
 	return;
 }
 
 void ObjectMap::objectRotate(Object* object, float mod) {
-	
+
 	if (object == NULL) return;
 
 	object->rotate += mod;
@@ -352,7 +352,7 @@ void ObjectMap::objectRotate(Object* object, float mod) {
 	object->sprite.setRotation(object->rotate);
 
 	if (object->rotate > 360)
-		object->rotate = (int) object->rotate % 360;
+		object->rotate = (int)object->rotate % 360;
 
 }
 

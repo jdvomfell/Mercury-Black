@@ -158,13 +158,20 @@ void Editor::handleEvent() {
 
 				else if (toolBox.getMode() == WATER) {
 
+					waterHandler.selected = waterHandler.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
-
+					if (waterHandler.selected != waterHandler.map.end()) {
+						selector.rect.setSize(sf::Vector2f(waterHandler.selected->second->rect.width, waterHandler.selected->second->rect.height));
+						selector.rect.setOrigin(0, 0);
+						selector.rect.setPosition(waterHandler.selected->second->rect.left, waterHandler.selected->second->rect.top);
+						selector.rect.setOutlineColor(sf::Color::Blue);
+					}
 				}
 
 				else if (toolBox.getMode() == EVENT) {
 
 					eventMap.selected = eventMap.containment(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+
 
 					if (eventMap.selected != eventMap.events.end()) {
 						toolBox.selectEvent(eventMap.selected->second);
@@ -175,7 +182,6 @@ void Editor::handleEvent() {
 						//selector.rect.setPosition(eventMap.selected->second->eventArea->getPosition());
 						selector.rect.setOutlineColor(sf::Color::Blue);
 
-					}
 				}
 
 			}
@@ -262,12 +268,12 @@ void Editor::handleEvent() {
 
 			if (toolBox.getMode() == OBJECT)
 				objectMap.remove();
-			else if (toolBox.getMode() == PLATFORM) {
+			else if (toolBox.getMode() == PLATFORM)
 				platformMap.remove();
-			}
-			else if (toolBox.getMode() == EVENT) {
+			else if (toolBox.getMode() == WATER)
+				waterHandler.remove();
+			else if (toolBox.getMode() == EVENT)
 				eventMap.remove(eventMap.selected); 
-			}
 
 			selector.rect.setOutlineColor(sf::Color::Transparent);
 

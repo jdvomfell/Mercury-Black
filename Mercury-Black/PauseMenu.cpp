@@ -25,9 +25,9 @@ void PauseMenu::init() {
 	title.setPosition(view.getCenter().x, view.getCenter().y - (view.getSize().y / 3));
 
 	resumeButton.text.setPosition(view.getCenter().x, title.getPosition().y + (view.getSize().y / 6));
-	optionsButton.text.setPosition(view.getCenter().x, title.getPosition().y + 2*(view.getSize().y / 6));
-	mainMenuButton.text.setPosition(view.getCenter().x, title.getPosition().y + 3*(view.getSize().y / 6));
-	quitButton.text.setPosition(view.getCenter().x, title.getPosition().y + 4*(view.getSize().y / 6));
+	optionsButton.text.setPosition(view.getCenter().x, title.getPosition().y + 2 * (view.getSize().y / 6));
+	mainMenuButton.text.setPosition(view.getCenter().x, title.getPosition().y + 3 * (view.getSize().y / 6));
+	quitButton.text.setPosition(view.getCenter().x, title.getPosition().y + 4 * (view.getSize().y / 6));
 
 	guiHandler.isSelected(sf::Vector2f(0, 0));
 

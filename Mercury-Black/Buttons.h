@@ -8,12 +8,12 @@ class TextButton : public GUI {
 
 public:
 
-    TextButton() {}
-    TextButton(std::string name, float x, float y, int size, sf::Font * font, eventFunction funcPtr);
+	TextButton() {}
+	TextButton(std::string name, float x, float y, int size, sf::Font * font, eventFunction funcPtr);
 	bool isSelected(sf::Vector2f position);
 	void draw(sf::RenderWindow *);
 	// A destructor
-    ~TextButton(){ m_funcPtr = NULL; }
+	~TextButton() { m_funcPtr = NULL; }
 
 	sf::Text text;
 
@@ -39,6 +39,8 @@ void popState(GameEngine * engine);
 void changeToEditor(GameEngine * engine);
 void changeToHitboxEditor(GameEngine * engine);
 void changeToMainMenu(GameEngine * engine);
+void changeToOptionsMenu(GameEngine * engine);
+void changeToKeyBindings(GameEngine * engine);
 void quitGame(GameEngine * engine);
 void doNothing(GameEngine * engine);
 #endif
