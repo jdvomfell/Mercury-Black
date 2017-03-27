@@ -1,6 +1,7 @@
 #include "ToolBox.h"
 
 #include "PlatformMap.h"
+#include "EventHandler.h"
 #include "ObjectMap.h"
 #include "Water.h"
 
@@ -252,6 +253,21 @@ void ToolBox::selectObject(Object * object) {
 	morphText3.setString("Rotation: " + std::to_string(object->rotate));
 	//Scale
 	morphText4.setString("Scale: " + std::to_string(object->scale));
+}
+
+void ToolBox::selectEvent(Event * sEvent)
+{
+	if (sEvent->type == "SOUND") {
+		Sound * sound = dynamic_cast<Sound *>(sEvent);
+		//Position
+		morphText1.setString("Coordinate Position:\nX: " + std::to_string(sound->eventArea->getPosition().x) + "\nY: " + std::to_string(sound->eventArea->getPosition().y));
+		//
+		morphText2.setString(sound->filename);
+		//
+		morphText3.setString("");
+		//
+		morphText4.setString("");
+	}
 }
 
 void ToolBox::selectWater(Water * water) {

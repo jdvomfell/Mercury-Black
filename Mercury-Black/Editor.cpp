@@ -16,6 +16,7 @@ void Editor::init() {
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	platformMap.load();
+	eventMap.load();
 
 	zoom = 2.0f;
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2.0f, engine->window.getDefaultView().getSize().y * 2.0f));
@@ -31,7 +32,7 @@ void Editor::clean() {
 	objectMap.clean();
 	platformMap.clean();
 	waterHandler.clean();
-
+	eventMap.clean();
 }
 
 void Editor::handleEvent() {
@@ -116,6 +117,9 @@ void Editor::handleEvent() {
 				else if (toolBox.getMode() == WATER) {
 					corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
 				}
+				else if (toolBox.getMode() == EVENT) {
+					corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+				}
 
 			}
 
@@ -158,6 +162,22 @@ void Editor::handleEvent() {
 
 				}
 
+				else if (toolBox.getMode() == EVENT) {
+
+					eventMap.selected = eventMap.containment(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+
+					if (eventMap.selected != eventMap.events.end()) {
+						toolBox.selectEvent(eventMap.selected->second);
+						printf("\nEVENT POS X: %f     EVENT POS Y: %f\n", eventMap.selected->second->eventArea->getPosition().x, eventMap.selected->second->eventArea->getPosition().y);
+						selector.rect.setSize(sf::Vector2f(eventMap.selected->second->eventArea->getLocalBounds().width, eventMap.selected->second->eventArea->getLocalBounds().height));
+						selector.rect.setPosition(eventMap.selected->second->eventArea->getPosition().x, 
+												  eventMap.selected->second->eventArea->getPosition().y - eventMap.selected->second->eventArea->getLocalBounds().height);
+						//selector.rect.setPosition(eventMap.selected->second->eventArea->getPosition());
+						selector.rect.setOutlineColor(sf::Color::Blue);
+
+					}
+				}
+
 			}
 
 		}
@@ -188,6 +208,23 @@ void Editor::handleEvent() {
 				else if (toolBox.getMode() == WATER) {
 					corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
 					waterHandler.insert(corner1, corner2);
+				}
+
+				else if (toolBox.getMode() == EVENT) {
+						corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+						sf::RectangleShape * rectangle = new sf::RectangleShape(sf::Vector2f(corner2.x - corner1.x, corner1.y - corner2.y));
+						rectangle->setPosition(corner1.x, corner2.y);
+
+						if (eventMap.events.empty()) eventMap.numEvents = 0;
+
+						if (eventMap.numEvents == 0) {
+							printf("fuck");
+							eventMap.insertSound(rectangle, "Music/drank.ogg", 25, true);
+						}
+						else if (eventMap.numEvents == 1) {
+
+							eventMap.insertSound(rectangle, "Music/frogs.ogg", 25, true);
+						}
 				}
 
 			}
@@ -228,6 +265,9 @@ void Editor::handleEvent() {
 			else if (toolBox.getMode() == PLATFORM) {
 				platformMap.remove();
 			}
+			else if (toolBox.getMode() == EVENT) {
+				eventMap.remove(eventMap.selected); 
+			}
 
 			selector.rect.setOutlineColor(sf::Color::Transparent);
 
@@ -258,10 +298,12 @@ void Editor::handleEvent() {
 			objectMap.save();
 			platformMap.save();
 			waterHandler.save();
+			eventMap.save();
 		}
 		if (event.key.code == sf::Keyboard::K) {
 			objectMap.load();
 			platformMap.load();
+			eventMap.load();
 		}
 
 		if (event.key.code == sf::Keyboard::M)
@@ -368,6 +410,8 @@ void Editor::render(const float dt) {
 
 	platformMap.platformPoints.draw(&engine->window);
 
+	eventMap.draw(&engine->window);
+
 	engine->window.draw(selector.rect);
 
 	if (toolBox.getMode() == OBJECT)
@@ -376,7 +420,6 @@ void Editor::render(const float dt) {
 	toolBox.render();
 
 	engine->window.setView(view);
-
 }
 
 void Editor::deselect() {
@@ -388,6 +431,7 @@ void Editor::deselect() {
 
 	platformMap.selected = platformMap.map.end();
 	objectMap.selected = objectMap.map.end();
+	eventMap.selected = eventMap.events.end();
 
 }
 

@@ -38,13 +38,16 @@ void Game::init() {
 	objectMap.load();
 	platformMap.load();
 
+	eventMap.world = &world;
+	eventMap.load();
+	//eventMap.numEvents = 0;
+
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
 
 	metaballHandler.init(engine->window.getSize());
 	
 	waterHandler.load();
-
 }
 
 void Game::clean() {
@@ -55,7 +58,7 @@ void Game::clean() {
 	platformMap.clean();
 	objectMap.clean();
 	waterHandler.clean();
-
+	eventMap.clean();
 }
 
 void Game::handleEvent() {
@@ -144,9 +147,15 @@ void Game::update(const float dt) {
 	movementSystem(&world);
 	damageSystem(&world, dt);
 
-	//for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)	
-		//if (eventMap.eit->second->isTriggered()) 
-			//eventMap.eit->second->trigger();
+	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end();) {
+
+		if (eventMap.eit->second->eventArea->getGlobalBounds().contains(world.position[0].x, world.position[0].y)) {
+			if (eventMap.eit->second->isTriggered())
+				eventMap.eit->second->trigger();
+		}
+
+		eventMap.eit++;
+	}
 
 	waterHandler.update();
 	waterHandler.updateWaves(dt);
@@ -183,14 +192,20 @@ void Game::render(const float dt) {
 	engine->window.draw(rect);
 
 	objectMap.drawForeground(&engine->window);
-
-	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)
-	{
-		engine->window.draw(*eventMap.eit->second->eventArea);
-	}
-
+	
 	if(drawPlatforms)
 		for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)
 			engine->window.draw(*(pit->second));
+
+	//for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); )
+	//{
+		//if (eventMap.eit->second->eventArea->getGlobalBounds().contains(world.position[0].x, world.position[0].y)) {
+			//if (eventMap.eit->second->eventArea == NULL)
+				//printf("NULL");
+			//else
+				//engine->window.draw(*(eventMap.eit->second->eventArea));
+		//}
+		//eventMap.eit++;
+//	}
 
 }

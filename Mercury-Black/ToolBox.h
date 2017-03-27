@@ -2,6 +2,7 @@
 #define TOOLBOX_H
 
 #include "Buttons.h"
+#include "EventHandler.h"
 #include <SFML/Graphics.hpp>
 
 const enum Mode {
@@ -34,6 +35,7 @@ public:
 
 	void selectPlatform(sf::ConvexShape *);
 	void selectObject(struct Object *);
+	void selectEvent(Event * sEvent);
 	void selectWater(class Water *);
 
 	void update();
