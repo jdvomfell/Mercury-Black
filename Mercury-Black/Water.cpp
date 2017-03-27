@@ -105,6 +105,8 @@ Water::Water(sf::Vector2f topLeft, sf::Vector2f bottomRight) {
 	length = (bottomRight.x - topLeft.x);
 	targetHeight = topLeft.y;
 
+	rect = sf::FloatRect(topLeft, bottomRight - topLeft);
+
 	float numSprings = length / PIXELS_PER_SPRING;
 
 	for (int i = 0; i < numSprings; i++) {
@@ -249,5 +251,60 @@ void WaterHandler::clean() {
 		map.erase(it++);
 
 	}
+
+}
+
+std::map <float, Water *>::iterator WaterHandler::findRight(float x) {
+
+	return map.lower_bound(x);
+
+}
+
+std::map <float, Water *>::iterator WaterHandler::findLeft(float x) {
+
+	if (map.lower_bound(x) != map.begin())
+		return --map.lower_bound(x);
+	else
+		return map.end();
+
+}
+
+std::map <float, Water *>::iterator WaterHandler::findClosest(sf::Vector2f position) {
+
+	float distanceLeft;
+	float distanceRight;
+
+	std::map<float, Water *>::iterator left = findLeft(position.x);
+	std::map<float, Water *>::iterator right = findRight(position.x);
+
+	if (left != map.end() && right != map.end()) {
+		distanceLeft = sqrt(pow((position.x - left->second->x), 2) + pow((position.y - left->second->targetHeight), 2));
+		distanceRight = sqrt(pow((right->second->x - position.x), 2) + pow((right->second->targetHeight - position.y), 2));
+		if (distanceLeft < distanceRight)
+			return left;
+		else
+			return right;
+	}
+
+	else if (left == map.end())
+		return right;
+
+	else if (right == map.end())
+		return left;
+
+	else
+		return map.end();
+
+}
+
+void WaterHandler::remove() {
+
+	if (selected == map.end())
+		return;
+
+	delete(selected->second);
+	map.erase(selected);
+
+	selected = map.end();
 
 }

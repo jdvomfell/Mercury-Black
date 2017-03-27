@@ -156,13 +156,13 @@ void HitboxMap::clean() {
 	}
 
 	for (it = collisionBoxes.begin(); it != collisionBoxes.end();)
-		map.erase(it++);
+		collisionBoxes.erase(it++);
 	for (it = defenceBoxes.begin(); it != defenceBoxes.end();)
-		map.erase(it++);
+		defenceBoxes.erase(it++);
 	for (it = damageBoxes.begin(); it != damageBoxes.end();)
-		map.erase(it++);
+		damageBoxes.erase(it++);
 	for (it = hurtBoxes.begin(); it != hurtBoxes.end();)
-		map.erase(it++);
+		hurtBoxes.erase(it++);
 
 }
 
@@ -193,6 +193,6 @@ std::vector<Hitbox *> HitboxMap::getHitboxes(std::string ID) {
 
 std::vector<Hitbox *> HitboxMap::getFlippedHitboxes(std::string ID) {
 
-
+	return getHitboxes(ID);
 
 }

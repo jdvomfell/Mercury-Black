@@ -209,7 +209,7 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 					//}
 					
 					//else {
-					if (hurtIt != hitboxMap->hurtBoxs.end() && damageIt != hitboxMap->damageBoxs.end()) {
+					if (hurtIt != hitboxMap->hurtBoxes.end() && damageIt != hitboxMap->damageBoxes.end()) {
 
 						/* Check Each Damage Box Against Each Hurt Box */
 
