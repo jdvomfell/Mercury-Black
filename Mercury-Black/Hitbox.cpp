@@ -25,16 +25,16 @@ void HitboxMap::addHitbox(std::string textureID, sf::RectangleShape box, int typ
 
 		switch (type) {
 		case HURTBOX:
-			hurtBoxs.insert(std::make_pair(textureID, hitbox));
+			hurtBoxes.insert(std::make_pair(textureID, hitbox));
 			break;
 		case COLLISIONBOX:
-			collisionBoxs.insert(std::make_pair(textureID, hitbox));
+			collisionBoxes.insert(std::make_pair(textureID, hitbox));
 			break;
 		case DAMAGEBOX:
-			damageBoxs.insert(std::make_pair(textureID, hitbox));
+			damageBoxes.insert(std::make_pair(textureID, hitbox));
 			break;
 		case DEFENCEBOX:
-			defenceBoxs.insert(std::make_pair(textureID, hitbox));
+			defenceBoxes.insert(std::make_pair(textureID, hitbox));
 			break;
 		}
 	
@@ -146,11 +146,53 @@ void HitboxMap::load() {
 	ifstream.close();
 }
 
+void HitboxMap::clean() {
+
+	std::multimap<std::string, Hitbox *>::iterator it;
+
+	for (it = map.begin(); it != map.end();) {
+		delete(it->second);
+		map.erase(it++);
+	}
+
+	for (it = collisionBoxes.begin(); it != collisionBoxes.end();)
+		map.erase(it++);
+	for (it = defenceBoxes.begin(); it != defenceBoxes.end();)
+		map.erase(it++);
+	for (it = damageBoxes.begin(); it != damageBoxes.end();)
+		map.erase(it++);
+	for (it = hurtBoxes.begin(); it != hurtBoxes.end();)
+		map.erase(it++);
+
+}
+
 void HitboxMap::draw(sf::RenderWindow *window, std::string textureID) {
 	std::multimap<std::string, Hitbox*>::iterator it;
 	
 	for (it = map.lower_bound(textureID); it != map.upper_bound(textureID); it++) {
 		window->draw(it->second->box);
 	}
+
+}
+
+std::vector<Hitbox *> HitboxMap::getHitboxes(std::string ID) {
+
+	std::vector<Hitbox *> hitboxes;
+	std::multimap<std::string, Hitbox *>::iterator it;
+
+	if ((it = map.find(ID)) != map.end()) {
+		while (it != map.upper_bound(ID)) {
+			hitboxes.push_back(it->second);
+			it++;
+		}
+	}
+
+	return hitboxes;
+
+}
+
+std::vector<Hitbox *> HitboxMap::getFlippedHitboxes(std::string ID) {
+
+
 
 }

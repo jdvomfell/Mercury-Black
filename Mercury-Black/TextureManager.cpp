@@ -202,6 +202,7 @@ void TextureManager::loadAllTextures() {
 	loadTexture("statue_1", "Textures/Test/statue_1.png");
 	loadTexture("bridge_1_back", "Textures/Test/bridge_1_back.png");
 	loadTexture("bridge_1_front", "Textures/Test/bridge_1_front.png");
+	loadTexture("spring_rock_1", "Textures/Test/spring_rock_1.png");
 
 	/////ICONS/////
 

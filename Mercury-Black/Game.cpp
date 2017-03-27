@@ -56,6 +56,7 @@ void Game::clean() {
 	platformMap.clean();
 	objectMap.clean();
 	waterHandler.clean();
+	hitboxMap.clean();
 
 }
 

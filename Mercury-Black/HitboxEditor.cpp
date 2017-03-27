@@ -21,6 +21,8 @@ void HitboxEditor::init() {
 
 void HitboxEditor::clean() {
 	
+	hitMap.clean();
+
 }
 
 void HitboxEditor::handleEvent() {

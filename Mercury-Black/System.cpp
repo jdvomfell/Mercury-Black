@@ -131,10 +131,10 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 
 			if ((world->mask[damageTakerID] & ANIMATION_MASK) == ANIMATION_MASK) {
 				hurtID = world->sprite[damageTakerID].animationManager.getCurrentTextureID();
-				hurtIt = hitboxMap->hurtBoxs.find(hurtID);
+				hurtIt = hitboxMap->hurtBoxes.find(hurtID);
 			}
 			else {
-				hurtIt = hitboxMap->hurtBoxs.end();
+				hurtIt = hitboxMap->hurtBoxes.end();
 			}
 
 			for (int damageDealerID = 0; damageDealerID < MAX_ENTITIES; damageDealerID++) {
@@ -145,10 +145,10 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 
 					if ((world->mask[damageDealerID] & ANIMATION_MASK) == ANIMATION_MASK) {
 						damageID = world->sprite[damageDealerID].animationManager.getCurrentTextureID();
-						damageIt = hitboxMap->damageBoxs.find(damageID);
+						damageIt = hitboxMap->damageBoxes.find(damageID);
 					}
 					else {
-						damageIt = hitboxMap->damageBoxs.end();
+						damageIt = hitboxMap->damageBoxes.end();
 					}
 
 					/* See If Damage Should Be Dealt */
@@ -215,7 +215,7 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 
 						do {
 
-							hurtIt = hitboxMap->hurtBoxs.find(hurtID);
+							hurtIt = hitboxMap->hurtBoxes.find(hurtID);
 
 							damageBox = damageIt->second->box.getLocalBounds();
 							damageBox.top += world->sprite[damageDealerID].sprite.getGlobalBounds().top;
@@ -235,10 +235,10 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 
 								hurtIt++;
 
-							} while (hurtIt != hitboxMap->hurtBoxs.upper_bound(hurtID));
+							} while (hurtIt != hitboxMap->hurtBoxes.upper_bound(hurtID));
 
 							damageIt++;
-						} while (damageIt != hitboxMap->damageBoxs.upper_bound(damageID));
+						} while (damageIt != hitboxMap->damageBoxes.upper_bound(damageID));
 
 					}
 
