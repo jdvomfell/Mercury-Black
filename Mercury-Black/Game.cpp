@@ -21,21 +21,6 @@ void Game::init() {
 	createWisp(&world, 500, 500, &metaballHandler);
 	//createCeilingPlant(&world, 3000, 1000);
 
-	/*Sound insertion code TEMPORARY*/
-
-	sf::Vector2f size(800, 800);
-	sf::Vector2f size2(500, 500);
-	sf::RectangleShape * rectangle = new sf::RectangleShape(size);
-	sf::RectangleShape * rectangle2 = new sf::RectangleShape(size2);
-	rectangle->setFillColor(sf::Color::Blue);
-	rectangle2->setFillColor(sf::Color::Green);
-	eventMap.insertSound(rectangle, &world, "Music/frogs.ogg", 20.0, true);
-	eventMap.insertSound(rectangle2, &world, "Music/drank.ogg", 25.0, true);
-	rectangle->setPosition(1000, 1500);
-	rectangle2->setPosition(1000, 1500);
-
-	/* End of sound code*/
-
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	platformMap.load();

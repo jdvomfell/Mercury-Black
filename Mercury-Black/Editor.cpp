@@ -177,10 +177,12 @@ void Editor::handleEvent() {
 						toolBox.selectEvent(eventMap.selected->second);
 						printf("\nEVENT POS X: %f     EVENT POS Y: %f\n", eventMap.selected->second->eventArea->getPosition().x, eventMap.selected->second->eventArea->getPosition().y);
 						selector.rect.setSize(sf::Vector2f(eventMap.selected->second->eventArea->getLocalBounds().width, eventMap.selected->second->eventArea->getLocalBounds().height));
-						selector.rect.setPosition(eventMap.selected->second->eventArea->getPosition().x, 
-												  eventMap.selected->second->eventArea->getPosition().y - eventMap.selected->second->eventArea->getLocalBounds().height);
+						selector.rect.setPosition(eventMap.selected->second->eventArea->getPosition().x,
+						eventMap.selected->second->eventArea->getPosition().y - eventMap.selected->second->eventArea->getLocalBounds().height);
 						//selector.rect.setPosition(eventMap.selected->second->eventArea->getPosition());
 						selector.rect.setOutlineColor(sf::Color::Blue);
+
+					}
 
 				}
 
@@ -217,20 +219,20 @@ void Editor::handleEvent() {
 				}
 
 				else if (toolBox.getMode() == EVENT) {
-						corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
-						sf::RectangleShape * rectangle = new sf::RectangleShape(sf::Vector2f(corner2.x - corner1.x, corner1.y - corner2.y));
-						rectangle->setPosition(corner1.x, corner2.y);
+					corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+					sf::RectangleShape * rectangle = new sf::RectangleShape(sf::Vector2f(corner2.x - corner1.x, corner1.y - corner2.y));
+					rectangle->setPosition(corner1.x, corner2.y);
 
-						if (eventMap.events.empty()) eventMap.numEvents = 0;
+					if (eventMap.events.empty()) eventMap.numEvents = 0;
 
-						if (eventMap.numEvents == 0) {
-							printf("fuck");
-							eventMap.insertSound(rectangle, "Music/drank.ogg", 25, true);
-						}
-						else if (eventMap.numEvents == 1) {
-
-							eventMap.insertSound(rectangle, "Music/frogs.ogg", 25, true);
-						}
+					if (eventMap.numEvents == 0) {
+						printf("fuck");
+						eventMap.insertSound(rectangle, "Music/drank.ogg", 25, true);
+					}
+					else if (eventMap.numEvents == 1) {
+						eventMap.insertSound(rectangle, "Music/frogs.ogg", 25, true);
+					}
+		
 				}
 
 			}
@@ -285,10 +287,8 @@ void Editor::handleEvent() {
 		}
 
 		if (event.key.code == sf::Keyboard::Return) {
-
 			if (toolBox.getMode() == PLATFORM)
 				platformMap.insert();
-
 		}
 
 		if (event.key.code == sf::Keyboard::A)
@@ -306,6 +306,7 @@ void Editor::handleEvent() {
 			waterHandler.save();
 			eventMap.save();
 		}
+		
 		if (event.key.code == sf::Keyboard::K) {
 			objectMap.load();
 			platformMap.load();
@@ -318,10 +319,12 @@ void Editor::handleEvent() {
 			toolBox.nextTool();
 		
 		if (toolBox.getMode() == OBJECT) {
+			
 			if (event.key.code == sf::Keyboard::R) {
 				objectMap.prevObject();
 				toolBox.morphText3.setString(objectMap.object.textureName);
 			}
+			
 			if (event.key.code == sf::Keyboard::T) {
 				objectMap.nextObject();
 				toolBox.morphText3.setString(objectMap.object.textureName);
@@ -343,6 +346,7 @@ void Editor::handleEvent() {
 		break;
 
 	case sf::Event::KeyReleased:
+		
 		if (event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::RShift)
 			doSpeedUp = false;
 		if (event.key.code == sf::Keyboard::A)
@@ -354,6 +358,7 @@ void Editor::handleEvent() {
 		if (event.key.code == sf::Keyboard::S)
 			doDown = false;
 		break;
+
 	}
 
 }
@@ -397,6 +402,8 @@ void Editor::update(const float dt) {
 	waterHandler.update();
 
 	view.move(viewVelX, viewVelY);
+
+
 
 }
 
