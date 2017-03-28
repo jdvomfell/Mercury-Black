@@ -11,32 +11,7 @@ void EventHandler::insertSpawn(sf::RectangleShape * rectangle, World * world) {
 
 }*/
 
-void EventHandler::insertSound(sf::RectangleShape * rectangle, World * world, std::string fileName, float volume, bool loop) {
 
-	Sound * newEvent = new Sound();
-	float pos;
-
-	Position player;
-	player = world->position[0];
-
-	newEvent->eventArea = rectangle; 
-	newEvent->world = world;
-
-	rectangle->setOrigin(rectangle->getPosition().x + (rectangle->getGlobalBounds().width / 2.0f),
-						 rectangle->getPosition().x + (rectangle->getGlobalBounds().height / 2.0f));
-
-	pos = rectangle->getOrigin().x;
-
-	newEvent->sound = new sf::Music(); 
-	newEvent->sound->openFromFile(fileName);
-	newEvent->sound->setPosition(player.x, player.y, 0);
-	newEvent->sound->setVolume(volume);
-	newEvent->sound->setLoop(loop);
-	newEvent->sound->setMinDistance(100000.0f);
-
-	events.insert(std::make_pair(pos, newEvent));
-
-}
 /*
 void EventHandler::insertSwitch(sf::RectangleShape * rectangle, World * world) {
 
@@ -50,7 +25,7 @@ void EventHandler::insertSwitch(sf::RectangleShape * rectangle, World * world) {
 }
 
 void EventHandler::insertSwitchEffect(sf::RectangleShape * rectangle, World * world) {
-
+s
 	SwitchEffect * newEvent = new SwitchEffect();
 
 	newEvent->eventArea = rectangle; 
@@ -60,23 +35,161 @@ void EventHandler::insertSwitchEffect(sf::RectangleShape * rectangle, World * wo
 
 }*/
 
+
 void EventHandler::remove(std::map<float, Event *>::iterator oldEvent) {
 
-	events.erase(oldEvent);
+	if (oldEvent == events.end() || oldEvent->second == NULL || numEvents <= 1)
+		return;
 
+	delete(oldEvent->second);
+	events.erase(selected);
+	selected = events.end();
+	numEvents--;
 }
 
 void EventHandler::clean() {
 
-	for (eit = events.begin(); eit != events.end(); eit++)
+	for (eit = events.begin(); eit != events.end();)
 	{
 		eit->second->clean();
-		
+		events.erase(eit++);
+	}
+
+	numEvents = 0;
+}
+
+void EventHandler::save() {
+
+	std::ofstream ofstream;
+
+	std::string eventFilename = "event.dat";
+	ofstream.open(eventFilename, std::ios::out | std::ios::binary);
+
+	for (eit = events.begin(); eit != events.end(); eit++) {
+
+		if (eit->second->type == "SOUND") {
+			Sound * sound = dynamic_cast<Sound *>(eit->second);
+
+			ofstream
+				<< "SOUND" << std::endl
+				<< sound->eventArea->getPosition().x << std::endl
+				<< sound->eventArea->getPosition().y << std::endl
+				<< sound->eventArea->getSize().x << std::endl
+				<< sound->eventArea->getSize().y << std::endl
+				<< sound->filename << std::endl
+				<< sound->sound->getVolume() << std::endl
+				<< sound->sound->getLoop() << std::endl
+				<< sound->sound->getMinDistance() << std::endl;
+
+		}
+	}
+
+	ofstream.close();
+}
+
+void EventHandler::load() {
+
+	std::string eventFilename = "event.dat";
+	std::ifstream ifstream;
+
+	float x, y, sizeX, sizeY;
+	std::string eventType; 
+
+	int numEvents = 0; 
+
+	clean();
+
+	ifstream.open(eventFilename, std::ios::in | std::ios::binary);
+
+	if (!ifstream.is_open()) {
+		printf("ERROR: Cannot Open Object File (Possibly No File To Load)\n");
+		return;
+	}
+
+	while (ifstream >> eventType) {
+
+		if (ifstream.eof())
+			return; 
+
+		if (eventType == "SOUND") {
+
+			numEvents++;
+
+			printf("fuckkckcckckckckc");
+			float volume; 
+			bool loop;
+			float minDistance; 
+			std::string filename; 
+			Sound * sound = new Sound();
+			
+			ifstream >> x >> y >> sizeX >> sizeY >> filename >> volume >> loop >> minDistance;
+			
+			sf::RectangleShape * rect = new sf::RectangleShape(sf::Vector2f(sizeX, sizeY));
+			rect->setPosition(x, y);
+
+			insertSound(rect, filename, volume, loop);
+
+		}
+	}
+
+	printf("Loaded %d Weenie Hut Juniors! n", numEvents);
+
+	ifstream.close(); 
+
+}
+
+void EventHandler::insertSound(sf::RectangleShape * rectangle, std::string fileName, float volume, bool loop) {
+
+	Sound * newEvent = new Sound();
+	float pos;
+	sf::Color color(255, 0, 0, 30);
+
+	numEvents++;
+
+	newEvent->eventArea = rectangle;
+	newEvent->type = "SOUND";
+	newEvent->filename = fileName;
+
+	pos = rectangle->getPosition().x;
+
+	newEvent->eventArea->setFillColor(color);
+
+	newEvent->sound = new sf::Music();
+	newEvent->sound->openFromFile(fileName);
+	newEvent->sound->setPosition(rectangle->getPosition().x, rectangle->getPosition().y, 0);
+	newEvent->sound->setVolume(volume);
+	newEvent->sound->setLoop(loop);
+	newEvent->sound->setMinDistance(100000.0f);
+
+	selected = events.insert(std::make_pair(pos, newEvent));
+
+}
+
+void EventHandler::draw(sf::RenderWindow * window)
+{
+	for (eit = events.begin(); eit != events.end(); ) {
+		window->draw(*(eit++)->second->eventArea);
 	}
 }
 
+std::map<float, Event *>::iterator EventHandler::containment(sf::Vector2f mouse) {
+
+	for (eit = events.begin(); eit != events.end(); eit++) {
+		if (eit->second != NULL) {
+			if (eit->second->eventArea != NULL) {
+				if (eit->second->eventArea->getGlobalBounds().contains(mouse)) {
+					return eit;
+				}
+			}
+		}
+		
+	}
+
+	return events.end();
+}
+
 void Spawner::trigger() {
-	
+
 }
 
 bool Spawner::isTriggered() {
@@ -98,24 +211,16 @@ void Sound::trigger() {
 
 bool Sound::isTriggered() {
 
-	Position player; 
-
-	player = world->position[0];
-
-	if (eventArea->getGlobalBounds().contains(player.x, player.y)) {
-
-		if (sound->getPlayingOffset() != sf::Time::Zero) 
-			 return false;
-		else return true;
-
-	}
-	else return false; 
+	if (sound->getPlayingOffset() != sf::Time::Zero) 
+		 return false;
+	else return true; 
 
 }
 
 void Sound::clean() {
 
 	sound->stop();
+	delete(eventArea);
 
 }
 

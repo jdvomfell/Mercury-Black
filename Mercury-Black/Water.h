@@ -39,6 +39,8 @@ public:
 	sf::VertexArray waterShape;
 	std::vector<Spring *> springs;
 
+	sf::FloatRect rect;
+
 	sf::Vector2f topLeft;
 	sf::Vector2f bottomRight;
 
@@ -53,11 +55,18 @@ class WaterHandler {
 
 public:
 
+	std::map<float, Water *>::iterator selected;
+
 	void insert(sf::Vector2f topLeft, sf::Vector2f);
+	void remove();
 
 	void updateWaves(float dt);
 	void update();
 	void draw(sf::RenderWindow * window);
+
+	std::map <float, Water *>::iterator findClosest(sf::Vector2f);
+	std::map <float, Water *>::iterator findRight(float x);
+	std::map <float, Water *>::iterator findLeft(float x);
 
 	void clean();
 

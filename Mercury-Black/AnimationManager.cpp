@@ -34,7 +34,7 @@ void AnimationManager::createAnimation(TextureManager * textureManager, std::str
 	for (int i = 0; i < numFrames; i++) {
 		frameName = entityName;
 		frameName += "_" + animationName + "_" + std::to_string(i + 1);
-		animation->addFrame(textureManager->getTexture(frameName));
+		animation->addFrame(textureManager->getTexture(frameName), frameName);
 	}
 
 	this->addAnimation(animation, animationName);
@@ -94,6 +94,12 @@ void AnimationManager::changeAnimation(std::string animationID)	{
 	currentAnimation = animationID;
 	currentFrame = 0;
 	currentTime = 0.0f;
+
+}
+
+std::string AnimationManager::getCurrentTextureID() {
+
+	return animations[currentAnimation]->textureIDs[currentFrame];
 
 }
 

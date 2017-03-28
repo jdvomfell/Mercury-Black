@@ -16,6 +16,7 @@ void Editor::init() {
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	platformMap.load();
+	eventMap.load();
 
 	previewBox.setOutlineThickness(5);
 	previewBox.setFillColor(sf::Color::Transparent);
@@ -35,7 +36,7 @@ void Editor::clean() {
 	objectMap.clean();
 	platformMap.clean();
 	waterHandler.clean();
-
+	eventMap.clean();
 }
 
 void Editor::handleEvent() {
@@ -128,6 +129,9 @@ void Editor::handleEvent() {
 					previewBox.setPosition(corner1);
 					previewBox.setOutlineColor(sf::Color::Red);
 				}
+				else if (toolBox.getMode() == EVENT) {
+					corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+				}
 
 			}
 
@@ -166,7 +170,31 @@ void Editor::handleEvent() {
 
 				else if (toolBox.getMode() == WATER) {
 
+					waterHandler.selected = waterHandler.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
+					if (waterHandler.selected != waterHandler.map.end()) {
+						selector.rect.setSize(sf::Vector2f(waterHandler.selected->second->rect.width, waterHandler.selected->second->rect.height));
+						selector.rect.setOrigin(0, 0);
+						selector.rect.setPosition(waterHandler.selected->second->rect.left, waterHandler.selected->second->rect.top);
+						selector.rect.setOutlineColor(sf::Color::Blue);
+					}
+				}
+
+				else if (toolBox.getMode() == EVENT) {
+
+					eventMap.selected = eventMap.containment(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+
+
+					if (eventMap.selected != eventMap.events.end()) {
+						toolBox.selectEvent(eventMap.selected->second);
+						printf("\nEVENT POS X: %f     EVENT POS Y: %f\n", eventMap.selected->second->eventArea->getPosition().x, eventMap.selected->second->eventArea->getPosition().y);
+						selector.rect.setSize(sf::Vector2f(eventMap.selected->second->eventArea->getLocalBounds().width, eventMap.selected->second->eventArea->getLocalBounds().height));
+						selector.rect.setPosition(eventMap.selected->second->eventArea->getPosition().x,
+						eventMap.selected->second->eventArea->getPosition().y - eventMap.selected->second->eventArea->getLocalBounds().height);
+						//selector.rect.setPosition(eventMap.selected->second->eventArea->getPosition());
+						selector.rect.setOutlineColor(sf::Color::Blue);
+
+					}
 
 				}
 
@@ -201,6 +229,23 @@ void Editor::handleEvent() {
 					previewBox.setOutlineColor(sf::Color::Transparent);
 					corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
 					waterHandler.insert(corner1, corner2);
+				}
+
+				else if (toolBox.getMode() == EVENT) {
+					corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+					sf::RectangleShape * rectangle = new sf::RectangleShape(sf::Vector2f(corner2.x - corner1.x, corner1.y - corner2.y));
+					rectangle->setPosition(corner1.x, corner2.y);
+
+					if (eventMap.events.empty()) eventMap.numEvents = 0;
+
+					if (eventMap.numEvents == 0) {
+						printf("fuck");
+						eventMap.insertSound(rectangle, "Music/drank.ogg", 25, true);
+					}
+					else if (eventMap.numEvents == 1) {
+						eventMap.insertSound(rectangle, "Music/frogs.ogg", 25, true);
+					}
+		
 				}
 
 			}
@@ -238,9 +283,12 @@ void Editor::handleEvent() {
 
 			if (toolBox.getMode() == OBJECT)
 				objectMap.remove();
-			else if (toolBox.getMode() == PLATFORM) {
+			else if (toolBox.getMode() == PLATFORM)
 				platformMap.remove();
-			}
+			else if (toolBox.getMode() == WATER)
+				waterHandler.remove();
+			else if (toolBox.getMode() == EVENT)
+				eventMap.remove(eventMap.selected); 
 
 			selector.rect.setOutlineColor(sf::Color::Transparent);
 
@@ -252,10 +300,8 @@ void Editor::handleEvent() {
 		}
 
 		if (event.key.code == sf::Keyboard::Return) {
-
 			if (toolBox.getMode() == PLATFORM)
 				platformMap.insert();
-
 		}
 
 		if (event.key.code == sf::Keyboard::A)
@@ -271,10 +317,13 @@ void Editor::handleEvent() {
 			objectMap.save();
 			platformMap.save();
 			waterHandler.save();
+			eventMap.save();
 		}
+		
 		if (event.key.code == sf::Keyboard::K) {
 			objectMap.load();
 			platformMap.load();
+			eventMap.load();
 		}
 
 		if (event.key.code == sf::Keyboard::M)
@@ -283,10 +332,12 @@ void Editor::handleEvent() {
 			toolBox.nextTool();
 		
 		if (toolBox.getMode() == OBJECT) {
+			
 			if (event.key.code == sf::Keyboard::R) {
 				objectMap.prevObject();
 				toolBox.morphText3.setString(objectMap.object.textureName);
 			}
+			
 			if (event.key.code == sf::Keyboard::T) {
 				objectMap.nextObject();
 				toolBox.morphText3.setString(objectMap.object.textureName);
@@ -308,6 +359,7 @@ void Editor::handleEvent() {
 		break;
 
 	case sf::Event::KeyReleased:
+		
 		if (event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::RShift)
 			doSpeedUp = false;
 		if (event.key.code == sf::Keyboard::A)
@@ -319,6 +371,7 @@ void Editor::handleEvent() {
 		if (event.key.code == sf::Keyboard::S)
 			doDown = false;
 		break;
+
 	}
 
 }
@@ -363,6 +416,8 @@ void Editor::update(const float dt) {
 
 	view.move(viewVelX, viewVelY);
 
+
+
 }
 
 void Editor::render(const float dt) {
@@ -381,6 +436,8 @@ void Editor::render(const float dt) {
 
 	platformMap.platformPoints.draw(&engine->window);
 
+	eventMap.draw(&engine->window);
+
 	engine->window.draw(selector.rect);
 
 	if (toolBox.getMode() == OBJECT)
@@ -391,7 +448,6 @@ void Editor::render(const float dt) {
 	toolBox.render();
 
 	engine->window.setView(view);
-
 }
 
 void Editor::deselect() {
@@ -403,6 +459,7 @@ void Editor::deselect() {
 
 	platformMap.selected = platformMap.map.end();
 	objectMap.selected = objectMap.map.end();
+	eventMap.selected = eventMap.events.end();
 
 }
 

@@ -6,6 +6,7 @@
 
 #include "Water.h"
 #include "CollisionMap.h"
+#include "EventHandler.h"
 #include "ObjectMap.h"
 #include "GameState.h"
 #include "PlatformMap.h"
@@ -40,22 +41,26 @@ public:
 
 	void deselect();
 
+	int numEvents; 
+
 	/* Object */
 
 	/* Point */
 
 protected:
 
-	Editor() {}
+	Editor() { numEvents = 0; }
 
 private:
 
 	Selector selector;
 	static Editor editor;
 
+	EventHandler eventMap; 
 	ObjectMap objectMap;
 	PlatformMap platformMap;
 	WaterHandler waterHandler;
+	EventHandler eventHandler;
 
 	bool doSpeedUp;
 	bool doLeft;

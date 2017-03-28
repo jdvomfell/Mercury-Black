@@ -108,6 +108,11 @@ void TextureManager::loadAllTextures() {
 
 	loadTextures("player_inkArmAttack", "Textures/Player/Ink-Attack/", 9);
 
+
+	/* RunAttack */
+
+	loadTextures("player_runAttack", "Textures/Player/Run-Attack/", 6);
+
 	///Ceiling Plant///
 
 	/* Spawn */
@@ -197,6 +202,7 @@ void TextureManager::loadAllTextures() {
 	loadTexture("statue_1", "Textures/Test/statue_1.png");
 	loadTexture("bridge_1_back", "Textures/Test/bridge_1_back.png");
 	loadTexture("bridge_1_front", "Textures/Test/bridge_1_front.png");
+	loadTexture("spring_rock_1", "Textures/Test/spring_rock_1.png");
 
 	/////ICONS/////
 
@@ -207,4 +213,25 @@ void TextureManager::loadAllTextures() {
 	loadTexture("objectTool", "Textures/objectTool.png");
 	loadTexture("waterTool", "Textures/waterTool.png");
 
+	printf("LOAD TEXTURE\n");
+
+
+	/*
+	sf::Texture * t = new sf::Texture;
+	sf::Clock clock;
+	for (int i = 0; i < 100; i++) {
+		t->loadFromFile("Textures/Test/tree.png");
+	}
+	sf::Time elapsed1 = clock.getElapsedTime();
+	printf("TEXTURES LOADED %f\n", elapsed1.asSeconds());
+	clock.restart();
+	printf("Load Texture\n");
+	sf::Image s;
+	s.loadFromFile("Textures/Test/tree.png");
+	for (int i = 0; i < 100; i++) {
+		t->loadFromImage(s, sf::IntRect(0, 0, 10, 10));
+	}
+	elapsed1 = clock.getElapsedTime();
+	printf("TEXTURES LOADED %f\n", elapsed1.asSeconds());
+	*/
 }

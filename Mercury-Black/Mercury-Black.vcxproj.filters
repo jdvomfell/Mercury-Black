@@ -27,9 +27,6 @@
     <Filter Include="Source Files\UI">
       <UniqueIdentifier>{41452a39-2307-49a9-a0fc-9c7cc5e52ab5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\GameUtility">
-      <UniqueIdentifier>{130d7294-9d86-4394-8c9e-74df74abc048}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\GameUtility">
       <UniqueIdentifier>{309f919f-f043-4e7f-8d44-986d08e84a1c}</UniqueIdentifier>
     </Filter>
@@ -48,6 +45,9 @@
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\GameUtility">
+      <UniqueIdentifier>{130d7294-9d86-4394-8c9e-74df74abc048}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -108,26 +108,32 @@
     <ClCompile Include="PauseMenu.cpp">
       <Filter>Source Files\GameStates</Filter>
     </ClCompile>
+    <ClCompile Include="ToolBox.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Fade.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Hitbox.cpp">
+      <Filter>Source Files\GameUtility</Filter>
+    </ClCompile>
     <ClCompile Include="CollisionHelper.cpp">
       <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
     <ClCompile Include="EventHandler.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
-    <ClCompile Include="ToolBox.cpp">
-      <Filter>Source Files\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Metaball.cpp">
+    <ClCompile Include="KeyBind.cpp">
       <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
     <ClCompile Include="Water.cpp">
       <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
-    <ClCompile Include="Fade.cpp">
-      <Filter>Source Files\GameStates</Filter>
-    </ClCompile>
-    <ClCompile Include="KeyBind.cpp">
+    <ClCompile Include="Metaball.cpp">
       <Filter>Source Files\GameUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -211,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="Water.h">
       <Filter>Header Files\GameUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
