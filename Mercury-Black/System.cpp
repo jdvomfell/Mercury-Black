@@ -118,8 +118,8 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 	std::multimap<std::string, Hitbox *>::iterator hurtIt;
 	std::multimap<std::string, Hitbox *>::iterator damageIt;
 
-	sf::FloatRect hurtBox;
-	sf::FloatRect damageBox;
+	sf::RectangleShape hurtBox;
+	sf::RectangleShape damageBox;
 
 	for (int damageTakerID = 0; damageTakerID < MAX_ENTITIES; damageTakerID++) {
 
@@ -217,17 +217,15 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 
 							hurtIt = hitboxMap->hurtBoxes.find(hurtID);
 
-							damageBox = damageIt->second->box.getLocalBounds();
-							damageBox.top += world->sprite[damageDealerID].sprite.getGlobalBounds().top;
-							damageBox.left += world->sprite[damageDealerID].sprite.getGlobalBounds().left;
+							damageBox = damageIt->second->box;
+							damageBox.setPosition(world->position[damageDealerID].x + damageBox.getPosition().x, world->position[damageDealerID].y + damageBox.getPosition().y);
 
 							do {
 
-								hurtBox = hurtIt->second->box.getLocalBounds();
-								hurtBox.top += world->sprite[damageTakerID].sprite.getGlobalBounds().top;
-								hurtBox.left += world->sprite[damageTakerID].sprite.getGlobalBounds().left;
+								hurtBox = hurtIt->second->box;
+								hurtBox.setPosition(world->position[damageTakerID].x + hurtBox.getPosition().x, world->position[damageTakerID].y + hurtBox.getPosition().y);
 
-								if (damageBox.intersects(hurtBox) && (damageDealerID != damageTakerID)) {
+								if (damageBox.getGlobalBounds().intersects(hurtBox.getGlobalBounds()) && (damageDealerID != damageTakerID)) {
 									printf("YO\n");
 									dealDamage = true;
 									break;

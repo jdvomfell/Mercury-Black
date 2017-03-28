@@ -191,6 +191,24 @@ void Game::render(const float dt) {
 		engine->window.draw(*eventMap.eit->second->eventArea);
 	}
 
+	/* HitboxTest */
+	std::string texID;
+	std::vector<Hitbox *> hitboxes;
+	sf::RectangleShape box;
+	#define ANIMATION_MASK (INPUT | SPRITE | SCRIPT)
+	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
+		if ((world.mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
+			texID = world.sprite[entityID].animationManager.getCurrentTextureID();
+			hitboxes = hitboxMap.getHitboxes(texID);
+			for (int i = 0; i < hitboxes.size(); i++) {
+				box = hitboxes[i]->box;
+				box.setPosition(world.position[entityID].x + hitboxes[i]->box.getPosition().x, world.position[entityID].y + hitboxes[i]->box.getPosition().y);
+				engine->window.draw(box);
+			}
+		}
+	}
+	//////////////////
+
 	if (drawPlatforms)
 		for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)
 			engine->window.draw(*(pit->second));

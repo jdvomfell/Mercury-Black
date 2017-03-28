@@ -5,6 +5,9 @@ HitboxEditor HitboxEditor::hitboxEditor;
 
 void HitboxEditor::init() {
 
+	positionText = sf::Text("Position", engine->textureManager.slideFont, 20);
+	positionText.setFillColor(sf::Color::Black);
+
 	textureID = engine->textureManager.textures.begin()->first;
 	drawHitBox.setFillColor(sf::Color::Transparent);
 	drawHitBox.setOutlineThickness(5);
@@ -12,6 +15,7 @@ void HitboxEditor::init() {
 	spriteBox.setFillColor(sf::Color::Transparent);
 	spriteBox.setOutlineThickness(3);
 	spriteBox.setOutlineColor(sf::Color::Blue);
+	hitMap.load();
 	hitMap.select = hitMap.map.lower_bound(textureID);
 
 	view.setSize(engine->window.getSize().x, engine->window.getSize().y);
@@ -115,6 +119,10 @@ void HitboxEditor::handleEvent() {
 		else if (event.key.code == sf::Keyboard::C) {
 			chooseCollision = 1;
 		}
+
+		else if (event.key.code == sf::Keyboard::Escape) {
+			engine->changeState(MainMenu::instance(engine));
+		}
 		
 		if (chooseCollision) {
 
@@ -146,21 +154,19 @@ void HitboxEditor::handleEvent() {
 			
 		}
 		break;
+
 	case sf::Event::MouseButtonPressed:
 		if (event.mouseButton.button == sf::Mouse::Left) {
 			initialPosition = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+			printf("%f, %f", (engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)).x), (engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)).y));
 			drawHitBox.setPosition(initialPosition);
 			drawHitBox.setSize(sf::Vector2f(0,0));
 
-			//printf("I COORDS: %f %f\n", initialPosition.x, initialPosition.y);
 			leftPlacing = 1;
 		}
 		else if (event.mouseButton.button == sf::Mouse::Right) {
-			//if (hitMap.select != hitMap.map.upper_bound(textureID)) {
-				printf("Yes\n");
-				hitMap.cycleHitbox(textureID);
-				printf("Oh yes babe\n");
-			//}
+			hitMap.cycleHitbox(textureID);
+			positionText.setString("Position:\n" + std::to_string(hitMap.select->second->box.getPosition().x) + "\n" + std::to_string(hitMap.select->second->box.getPosition().y));
 		}
 		break;
 	case sf::Event::MouseButtonReleased:
@@ -173,7 +179,6 @@ void HitboxEditor::handleEvent() {
 		if (leftPlacing) {
 			finalPosition = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
 			drawHitBox.setSize(finalPosition - initialPosition);
-			//printf("Left moved %f %f\n", finalPosition.x, finalPosition.y);
 		}
 		break;
 	}
@@ -213,9 +218,12 @@ int HitboxEditor::parser(std::string textureID, std::string check) {
 void HitboxEditor::update(const float dt) {
 
 	sprite.setTexture(*engine->textureManager.getTexture(textureID));
+	//sprite.setPosition(0 - sprite.getLocalBounds().width / 2, 0 - sprite.getLocalBounds().height / 2);
+	sprite.setOrigin(sprite.getPosition().x + sprite.getLocalBounds().width / 2, sprite.getPosition().y + sprite.getLocalBounds().height / 2);
+	sprite.setPosition(0, 0);
+	positionText.setPosition(view.getCenter().x - engine->window.getSize().x / 2 + 30, view.getCenter().y - engine->window.getSize().y / 2 + 30);
 	spriteBox.setSize(sf::Vector2f(sprite.getLocalBounds().width, sprite.getLocalBounds().height));
-	spriteBox.setPosition(sprite.getPosition());
-	//sprite.setOrigin(sprite.getPosition().x + sprite.getLocalBounds().width / 2, sprite.getPosition().y + sprite.getLocalBounds().height / 2);
+	spriteBox.setPosition(sprite.getGlobalBounds().left, sprite.getGlobalBounds().top);
 
 }
 
@@ -233,7 +241,7 @@ void HitboxEditor::render(const float dt) {
 
 
 	//spriteView.setSize(sprite.getGlobalBounds().width, sprite.getGlobalBounds().height);
-	view.setCenter(sprite.getPosition().x + sprite.getLocalBounds().width / 2, sprite.getPosition().y + sprite.getLocalBounds().height / 2);
+	view.setCenter(sprite.getPosition().x, sprite.getPosition().y);
 
 	engine->window.draw(sprite);
 	engine->window.setView(view);
@@ -244,4 +252,6 @@ void HitboxEditor::render(const float dt) {
 	}
 
 	hitMap.draw(&engine->window, textureID);
+
+	engine->window.draw(positionText);
 }

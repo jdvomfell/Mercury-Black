@@ -2,6 +2,8 @@
 #include <fstream>
 void HitboxMap::addHitbox(std::string textureID, sf::RectangleShape box, int type) {
 	
+	std::multimap<std::string, Hitbox *>::iterator it;
+
 	if (box.getSize().x > 5 && box.getSize().y > 5) {
 		
 		Hitbox *hitbox = new Hitbox;
@@ -11,17 +13,17 @@ void HitboxMap::addHitbox(std::string textureID, sf::RectangleShape box, int typ
 
 		/* Check To See If Box Already Exists */
 
-		for (select = map.lower_bound(textureID); select != map.upper_bound(textureID); select++) {
+		for (it = map.lower_bound(textureID); it != map.upper_bound(textureID); it++) {
 
-			if (box.getSize() == select->second->box.getSize()) {
-				if (box.getPosition() == select->second->box.getPosition()) {
+			if (box.getSize() == it->second->box.getSize()) {
+				if (box.getPosition() == it->second->box.getPosition()) {
 					return;
 				}
 			}	
 
 		}
 
-		select = map.insert(std::make_pair(textureID, hitbox));
+		it = map.insert(std::make_pair(textureID, hitbox));
 
 		switch (type) {
 		case HURTBOX:
@@ -43,9 +45,42 @@ void HitboxMap::addHitbox(std::string textureID, sf::RectangleShape box, int typ
 }
 
 void HitboxMap::deleteHitbox(std::string textureID) {
-	delete select->second;
-	map.erase(select);
-	select = map.lower_bound(textureID);
+	
+	std::multimap<std::string, Hitbox *>::iterator it;
+
+	if (select != map.end()) {
+
+		for (it = collisionBoxes.begin(); it != collisionBoxes.end(); it++) {
+			if (it->second == select->second) {
+				collisionBoxes.erase(it);
+				break;
+			}
+		}
+		for (it = defenceBoxes.begin(); it != defenceBoxes.end(); it++) {
+			if (it->second == select->second) {
+				defenceBoxes.erase(it);
+				break;
+			}
+		}
+		for (it = damageBoxes.begin(); it != damageBoxes.end(); it++) {
+			if (it->second == select->second) {
+				damageBoxes.erase(it);
+				break;
+			}
+		}
+		for (it = hurtBoxes.begin(); it != hurtBoxes.end(); it++) {
+			if (it->second == select->second) {
+				hurtBoxes.erase(it);
+				break;
+			}
+		}
+
+		delete(select->second);
+
+		map.erase(select);
+	}
+
+	select = map.end();
 }
 
 void HitboxMap::cycleHitbox(std::string textureID) {
@@ -92,6 +127,7 @@ void HitboxMap::save() {
 		position = it->second->box.getPosition();
 		//printf("%s %d %f %f %f %f", it->first.c_str(), it->second->type,
 			//position.x, position.y, size.x, size.y);
+
 		ofstream
 			<< it->first << std::endl
 			<< it->second->type << std::endl
@@ -139,7 +175,9 @@ void HitboxMap::load() {
 			rect.setOutlineColor(sf::Color::Green);
 		else if (t == DAMAGEBOX)
 			rect.setOutlineColor(sf::Color::Red);
+
 		addHitbox(s, rect, t);
+
 	}
 
 	printf("Loaded %d Hitboxes\n", numBox);
@@ -191,8 +229,25 @@ std::vector<Hitbox *> HitboxMap::getHitboxes(std::string ID) {
 
 }
 
-std::vector<Hitbox *> HitboxMap::getFlippedHitboxes(std::string ID) {
+std::vector<Hitbox *> HitboxMap::getFlippedHitboxes(std::string ID, sf::Sprite * sprite) {
 
-	return getHitboxes(ID);
+	sf::RectangleShape box;
+	std::vector<Hitbox *> hitboxes;
+	std::multimap<std::string, Hitbox *>::iterator it;
+
+	if ((it = map.find(ID)) != map.end()) {
+		while (it != map.upper_bound(ID)) {
+			hitboxes.push_back(it->second);
+			it++;
+		}
+	}
+
+	for (size_t i = 0; i < hitboxes.size(); i++) {
+		box = hitboxes[i]->box;
+		box.setPosition(-box.getGlobalBounds().left + box.getGlobalBounds().width, box.getGlobalBounds().top);
+		hitboxes[i]->box = box;
+	}
+
+	return hitboxes;
 
 }

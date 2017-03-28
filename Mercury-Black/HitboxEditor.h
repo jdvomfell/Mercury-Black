@@ -43,6 +43,8 @@ private:
 	sf::Vector2f finalPosition;
 	sf::RectangleShape drawHitBox;
 	sf::RectangleShape spriteBox;
+
+	sf::Text positionText;
 };
 
 #endif

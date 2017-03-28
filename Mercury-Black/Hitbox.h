@@ -31,7 +31,7 @@ public:
 	void draw(sf::RenderWindow *window, std::string textureID);
 
 	std::vector<Hitbox *> getHitboxes(std::string textureID);
-	std::vector<Hitbox *> getFlippedHitboxes(std::string textureID);
+	std::vector<Hitbox *> getFlippedHitboxes(std::string textureID, sf::Sprite * sprite);
 	
 	std::multimap <std::string, Hitbox*> map;
 	std::multimap <std::string, Hitbox*> collisionBoxes;
