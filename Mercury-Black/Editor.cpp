@@ -17,6 +17,10 @@ void Editor::init() {
 	objectMap.load();
 	platformMap.load();
 
+	previewBox.setOutlineThickness(5);
+	previewBox.setFillColor(sf::Color::Transparent);
+	previewBox.setOutlineColor(sf::Color::Transparent);
+
 	zoom = 2.0f;
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 2.0f, engine->window.getDefaultView().getSize().y * 2.0f));
 
@@ -53,6 +57,11 @@ void Editor::handleEvent() {
 		zoomPosition = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
 		toolBox.highlightButtons(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
 		engine->window.setView(view);
+
+		if (toolBox.getMode() == WATER) {
+			corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
+			previewBox.setSize(corner2 - corner1);
+		}
 		break;
 
 	case sf::Event::MouseWheelScrolled:
@@ -115,6 +124,9 @@ void Editor::handleEvent() {
 
 				else if (toolBox.getMode() == WATER) {
 					corner1 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+					previewBox.setSize(sf::Vector2f(0, 0));
+					previewBox.setPosition(corner1);
+					previewBox.setOutlineColor(sf::Color::Red);
 				}
 
 			}
@@ -186,6 +198,7 @@ void Editor::handleEvent() {
 				}
 
 				else if (toolBox.getMode() == WATER) {
+					previewBox.setOutlineColor(sf::Color::Transparent);
 					corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
 					waterHandler.insert(corner1, corner2);
 				}
@@ -372,6 +385,8 @@ void Editor::render(const float dt) {
 
 	if (toolBox.getMode() == OBJECT)
 		engine->window.draw(objectMap.object.sprite);
+
+	engine->window.draw(previewBox);
 
 	toolBox.render();
 
