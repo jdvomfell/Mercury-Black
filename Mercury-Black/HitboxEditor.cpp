@@ -129,25 +129,25 @@ void HitboxEditor::handleEvent() {
 			printf("Choose\n");
 			//Collision Box
 			if (event.key.code == sf::Keyboard::Num1) {
-				chooseHitbox = COLLISIONBOX;
+				chooseHitbox = HITBOXTYPE_COLLISION;
 				drawHitBox.setOutlineColor(sf::Color::Cyan);
 				chooseCollision = 0;
 			}
 			//Hurt Box
 			else if (event.key.code == sf::Keyboard::Num2) {
-				chooseHitbox = HURTBOX;
+				chooseHitbox = HITBOXTYPE_HURT;
 				drawHitBox.setOutlineColor(sf::Color::Magenta);
 				chooseCollision = 0;
 			}
 			//Defence Box
 			else if (event.key.code == sf::Keyboard::Num3) {
-				chooseHitbox = DEFENCEBOX;
+				chooseHitbox = HITBOXTYPE_DEFENCE;
 				drawHitBox.setOutlineColor(sf::Color::Green);
 				chooseCollision = 0;
 			}
 			//Damage Box
 			else if (event.key.code == sf::Keyboard::Num4) {
-				chooseHitbox = DAMAGEBOX;
+				chooseHitbox = HITBOXTYPE_DAMAGE;
 				drawHitBox.setOutlineColor(sf::Color::Red);
 				chooseCollision = 0;
 			}
@@ -218,9 +218,9 @@ int HitboxEditor::parser(std::string textureID, std::string check) {
 void HitboxEditor::update(const float dt) {
 
 	sprite.setTexture(*engine->textureManager.getTexture(textureID));
-	//sprite.setPosition(0 - sprite.getLocalBounds().width / 2, 0 - sprite.getLocalBounds().height / 2);
-	sprite.setOrigin(sprite.getPosition().x + sprite.getLocalBounds().width / 2, sprite.getPosition().y + sprite.getLocalBounds().height / 2);
+	sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
 	sprite.setPosition(0, 0);
+	
 	positionText.setPosition(view.getCenter().x - engine->window.getSize().x / 2 + 30, view.getCenter().y - engine->window.getSize().y / 2 + 30);
 	spriteBox.setSize(sf::Vector2f(sprite.getLocalBounds().width, sprite.getLocalBounds().height));
 	spriteBox.setPosition(sprite.getGlobalBounds().left, sprite.getGlobalBounds().top);
@@ -239,8 +239,6 @@ void HitboxEditor::render(const float dt) {
 	else
 		view.setSize(engine->window.getSize().x + 10, view.getSize().y);
 
-
-	//spriteView.setSize(sprite.getGlobalBounds().width, sprite.getGlobalBounds().height);
 	view.setCenter(sprite.getPosition().x, sprite.getPosition().y);
 
 	engine->window.draw(sprite);

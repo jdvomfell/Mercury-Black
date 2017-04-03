@@ -5,10 +5,15 @@
 #include <vector>
 #include <map>
 
-#define	COLLISIONBOX 0
-#define HURTBOX 1
-#define DEFENCEBOX 2
-#define DAMAGEBOX 3
+const enum HitboxType {
+
+	HITBOXTYPE_ALL,
+	HITBOXTYPE_COLLISION,
+	HITBOXTYPE_DEFENCE,
+	HITBOXTYPE_DAMAGE,
+	HITBOXTYPE_HURT
+
+};
 
 struct Hitbox {
 public:
@@ -30,8 +35,8 @@ public:
 
 	void draw(sf::RenderWindow *window, std::string textureID);
 
-	std::vector<Hitbox *> getHitboxes(std::string textureID);
-	std::vector<Hitbox *> getFlippedHitboxes(std::string textureID, sf::Sprite * sprite);
+	std::vector<sf::RectangleShape> getHitboxes(std::string textureID, HitboxType type);
+	std::vector<sf::RectangleShape> getFlippedHitboxes(std::string textureID, HitboxType type);
 	
 	std::multimap <std::string, Hitbox*> map;
 	std::multimap <std::string, Hitbox*> collisionBoxes;

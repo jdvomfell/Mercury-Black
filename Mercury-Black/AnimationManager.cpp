@@ -108,3 +108,12 @@ sf::Texture * AnimationManager::getCurrentTexture() {
 	return animations[currentAnimation]->textures[currentFrame];
 
 }
+
+bool AnimationManager::isEmpty() {
+
+	if (animations.begin() == animations.end())
+		return true;
+	else
+		return false;
+
+}

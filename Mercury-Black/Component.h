@@ -5,6 +5,13 @@
 #include "AnimationManager.h"
 #include "Metaball.h"
 
+const enum Direction {
+	UP = 0,
+	DOWN,
+	LEFT,
+	RIGHT
+};
+
 const enum states {
 	NO_STATE = 0,
 	ATTACK_STATE,
@@ -52,6 +59,8 @@ struct Input {
 	bool attack;
 
 	bool special;
+
+	Direction lastDirection;
 
 };
 

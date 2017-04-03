@@ -26,16 +26,16 @@ void HitboxMap::addHitbox(std::string textureID, sf::RectangleShape box, int typ
 		it = map.insert(std::make_pair(textureID, hitbox));
 
 		switch (type) {
-		case HURTBOX:
+		case HITBOXTYPE_HURT:
 			hurtBoxes.insert(std::make_pair(textureID, hitbox));
 			break;
-		case COLLISIONBOX:
+		case HITBOXTYPE_COLLISION:
 			collisionBoxes.insert(std::make_pair(textureID, hitbox));
 			break;
-		case DAMAGEBOX:
+		case HITBOXTYPE_DAMAGE:
 			damageBoxes.insert(std::make_pair(textureID, hitbox));
 			break;
-		case DEFENCEBOX:
+		case HITBOXTYPE_DEFENCE:
 			defenceBoxes.insert(std::make_pair(textureID, hitbox));
 			break;
 		}
@@ -87,16 +87,16 @@ void HitboxMap::cycleHitbox(std::string textureID) {
 
 	if (select != map.end()) {
 		switch (select->second->type) {
-		case COLLISIONBOX:
+		case HITBOXTYPE_COLLISION:
 			select->second->box.setOutlineColor(sf::Color::Cyan);
 			break;
-		case HURTBOX:
+		case HITBOXTYPE_HURT:
 			select->second->box.setOutlineColor(sf::Color::Magenta);
 			break;
-		case DEFENCEBOX:
+		case HITBOXTYPE_DEFENCE:
 			select->second->box.setOutlineColor(sf::Color::Green);
 			break;
-		case DAMAGEBOX:
+		case HITBOXTYPE_DAMAGE:
 			select->second->box.setOutlineColor(sf::Color::Red);
 			break;
 		}
@@ -167,13 +167,13 @@ void HitboxMap::load() {
 		
 		numBox++;
 		
-		if (t == COLLISIONBOX)
+		if (t == HITBOXTYPE_COLLISION)
 			rect.setOutlineColor(sf::Color::Cyan);
-		else if (t == HURTBOX)
+		else if (t == HITBOXTYPE_HURT)
 			rect.setOutlineColor(sf::Color::Magenta);
-		else if (t == DEFENCEBOX)
+		else if (t == HITBOXTYPE_DEFENCE)
 			rect.setOutlineColor(sf::Color::Green);
-		else if (t == DAMAGEBOX)
+		else if (t == HITBOXTYPE_DAMAGE)
 			rect.setOutlineColor(sf::Color::Red);
 
 		addHitbox(s, rect, t);
@@ -213,15 +213,47 @@ void HitboxMap::draw(sf::RenderWindow *window, std::string textureID) {
 
 }
 
-std::vector<Hitbox *> HitboxMap::getHitboxes(std::string ID) {
+std::vector<sf::RectangleShape> HitboxMap::getHitboxes(std::string ID, HitboxType type) {
 
-	std::vector<Hitbox *> hitboxes;
+	std::vector<sf::RectangleShape> hitboxes;
 	std::multimap<std::string, Hitbox *>::iterator it;
 
-	if ((it = map.find(ID)) != map.end()) {
-		while (it != map.upper_bound(ID)) {
-			hitboxes.push_back(it->second);
-			it++;
+	switch (type) {
+	
+	case HITBOXTYPE_ALL:
+		if ((it = map.find(ID)) != map.end()) {
+			while (it != map.upper_bound(ID)) {
+				hitboxes.push_back(it->second->box);
+				it++;
+			}
+		}
+	case HITBOXTYPE_HURT:
+		if ((it = hurtBoxes.find(ID)) != hurtBoxes.end()) {
+			while (it != hurtBoxes.upper_bound(ID)) {
+				hitboxes.push_back(it->second->box);
+				it++;
+			}
+		}
+	case HITBOXTYPE_DAMAGE:
+		if ((it = damageBoxes.find(ID)) != damageBoxes.end()) {
+			while (it != damageBoxes.upper_bound(ID)) {
+				hitboxes.push_back(it->second->box);
+				it++;
+			}
+		}
+	case HITBOXTYPE_DEFENCE:
+		if ((it = defenceBoxes.find(ID)) != defenceBoxes.end()) {
+			while (it != defenceBoxes.upper_bound(ID)) {
+				hitboxes.push_back(it->second->box);
+				it++;
+			}
+		}
+	case HITBOXTYPE_COLLISION:
+		if ((it = collisionBoxes.find(ID)) != collisionBoxes.end()) {
+			while (it != collisionBoxes.upper_bound(ID)) {
+				hitboxes.push_back(it->second->box);
+				it++;
+			}
 		}
 	}
 
@@ -229,24 +261,15 @@ std::vector<Hitbox *> HitboxMap::getHitboxes(std::string ID) {
 
 }
 
-std::vector<Hitbox *> HitboxMap::getFlippedHitboxes(std::string ID, sf::Sprite * sprite) {
+std::vector<sf::RectangleShape> HitboxMap::getFlippedHitboxes(std::string ID, HitboxType type) {
 
-	sf::RectangleShape box;
-	std::vector<Hitbox *> hitboxes;
+	std::vector<sf::RectangleShape> hitboxes;
 	std::multimap<std::string, Hitbox *>::iterator it;
 
-	if ((it = map.find(ID)) != map.end()) {
-		while (it != map.upper_bound(ID)) {
-			hitboxes.push_back(it->second);
-			it++;
-		}
-	}
+	hitboxes = getHitboxes(ID, type);
 
-	for (size_t i = 0; i < hitboxes.size(); i++) {
-		box = hitboxes[i]->box;
-		box.setPosition(-box.getGlobalBounds().left + box.getGlobalBounds().width, box.getGlobalBounds().top);
-		hitboxes[i]->box = box;
-	}
+	for (size_t i = 0; i < hitboxes.size(); i++)
+		hitboxes[i].setPosition(-(hitboxes[i].getGlobalBounds().left + hitboxes[i].getGlobalBounds().width), hitboxes[i].getGlobalBounds().top);
 
 	return hitboxes;
 

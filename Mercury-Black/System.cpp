@@ -107,157 +107,125 @@ void animationSystem(World * world, float dt) {
 
 void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 
-	Health * h;
-	Stats * st;
-	ScriptParameters * sp;
+	Input * dti;
+	Health * dth;
+	Sprite * dts;
+	Position * dtp;
+	ScriptParameters * dtsp;
+
+	Input * ddi;
+	Stats * ddst;
+	Sprite * dds;
+	Position * ddp;
+	ScriptParameters * ddsp;
 
 	bool dealDamage;
 
 	std::string hurtID;
 	std::string damageID;
-	std::multimap<std::string, Hitbox *>::iterator hurtIt;
-	std::multimap<std::string, Hitbox *>::iterator damageIt;
+	std::vector<sf::RectangleShape> hurtBoxes;
+	std::vector<sf::RectangleShape> damageBoxes;
 
-	sf::RectangleShape hurtBox;
-	sf::RectangleShape damageBox;
+	/* Find An Entity That Can Take Damage */
 
 	for (int damageTakerID = 0; damageTakerID < MAX_ENTITIES; damageTakerID++) {
 
-		world->health[damageTakerID].hurtTimer -= dt;
+		if ((world->mask[damageTakerID] & TAKE_DAMAGE_MASK) == TAKE_DAMAGE_MASK) {
 
-		if ((world->mask[damageTakerID] & TAKE_DAMAGE_MASK) == TAKE_DAMAGE_MASK && world->health[damageTakerID].hurtTimer <= 0) {
+			/* If The Entity Is Still Invaunerable Reduce It's Invaunerability Timer */
 
-			h = &(world->health[damageTakerID]);
-
-			if ((world->mask[damageTakerID] & ANIMATION_MASK) == ANIMATION_MASK) {
-				hurtID = world->sprite[damageTakerID].animationManager.getCurrentTextureID();
-				hurtIt = hitboxMap->hurtBoxes.find(hurtID);
+			if (world->health[damageTakerID].hurtTimer > 0) {
+				world->health[damageTakerID].hurtTimer -= dt;
+				continue;
 			}
-			else {
-				hurtIt = hitboxMap->hurtBoxes.end();
+
+			/* Get Damage Taker Info */
+
+			dti = &(world->input[damageTakerID]);
+			dth = &(world->health[damageTakerID]);
+			dts = &(world->sprite[damageTakerID]);
+			dtp = &(world->position[damageTakerID]);
+			dtsp = &(world->scriptParameters[damageTakerID]);
+
+			/* Get The Hitboxes For The Damage Taker */
+
+			hurtBoxes.clear();
+
+			if (!dts->animationManager.isEmpty()) {
+				hurtID = dts->animationManager.getCurrentTextureID();
+				if (dti->lastDirection == LEFT)
+					hurtBoxes = hitboxMap->getFlippedHitboxes(hurtID, HITBOXTYPE_HURT);
+				else
+					hurtBoxes = hitboxMap->getHitboxes(hurtID, HITBOXTYPE_HURT);
 			}
+
+			/* Move The Hitboxes To The Entities Position */
+
+			for (int i = 0; i < hurtBoxes.size(); i++)
+				hurtBoxes[i].move(dtp->x, dtp->y);
+
+			/* Find An Entity That Can Deal Damage */
 
 			for (int damageDealerID = 0; damageDealerID < MAX_ENTITIES; damageDealerID++) {
 
-				dealDamage = false;
-
 				if ((world->mask[damageDealerID] & DEAL_DAMAGE_MASK) == DEAL_DAMAGE_MASK && world->scriptParameters[damageDealerID].currentState == ATTACK_STATE) {
 
-					if ((world->mask[damageDealerID] & ANIMATION_MASK) == ANIMATION_MASK) {
-						damageID = world->sprite[damageDealerID].animationManager.getCurrentTextureID();
-						damageIt = hitboxMap->damageBoxes.find(damageID);
+					/* Don't Let Entities Kill Themselves */
+
+					if (damageDealerID == damageTakerID)
+						continue;
+
+					/* Get Damage Dealer Info */
+
+					ddi = &(world->input[damageTakerID]);
+					dds = &(world->sprite[damageDealerID]);
+					ddp = &(world->position[damageDealerID]);
+					ddst = &(world->stats[damageDealerID]);
+					ddsp = &(world->scriptParameters[damageDealerID]);
+
+					/* Get The Hitboxes For The Damage Dealer */
+
+					damageBoxes.clear();
+
+					if (!dds->animationManager.isEmpty()) {
+						damageID = dds->animationManager.getCurrentTextureID();
+						if (ddi->lastDirection == LEFT)
+							damageBoxes = hitboxMap->getFlippedHitboxes(damageID, HITBOXTYPE_DAMAGE);
+						else
+							damageBoxes = hitboxMap->getHitboxes(damageID, HITBOXTYPE_DAMAGE);
+
 					}
-					else {
-						damageIt = hitboxMap->damageBoxes.end();
-					}
 
-					/* See If Damage Should Be Dealt */
+					/* Move The Hitboxes To The Entities Position */
 
-					//if (hurtIt == hitboxMap->hurtBoxs.end() && damageIt == hitboxMap->damageBoxs.end()) {
+					for (int i = 0; i < damageBoxes.size(); i++)
+						damageBoxes[i].move(ddp->x, ddp->y);
 
-						/* Check The Bounds Of The Damage Dealer And Damage Taker Against Each Other */
+					/* Check Each Damage Box Against Each Hurt Box */
 
-					//	if ((world->sprite[damageTakerID].sprite.getGlobalBounds().intersects(world->sprite[damageDealerID].sprite.getGlobalBounds()) == true) && (damageDealerID != damageTakerID)) {
-					//		printf("No Boxes\n");
-					//		dealDamage = true;
-					//	}
+					dealDamage = false;
 
-					//}
+					for (size_t i = 0; i < damageBoxes.size(); i++) {
+						for(size_t j = 0; j < hurtBoxes.size(); j++){
 
-					//else if (hurtIt == hitboxMap->hurtBoxs.end()) {
+							/* If One Intersects Deal Damage */
 
-						/* Check Each Hurt Box Against The Bounds Of The Damage Dealer */
+							if (damageBoxes[i].getGlobalBounds().intersects(hurtBoxes[j].getGlobalBounds())) {
 
-					//	do {
+								dth->current -= ddst->power;
+								dth->hurtTimer = 1.0f;
+
+								if (dth->current <= 0)
+									dtsp->currentState = DEATH_STATE;
+
+								printf("E: %d\n", dth->current);
 							
-					//		damageBox = damageIt->second->box.getLocalBounds();
-					//		damageBox.top = world->position[damageDealerID].y;
-					//		damageBox.left = world->position[damageDealerID].x;
-
-					//		if (damageBox.intersects(world->sprite[damageTakerID].sprite.getGlobalBounds()) && (damageDealerID != damageTakerID)) {
-					//			printf("Only Damage\n");
-					//			dealDamage = true;
-					//			break;
-					//		}
-
-					//		damageIt++;
-
-					//	} while (damageIt != hitboxMap->damageBoxs.upper_bound(damageID));
-
-					//}
-
-					//else if (damageIt == hitboxMap->damageBoxs.end()) {
-
-						/* Check Each Damage Box Against The Bounds Of The Damage Taker */
-
-					//	do {
-
-					//		hurtBox = hurtIt->second->box.getLocalBounds();
-					//		hurtBox.top = world->position[damageTakerID].y;
-					//		hurtBox.left = world->position[damageTakerID].x;
-
-					//		if (hurtBox.intersects(world->sprite[damageDealerID].sprite.getGlobalBounds()) && (damageDealerID != damageTakerID)) {
-					//			printf("Only Hurt\n");
-					//			dealDamage = true;
-					//			break;
-					//		}
-
-					//		hurtIt++;
-
-					//	} while (hurtIt != hitboxMap->hurtBoxs.upper_bound(hurtID));
-
-					//}
+							}
+						
+						}
 					
-					//else {
-					if (hurtIt != hitboxMap->hurtBoxes.end() && damageIt != hitboxMap->damageBoxes.end()) {
-
-						/* Check Each Damage Box Against Each Hurt Box */
-
-						do {
-
-							hurtIt = hitboxMap->hurtBoxes.find(hurtID);
-
-							damageBox = damageIt->second->box;
-							damageBox.setPosition(world->position[damageDealerID].x + damageBox.getPosition().x, world->position[damageDealerID].y + damageBox.getPosition().y);
-
-							do {
-
-								hurtBox = hurtIt->second->box;
-								hurtBox.setPosition(world->position[damageTakerID].x + hurtBox.getPosition().x, world->position[damageTakerID].y + hurtBox.getPosition().y);
-
-								if (damageBox.getGlobalBounds().intersects(hurtBox.getGlobalBounds()) && (damageDealerID != damageTakerID)) {
-									printf("YO\n");
-									dealDamage = true;
-									break;
-								}
-
-								hurtIt++;
-
-							} while (hurtIt != hitboxMap->hurtBoxes.upper_bound(hurtID));
-
-							damageIt++;
-						} while (damageIt != hitboxMap->damageBoxes.upper_bound(damageID));
-
 					}
-
-					/* If One Intersects Deal Damage */
-
-					if (dealDamage) {
-
-						st = &(world->stats[damageDealerID]);
-						sp = &(world->scriptParameters[damageDealerID]);
-
-						h->current -= st->power;
-
-						h->hurtTimer = 1.0f;
-
-						if (world->health[damageTakerID].current <= 0)
-							world->scriptParameters[damageTakerID].currentState = DEATH_STATE;
-
-						printf("E: %d\n", world->health[damageTakerID].current);
-
-					}
-
+				
 				}
 
 			}
@@ -284,21 +252,27 @@ void inputSystem(World * world) {
 
 			/* INPUT */
 
-			if (i->left)
-				v->x = -v->speed * v->speedUp;
-			if (i->right)
-				v->x = v->speed * v->speedUp;
 			if ((i->left && i->right) || (!i->left && !i->right))
 				v->x = 0.0f;
 
+			else if (i->left) {
+				v->x = -v->speed * v->speedUp;
+				i->lastDirection = LEFT;
+			}
+
+			else if (i->right) {
+				v->x = v->speed * v->speedUp;
+				i->lastDirection = RIGHT;
+			}
+
 			if ((world->mask[entityID] & FLYING) == FLYING) {
 
-				if (i->up)
-					v->y = -v->speed * v->speedUp;
-				if (i->down)
-					v->y = v->speed * v->speedUp;
 				if ((i->up && i->down) || (!i->up && !i->down))
 					v->y = 0.0f;
+				else if (i->up)
+					v->y = -v->speed * v->speedUp;
+				else if (i->down)
+					v->y = v->speed * v->speedUp;
 			
 			}
 

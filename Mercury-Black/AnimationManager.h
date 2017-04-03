@@ -24,6 +24,8 @@ class AnimationManager {
 		std::string getCurrentTextureID();
 		sf::Texture * getCurrentTexture();
 
+		bool isEmpty();
+
 		int updateAnimation(float deltaTime);
 		void changeAnimation(std::string animationID);
 

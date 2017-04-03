@@ -183,16 +183,21 @@ void Game::render(const float dt) {
 
 	/* HitboxTest */
 	std::string texID;
-	std::vector<Hitbox *> hitboxes;
+	std::vector<sf::RectangleShape> hitboxes;
 	sf::RectangleShape box;
 	#define ANIMATION_MASK (INPUT | SPRITE | SCRIPT)
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 		if ((world.mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
 			texID = world.sprite[entityID].animationManager.getCurrentTextureID();
-			hitboxes = hitboxMap.getHitboxes(texID);
+			
+			if (world.input[entityID].lastDirection == LEFT)
+				hitboxes = hitboxMap.getFlippedHitboxes(texID, HITBOXTYPE_ALL);
+			else
+				hitboxes = hitboxMap.getHitboxes(texID, HITBOXTYPE_ALL);
+			
 			for (int i = 0; i < hitboxes.size(); i++) {
-				box = hitboxes[i]->box;
-				box.setPosition(world.position[entityID].x + hitboxes[i]->box.getPosition().x, world.position[entityID].y + hitboxes[i]->box.getPosition().y);
+				box = hitboxes[i];
+				box.move(world.position[entityID].x, world.position[entityID].y);
 				engine->window.draw(box);
 			}
 		}
