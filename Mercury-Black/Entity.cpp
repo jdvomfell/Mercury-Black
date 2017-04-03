@@ -227,7 +227,7 @@ int createWisp(World * world, float x, float y, MetaballHandler * metaballHandle
 
 	world->stats[entityID].power = 5;
 
-	world->sprite[entityID].metaballSpawner = new MetaballSpawner(metaballHandler, sf::Vector2f(x, y), sf::Vector2f(0, 0.5f), -0.05f, 1.5f, 13, 5, 5);
+	world->sprite[entityID].metaballSpawner = new MetaballSpawner(metaballHandler, sf::Vector2f(x, y), sf::Vector2f(0, 0.5f), -0.05f, 1.5f, 25, 5, 5);
 	metaballHandler->addSpawner(world->sprite[entityID].metaballSpawner);
 
 	return entityID;
