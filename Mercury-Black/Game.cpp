@@ -21,31 +21,19 @@ void Game::init() {
 	createWisp(&world, 500, 500, &metaballHandler);
 	//createCeilingPlant(&world, 3000, 1000);
 
-	/*Sound insertion code TEMPORARY*/
-
-	sf::Vector2f size(800, 800);
-	sf::Vector2f size2(500, 500);
-	sf::RectangleShape * rectangle = new sf::RectangleShape(size);
-	sf::RectangleShape * rectangle2 = new sf::RectangleShape(size2);
-	rectangle->setFillColor(sf::Color::Blue);
-	rectangle2->setFillColor(sf::Color::Green);
-	eventMap.insertSound(rectangle, &world, "Music/frogs.ogg", 20.0, true);
-	eventMap.insertSound(rectangle2, &world, "Music/drank.ogg", 25.0, true);
-	rectangle->setPosition(1000, 1500);
-	rectangle2->setPosition(1000, 1500);
-
-	/* End of sound code*/
-
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
 	platformMap.load();
 	hitboxMap.load();
 
+	eventMap.world = &world;
+	eventMap.load();
+	//eventMap.numEvents = 0;
+
 	rect.setOutlineColor(sf::Color::Black);
 	rect.setOutlineThickness(3);
 
 	waterHandler.load();
-
 }
 
 void Game::clean() {
@@ -58,6 +46,7 @@ void Game::clean() {
 	waterHandler.clean();
 	hitboxMap.clean();
 
+	eventMap.clean();
 }
 
 void Game::handleEvent() {
@@ -148,9 +137,15 @@ void Game::update(const float dt) {
 	movementSystem(&world);
 	damageSystem(&world, dt, &hitboxMap);
 
-	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)	
-		if (eventMap.eit->second->isTriggered()) 
-			eventMap.eit->second->trigger();
+	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end();) {
+
+		if (eventMap.eit->second->eventArea->getGlobalBounds().contains(world.position[0].x, world.position[0].y)) {
+			if (eventMap.eit->second->isTriggered())
+				eventMap.eit->second->trigger();
+		}
+
+		eventMap.eit++;
+	}
 
 	waterHandler.update();
 	waterHandler.updateWaves(dt);
@@ -186,11 +181,6 @@ void Game::render(const float dt) {
 
 	objectMap.drawForeground(&engine->window);
 
-	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); eventMap.eit++)
-	{
-		engine->window.draw(*eventMap.eit->second->eventArea);
-	}
-
 	/* HitboxTest */
 	std::string texID;
 	std::vector<Hitbox *> hitboxes;
@@ -212,5 +202,16 @@ void Game::render(const float dt) {
 	if (drawPlatforms)
 		for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)
 			engine->window.draw(*(pit->second));
+
+	//for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); )
+	//{
+		//if (eventMap.eit->second->eventArea->getGlobalBounds().contains(world.position[0].x, world.position[0].y)) {
+			//if (eventMap.eit->second->eventArea == NULL)
+				//printf("NULL");
+			//else
+				//engine->window.draw(*(eventMap.eit->second->eventArea));
+		//}
+		//eventMap.eit++;
+//	}
 
 }

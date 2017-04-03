@@ -132,6 +132,9 @@
     <ClCompile Include="Metaball.cpp">
       <Filter>Source Files\GameUtility</Filter>
     </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine.h">
@@ -214,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="Water.h">
       <Filter>Header Files\GameUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
