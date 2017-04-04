@@ -1,6 +1,7 @@
 #include "Hitbox.h"
 #include <fstream>
-void HitboxMap::addHitbox(std::string textureID, sf::RectangleShape box, int type) {
+
+void HitboxMap::addHitbox(std::string textureID, sf::RectangleShape box, HitboxType type) {
 	
 	std::multimap<std::string, Hitbox *>::iterator it;
 
@@ -85,27 +86,27 @@ void HitboxMap::deleteHitbox(std::string textureID) {
 
 void HitboxMap::cycleHitbox(std::string textureID) {
 
+	/* Set The Hitbox Back To The Type Color From The Selected Color */
+
 	if (select != map.end()) {
-		switch (select->second->type) {
-		case HITBOXTYPE_COLLISION:
-			select->second->box.setOutlineColor(sf::Color::Cyan);
-			break;
-		case HITBOXTYPE_HURT:
-			select->second->box.setOutlineColor(sf::Color::Magenta);
-			break;
-		case HITBOXTYPE_DEFENCE:
-			select->second->box.setOutlineColor(sf::Color::Green);
-			break;
-		case HITBOXTYPE_DAMAGE:
-			select->second->box.setOutlineColor(sf::Color::Red);
-			break;
-		}
+		
+		colorHitbox(select->second);
+
+		select++;
+
+		if (select == map.upper_bound(textureID))
+			select = map.lower_bound(textureID);
+
 	}
 
-	select++;
+	else {
+		
+		if (map.upper_bound(textureID) == map.lower_bound(textureID))
+			select = map.end();
+		else
+			select = map.lower_bound(textureID);
 
-	if (select == map.upper_bound(textureID))
-		select = map.lower_bound(textureID);
+	}
 
 	if(select != map.end())
 		select->second->box.setOutlineColor(sf::Color::Yellow);
@@ -139,14 +140,35 @@ void HitboxMap::save() {
 
 	ofstream.close();
 
-} 
+}
+
+void HitboxMap::colorHitbox(Hitbox * hitbox) {
+
+	switch (hitbox->type) {
+		
+	case HITBOXTYPE_COLLISION:
+		hitbox->box.setOutlineColor(sf::Color::Cyan);
+		break;
+	case HITBOXTYPE_HURT:
+		hitbox->box.setOutlineColor(sf::Color::Magenta);
+		break;
+	case HITBOXTYPE_DEFENCE:
+		hitbox->box.setOutlineColor(sf::Color::Green);
+		break;
+	case HITBOXTYPE_DAMAGE:
+		hitbox->box.setOutlineColor(sf::Color::Red);
+		break;
+		
+	}
+}
 
 void HitboxMap::load() {
 	
 	std::ifstream ifstream;
 	std::string hitBoxFilename = "hitbox.dat";
 	sf::Vector2f pos, size;
-	int t, numBox(0);
+	int t;
+	int numBox(0);
 	std::string s;
 	sf::RectangleShape rect;
 	Hitbox * temp = NULL;
@@ -155,7 +177,7 @@ void HitboxMap::load() {
 
 	if (!ifstream.is_open()) {
 		printf("ERROR: Cannot Open Hitbox File (Possibly No File To Load)\n");
-	//	return;
+		return;
 	}
 
 	rect.setOutlineThickness(5);
@@ -176,7 +198,7 @@ void HitboxMap::load() {
 		else if (t == HITBOXTYPE_DAMAGE)
 			rect.setOutlineColor(sf::Color::Red);
 
-		addHitbox(s, rect, t);
+		addHitbox(s, rect, (HitboxType)t);
 
 	}
 

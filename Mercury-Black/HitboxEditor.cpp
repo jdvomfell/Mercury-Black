@@ -53,9 +53,10 @@ void HitboxEditor::handleEvent() {
 
 			textureID = engine->textureManager.getNextTextureID(textureID);
 
-			if (hitMap.map.find(textureID) != hitMap.map.end()) {
-				hitMap.select = hitMap.map.find(textureID);
-			}
+			if (hitMap.select != hitMap.map.end())
+				hitMap.colorHitbox(hitMap.select->second);
+			hitMap.select = hitMap.map.find(textureID);
+
 		}
 
 		else if (event.key.code == sf::Keyboard::A) {
@@ -64,9 +65,10 @@ void HitboxEditor::handleEvent() {
 
 			textureID = engine->textureManager.getPrevTextureID(textureID);
 
-			if (hitMap.map.find(textureID) != hitMap.map.end()) {
-				hitMap.select = hitMap.map.find(textureID);
-			}
+			if (hitMap.select != hitMap.map.end())
+				hitMap.colorHitbox(hitMap.select->second);
+			hitMap.select = hitMap.map.find(textureID);
+
 		}
 		else if (event.key.code == sf::Keyboard::J) {
 			hitMap.save();
@@ -129,25 +131,25 @@ void HitboxEditor::handleEvent() {
 			printf("Choose\n");
 			//Collision Box
 			if (event.key.code == sf::Keyboard::Num1) {
-				chooseHitbox = HITBOXTYPE_COLLISION;
+				hitboxType = HITBOXTYPE_COLLISION;
 				drawHitBox.setOutlineColor(sf::Color::Cyan);
 				chooseCollision = 0;
 			}
 			//Hurt Box
 			else if (event.key.code == sf::Keyboard::Num2) {
-				chooseHitbox = HITBOXTYPE_HURT;
+				hitboxType = HITBOXTYPE_HURT;
 				drawHitBox.setOutlineColor(sf::Color::Magenta);
 				chooseCollision = 0;
 			}
 			//Defence Box
 			else if (event.key.code == sf::Keyboard::Num3) {
-				chooseHitbox = HITBOXTYPE_DEFENCE;
+				hitboxType = HITBOXTYPE_DEFENCE;
 				drawHitBox.setOutlineColor(sf::Color::Green);
 				chooseCollision = 0;
 			}
 			//Damage Box
 			else if (event.key.code == sf::Keyboard::Num4) {
-				chooseHitbox = HITBOXTYPE_DAMAGE;
+				hitboxType = HITBOXTYPE_DAMAGE;
 				drawHitBox.setOutlineColor(sf::Color::Red);
 				chooseCollision = 0;
 			}
@@ -166,13 +168,14 @@ void HitboxEditor::handleEvent() {
 		}
 		else if (event.mouseButton.button == sf::Mouse::Right) {
 			hitMap.cycleHitbox(textureID);
-			positionText.setString("Position:\n" + std::to_string(hitMap.select->second->box.getPosition().x) + "\n" + std::to_string(hitMap.select->second->box.getPosition().y));
+			if(hitMap.select != hitMap.map.end())
+				positionText.setString("Position:\n" + std::to_string(hitMap.select->second->box.getPosition().x) + "\n" + std::to_string(hitMap.select->second->box.getPosition().y));
 		}
 		break;
 	case sf::Event::MouseButtonReleased:
 		if (event.mouseButton.button == sf::Mouse::Left) {
 			leftPlacing = 0;
-			hitMap.addHitbox(textureID, drawHitBox, chooseHitbox);
+			hitMap.addHitbox(textureID, drawHitBox, hitboxType);
 		}
 		break;
 	case sf::Event::MouseMoved:
@@ -184,6 +187,7 @@ void HitboxEditor::handleEvent() {
 	}
 }
 void HitboxEditor::copy(std::string textureID) {
+
 	std::multimap <std::string, Hitbox *>::iterator it;
 	std::string check;
 	
@@ -191,27 +195,46 @@ void HitboxEditor::copy(std::string textureID) {
 	check = textureID;
 
 	while (1) {
-		printf("check\n");
 		check = engine->textureManager.getNextTextureID(check);
+		
 		if (!parser(textureID, check))
 			break;
+		
 		hitMap.addHitbox(check, it->second->box, it->second->type);
 	}
 }
 
 int HitboxEditor::parser(std::string textureID, std::string check) {
 
-	for (int i = check.size() - 1; check[i] != '_'; i--) {
-		printf("ohe yesssss\n");
+	/* Look For The Underscore Before The Frame Number */
+
+	for (size_t i = check.size() - 1; check[i] != '_'; i--) {
+
+		/* Get The Next Smaller String */
+
 		check = check.substr(0, check.size() - 1);
-	}
-	for (int i = 0; i < check.size(); i++) {
-		if (check[i] != textureID[i]) {
-			printf("%s %s not same fam\n", check.c_str(), textureID.c_str());
+
+		/* If This Texture Is Not Part Of An Animation Break */
+
+		if (i == 0) {
+			printf("No Underscore Found, Not Part Of An Animation\n");
 			return 0;
 		}
+	
 	}
-	printf("%s %s SAMMMEEE!\n", check.c_str(), textureID.c_str());
+
+	/* Make Sure The Texture Is Part Of The Same Animation */
+
+	for (size_t i = 0; i < check.size(); i++) {
+
+		if (check[i] != textureID[i]) {
+			printf("%s, Is Not, %s Found A Different Animation\n", check.c_str(), textureID.c_str());
+			return 0;
+		}
+
+	}
+
+	printf("Found Another %s Frame\n", check.c_str());
 	return 1;
 }
 

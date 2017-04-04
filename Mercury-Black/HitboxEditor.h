@@ -38,7 +38,7 @@ private:
 	static HitboxEditor hitboxEditor;
 	int leftPlacing;
 	int chooseCollision;
-	int chooseHitbox;
+	HitboxType hitboxType;
 	sf::Vector2f initialPosition;
 	sf::Vector2f finalPosition;
 	sf::RectangleShape drawHitBox;

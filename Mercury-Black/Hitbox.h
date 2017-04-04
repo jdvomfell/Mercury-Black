@@ -18,20 +18,22 @@ const enum HitboxType {
 struct Hitbox {
 public:
 	sf::RectangleShape box;
-	int type;
+	HitboxType type;
 };
 
 class HitboxMap {
 
 public:
 	
-	void addHitbox(std::string textureID, sf::RectangleShape box, int type);
+	void addHitbox(std::string textureID, sf::RectangleShape box, HitboxType type);
 	void deleteHitbox(std::string textureID);
 	void cycleHitbox(std::string textureID);
 	
 	void save();
 	void load();
 	void clean();
+
+	void colorHitbox(Hitbox * hitbox);
 
 	void draw(sf::RenderWindow *window, std::string textureID);
 

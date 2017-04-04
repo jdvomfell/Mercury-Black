@@ -119,8 +119,6 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 	Position * ddp;
 	ScriptParameters * ddsp;
 
-	bool dealDamage;
-
 	std::string hurtID;
 	std::string damageID;
 	std::vector<sf::RectangleShape> hurtBoxes;
@@ -130,104 +128,106 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 
 	for (int damageTakerID = 0; damageTakerID < MAX_ENTITIES; damageTakerID++) {
 
-		if ((world->mask[damageTakerID] & TAKE_DAMAGE_MASK) == TAKE_DAMAGE_MASK) {
+		if ((world->mask[damageTakerID] & TAKE_DAMAGE_MASK) != TAKE_DAMAGE_MASK)
+			continue;
 
-			/* If The Entity Is Still Invaunerable Reduce It's Invaunerability Timer */
+		/* If The Entity Is Still Invaunerable Reduce It's Invaunerability Timer */
 
-			if (world->health[damageTakerID].hurtTimer > 0) {
-				world->health[damageTakerID].hurtTimer -= dt;
+		if (world->health[damageTakerID].hurtTimer > 0) {
+			world->health[damageTakerID].hurtTimer -= dt;
+			continue;
+		}
+
+		/* Get Damage Taker Info */
+
+		dti = &(world->input[damageTakerID]);
+		dth = &(world->health[damageTakerID]);
+		dts = &(world->sprite[damageTakerID]);
+		dtp = &(world->position[damageTakerID]);
+		dtsp = &(world->scriptParameters[damageTakerID]);
+
+		/* Get The Hitboxes For The Damage Taker */
+
+		hurtBoxes.clear();
+
+		if (!dts->animationManager.isEmpty()) {
+			
+			hurtID = dts->animationManager.getCurrentTextureID();
+			
+			if (dti->lastDirection == LEFT)
+				hurtBoxes = hitboxMap->getFlippedHitboxes(hurtID, HITBOXTYPE_HURT);
+			else
+				hurtBoxes = hitboxMap->getHitboxes(hurtID, HITBOXTYPE_HURT);
+		}
+
+		/* Move The Hitboxes To The Entities Position */
+
+		for (int i = 0; i < hurtBoxes.size(); i++)
+			hurtBoxes[i].move(dtp->x, dtp->y);
+
+		/* Find An Entity That Can Deal Damage */
+
+		for (int damageDealerID = 0; damageDealerID < MAX_ENTITIES; damageDealerID++) {
+
+			if ((world->mask[damageDealerID] & DEAL_DAMAGE_MASK) != DEAL_DAMAGE_MASK || world->scriptParameters[damageDealerID].currentState != ATTACK_STATE)
 				continue;
-			}
 
-			/* Get Damage Taker Info */
+			/* Don't Let Entities Kill Themselves */
 
-			dti = &(world->input[damageTakerID]);
-			dth = &(world->health[damageTakerID]);
-			dts = &(world->sprite[damageTakerID]);
-			dtp = &(world->position[damageTakerID]);
-			dtsp = &(world->scriptParameters[damageTakerID]);
+			if (damageDealerID == damageTakerID)
+				continue;
 
-			/* Get The Hitboxes For The Damage Taker */
+			/* Get Damage Dealer Info */
 
-			hurtBoxes.clear();
+			ddi = &(world->input[damageDealerID]);
+			dds = &(world->sprite[damageDealerID]);
+			ddp = &(world->position[damageDealerID]);
+			ddst = &(world->stats[damageDealerID]);
+			ddsp = &(world->scriptParameters[damageDealerID]);
 
-			if (!dts->animationManager.isEmpty()) {
-				hurtID = dts->animationManager.getCurrentTextureID();
-				if (dti->lastDirection == LEFT)
-					hurtBoxes = hitboxMap->getFlippedHitboxes(hurtID, HITBOXTYPE_HURT);
+			/* Get The Hitboxes For The Damage Dealer */
+
+			damageBoxes.clear();
+
+			if (!dds->animationManager.isEmpty()) {
+				
+				damageID = dds->animationManager.getCurrentTextureID();
+
+				if (ddi->lastDirection == LEFT)
+					damageBoxes = hitboxMap->getFlippedHitboxes(damageID, HITBOXTYPE_DAMAGE);
 				else
-					hurtBoxes = hitboxMap->getHitboxes(hurtID, HITBOXTYPE_HURT);
+					damageBoxes = hitboxMap->getHitboxes(damageID, HITBOXTYPE_DAMAGE);
+
 			}
 
 			/* Move The Hitboxes To The Entities Position */
 
-			for (int i = 0; i < hurtBoxes.size(); i++)
-				hurtBoxes[i].move(dtp->x, dtp->y);
+			for (int i = 0; i < damageBoxes.size(); i++)
+				damageBoxes[i].move(ddp->x, ddp->y);
 
-			/* Find An Entity That Can Deal Damage */
+			/* Check Each Damage Box Against Each Hurt Box */
 
-			for (int damageDealerID = 0; damageDealerID < MAX_ENTITIES; damageDealerID++) {
+			for (size_t i = 0; i < damageBoxes.size(); i++) {
+				for(size_t j = 0; j < hurtBoxes.size(); j++){
 
-				if ((world->mask[damageDealerID] & DEAL_DAMAGE_MASK) == DEAL_DAMAGE_MASK && world->scriptParameters[damageDealerID].currentState == ATTACK_STATE) {
+					printf("Check\n");
 
-					/* Don't Let Entities Kill Themselves */
+					/* If One Intersects Deal Damage */
 
-					if (damageDealerID == damageTakerID)
-						continue;
+					if (damageBoxes[i].getGlobalBounds().intersects(hurtBoxes[j].getGlobalBounds())) {
 
-					/* Get Damage Dealer Info */
+						dth->current -= ddst->power;
+						dth->hurtTimer = 1.0f;
 
-					ddi = &(world->input[damageTakerID]);
-					dds = &(world->sprite[damageDealerID]);
-					ddp = &(world->position[damageDealerID]);
-					ddst = &(world->stats[damageDealerID]);
-					ddsp = &(world->scriptParameters[damageDealerID]);
+						if (dth->current <= 0)
+							dtsp->currentState = DEATH_STATE;
 
-					/* Get The Hitboxes For The Damage Dealer */
-
-					damageBoxes.clear();
-
-					if (!dds->animationManager.isEmpty()) {
-						damageID = dds->animationManager.getCurrentTextureID();
-						if (ddi->lastDirection == LEFT)
-							damageBoxes = hitboxMap->getFlippedHitboxes(damageID, HITBOXTYPE_DAMAGE);
-						else
-							damageBoxes = hitboxMap->getHitboxes(damageID, HITBOXTYPE_DAMAGE);
-
-					}
-
-					/* Move The Hitboxes To The Entities Position */
-
-					for (int i = 0; i < damageBoxes.size(); i++)
-						damageBoxes[i].move(ddp->x, ddp->y);
-
-					/* Check Each Damage Box Against Each Hurt Box */
-
-					dealDamage = false;
-
-					for (size_t i = 0; i < damageBoxes.size(); i++) {
-						for(size_t j = 0; j < hurtBoxes.size(); j++){
-
-							/* If One Intersects Deal Damage */
-
-							if (damageBoxes[i].getGlobalBounds().intersects(hurtBoxes[j].getGlobalBounds())) {
-
-								dth->current -= ddst->power;
-								dth->hurtTimer = 1.0f;
-
-								if (dth->current <= 0)
-									dtsp->currentState = DEATH_STATE;
-
-								printf("E: %d\n", dth->current);
-							
-							}
-						
-						}
+						printf("E: %d\n", dth->current);
 					
 					}
 				
 				}
-
+			
 			}
 
 		}
@@ -369,6 +369,8 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
 	std::map<float, sf::ConvexShape *>::iterator it;
 
+	/* Find An Entity That Can Collide With Platforms */
+
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
 		if ((world->mask[entityID] & COLLISION_MASK) == COLLISION_MASK) {
@@ -378,10 +380,14 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 			tempSprite.setPosition(sprite->getPosition());
 			tempSprite.setPosition(tempSprite.getPosition().x + world->velocity[entityID].x, tempSprite.getPosition().y + world->velocity[entityID].y);
 
+			/* Retrieve The Entity Normals */
+
 			entityTopNormal = entity->getEntityNormal("top", sprite);
 			entityBottomNormal = entity->getEntityNormal("bottom", sprite);
 			entityLeftNormal = entity->getEntityNormal("left", sprite);
 			entityRightNormal = entity->getEntityNormal("right", sprite);
+
+			/* Check The Entity Against Platforms */
 
 			for (it = platformMap->map.begin(); it != platformMap->map.end(); it++) {
 
@@ -390,6 +396,8 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
 				shape = it->second;
 				collision = true;
+
+				/* Check Projections Against Each Normal Of The Shape */
 
 				for (size_t i = 0; i < shape->getPointCount(); i++) {
 
@@ -417,6 +425,10 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 					}
 				}
 
+				/* Check Projections Against Each Entity Projections */
+
+				/* Entity Top Projections */
+
 				entityProjection = entity->getEntityProjection(entityTopNormal, tempSprite);
 				shapeProjection = platformMap->getProjection(entityTopNormal, shape);
 
@@ -438,6 +450,8 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 					}
 				}
 
+				/* Entity Bottom Projections */
+
 				entityProjection = entity->getEntityProjection(entityBottomNormal, tempSprite);
 				shapeProjection = platformMap->getProjection(entityBottomNormal, shape);
 
@@ -457,6 +471,8 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 						smallestNormal = entityBottomNormal;
 					}
 				}
+
+				/* Entity Left Projections */
 
 				entityProjection = entity->getEntityProjection(entityLeftNormal, tempSprite);
 				shapeProjection = platformMap->getProjection(entityLeftNormal, shape);
@@ -478,6 +494,8 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 					}
 				}
 
+				/* Entity Right Projections */
+
 				entityProjection = entity->getEntityProjection(entityRightNormal, tempSprite);
 				shapeProjection = platformMap->getProjection(entityRightNormal, shape);
 
@@ -498,7 +516,8 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 					}
 				}
 
-				//COLLISION DETECTED, CALCULATE MTV
+				/* Collision Has Happened, Calculate And Apply The MTV */
+				
 				if (collision == true)
 				{
 					shape->setFillColor(sf::Color::Red);
