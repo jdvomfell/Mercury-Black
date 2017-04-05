@@ -53,7 +53,17 @@ void scriptAttack(World* world, int entityID, float x, float y) {
 		//world->input[entityID].attack = false;
 	}
 }
+void scriptFlyWait(World * world, int entityID, float x, float y) {
+	sf::Vector2f r;
+	if (std::fabs(world->position[entityID].x - x) ==
+		world->scriptParameters[entityID].attackRangeMin) {
+		r.x = std::fabs(x - world->position[entityID].x);
+		r.y = std::fabs(y - world->position[entityID].y);
 
+		world->position[entityID].x = r.x;
+		world->position[entityID].y = r.y;
+	}
+}
 void scriptRetreat(World * world, int entityID, float x, float y) {
 
 	if (std::fabs(world->position[entityID].x - x) <=
@@ -73,7 +83,9 @@ void scriptRetreat(World * world, int entityID, float x, float y) {
 		world->input[entityID].right = false;
 	}
 }
+void lineOfSight() {
 
+}
 /* Entity Scripts */
 
 void scriptPlayer(World *world, float dt) {
@@ -276,7 +288,8 @@ void scriptWisp(World * world, int entityID, float dt) {
 	}
 
 	scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
-
+	scriptFlyWait(world, entityID, world->position[0].x, world->position[0].y);
+	
 	s->metaballSpawner->position.x = p->x;
 	s->metaballSpawner->position.y = p->y;
 

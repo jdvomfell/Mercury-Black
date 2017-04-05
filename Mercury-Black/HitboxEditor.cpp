@@ -63,11 +63,11 @@ void HitboxEditor::handleEvent() {
 		else if (event.key.code == sf::Keyboard::J) {
 			hitMap.save();
 		}
-		else if (event.key.code == sf::Keyboard::X) {
-			copy(textureID);
-		}
 		else if (event.key.code == sf::Keyboard::K) {
 			hitMap.load();
+		}
+		else if (event.key.code == sf::Keyboard::X) {
+			copy(textureID);
 		}
 		else if (event.key.code == sf::Keyboard::Up) {
 			
