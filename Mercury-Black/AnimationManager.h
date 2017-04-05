@@ -12,7 +12,7 @@ class AnimationManager {
 	public:
 
 		int currentFrame;
-		float currentTime; 
+		float currentTime;
 
 		std::string currentAnimation;
 
@@ -21,7 +21,10 @@ class AnimationManager {
 		AnimationManager();
 
 		void clean();
+		std::string getCurrentTextureID();
 		sf::Texture * getCurrentTexture();
+
+		bool isEmpty();
 
 		int updateAnimation(float deltaTime);
 		void changeAnimation(std::string animationID);

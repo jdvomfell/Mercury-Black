@@ -1,5 +1,7 @@
 #include "System.h"
 #include "CollisionHelper.h"
+#include "Hitbox.h"
+
 #include <cmath>
 
 /* Do Not Edit CONSTS Without Discussing Gameplay Implications First */
@@ -64,45 +66,168 @@ void renderSystem(World * world, sf::RenderWindow * window) {
 
 }
 
+#define ANIMATION_MASK (INPUT | SPRITE | SCRIPT)
+
+void animationSystem(World * world, float dt) {
+
+	Sprite * s;
+	Input * i;
+	ScriptParameters * sp;
+
+	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
+
+		if ((world->mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
+
+			s = &(world->sprite[entityID]);
+			i = &(world->input[entityID]);
+			sp = &(world->scriptParameters[entityID]);
+
+			if (i->left)
+				s->sprite.setTextureRect(sf::IntRect((int)s->sprite.getLocalBounds().width, 0, (int)-s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
+			else if (i->right)
+				s->sprite.setTextureRect(sf::IntRect(0, 0, (int)s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
+
+			s->sprite.setTexture(*s->animationManager.getCurrentTexture());
+			s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height / 2));
+
+			/* Allow Animation Changes If Current Animation Has Ended */
+			if (s->animationManager.updateAnimation(dt) == 1) {
+				sp->currentState = NO_STATE;
+
+			}
+
+		}
+
+	}
+
+}
+
 #define TAKE_DAMAGE_MASK (HEALTH)
 #define DEAL_DAMAGE_MASK (STATS | SCRIPT)
 
-void damageSystem(World * world, float dt) {
+void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 
-	Health * h;
-	Stats * st;
-	ScriptParameters * sp;
+	Input * dti;
+	Health * dth;
+	Sprite * dts;
+	Position * dtp;
+	ScriptParameters * dtsp;
+
+	Input * ddi;
+	Stats * ddst;
+	Sprite * dds;
+	Position * ddp;
+	ScriptParameters * ddsp;
+
+	std::string hurtID;
+	std::string damageID;
+	std::vector<sf::RectangleShape> hurtBoxes;
+	std::vector<sf::RectangleShape> damageBoxes;
+
+	/* Find An Entity That Can Take Damage */
 
 	for (int damageTakerID = 0; damageTakerID < MAX_ENTITIES; damageTakerID++) {
 
-		world->health[damageTakerID].hurtTimer -= dt;
+		if ((world->mask[damageTakerID] & TAKE_DAMAGE_MASK) != TAKE_DAMAGE_MASK)
+			continue;
 
-		if ((world->mask[damageTakerID] & TAKE_DAMAGE_MASK) == TAKE_DAMAGE_MASK && world->health[damageTakerID].hurtTimer <= 0) {
+		/* If The Entity Is Still Invaunerable Reduce It's Invaunerability Timer */
 
-			h = &(world->health[damageTakerID]);
+		if (world->health[damageTakerID].hurtTimer > 0) {
+			world->health[damageTakerID].hurtTimer -= dt;
+			continue;
+		}
 
-			for (int damageDealerID = 0; damageDealerID < MAX_ENTITIES; damageDealerID++) {
+		/* Get Damage Taker Info */
 
-				if ((world->mask[damageDealerID] & DEAL_DAMAGE_MASK) == DEAL_DAMAGE_MASK && world->scriptParameters[damageDealerID].currentState == ATTACK_STATE) {
+		dti = &(world->input[damageTakerID]);
+		dth = &(world->health[damageTakerID]);
+		dts = &(world->sprite[damageTakerID]);
+		dtp = &(world->position[damageTakerID]);
+		dtsp = &(world->scriptParameters[damageTakerID]);
 
-					if ((world->sprite[damageTakerID].sprite.getGlobalBounds().intersects(world->sprite[damageDealerID].sprite.getGlobalBounds()) == true) && (damageDealerID != damageTakerID)) {
+		/* Get The Hitboxes For The Damage Taker */
 
-						st = &(world->stats[damageDealerID]);
-						sp = &(world->scriptParameters[damageDealerID]);
+		hurtBoxes.clear();
 
-						h->current -= st->power;
+		if (!dts->animationManager.isEmpty()) {
+			
+			hurtID = dts->animationManager.getCurrentTextureID();
+			
+			if (dti->lastDirection == LEFT)
+				hurtBoxes = hitboxMap->getFlippedHitboxes(hurtID, HITBOXTYPE_HURT);
+			else
+				hurtBoxes = hitboxMap->getHitboxes(hurtID, HITBOXTYPE_HURT);
+		}
 
-						h->hurtTimer = 1.0f;
+		/* Move The Hitboxes To The Entities Position */
 
-						if (world->health[damageTakerID].current <= 0)
-							world->scriptParameters[damageTakerID].currentState = DEATH_STATE;
+		for (int i = 0; i < hurtBoxes.size(); i++)
+			hurtBoxes[i].move(dtp->x, dtp->y);
 
-						printf("E: %d\n", world->health[damageTakerID].current);
+		/* Find An Entity That Can Deal Damage */
 
+		for (int damageDealerID = 0; damageDealerID < MAX_ENTITIES; damageDealerID++) {
+
+			if ((world->mask[damageDealerID] & DEAL_DAMAGE_MASK) != DEAL_DAMAGE_MASK || world->scriptParameters[damageDealerID].currentState != ATTACK_STATE)
+				continue;
+
+			/* Don't Let Entities Kill Themselves */
+
+			if (damageDealerID == damageTakerID)
+				continue;
+
+			/* Get Damage Dealer Info */
+
+			ddi = &(world->input[damageDealerID]);
+			dds = &(world->sprite[damageDealerID]);
+			ddp = &(world->position[damageDealerID]);
+			ddst = &(world->stats[damageDealerID]);
+			ddsp = &(world->scriptParameters[damageDealerID]);
+
+			/* Get The Hitboxes For The Damage Dealer */
+
+			damageBoxes.clear();
+
+			if (!dds->animationManager.isEmpty()) {
+				
+				damageID = dds->animationManager.getCurrentTextureID();
+
+				if (ddi->lastDirection == LEFT)
+					damageBoxes = hitboxMap->getFlippedHitboxes(damageID, HITBOXTYPE_DAMAGE);
+				else
+					damageBoxes = hitboxMap->getHitboxes(damageID, HITBOXTYPE_DAMAGE);
+
+			}
+
+			/* Move The Hitboxes To The Entities Position */
+
+			for (int i = 0; i < damageBoxes.size(); i++)
+				damageBoxes[i].move(ddp->x, ddp->y);
+
+			/* Check Each Damage Box Against Each Hurt Box */
+
+			for (size_t i = 0; i < damageBoxes.size(); i++) {
+				for(size_t j = 0; j < hurtBoxes.size(); j++){
+
+					printf("Check\n");
+
+					/* If One Intersects Deal Damage */
+
+					if (damageBoxes[i].getGlobalBounds().intersects(hurtBoxes[j].getGlobalBounds())) {
+
+						dth->current -= ddst->power;
+						dth->hurtTimer = 1.0f;
+
+						if (dth->current <= 0)
+							dtsp->currentState = DEATH_STATE;
+
+						printf("E: %d\n", dth->current);
+					
 					}
-
+				
 				}
-
+			
 			}
 
 		}
@@ -127,21 +252,27 @@ void inputSystem(World * world) {
 
 			/* INPUT */
 
-			if (i->left)
-				v->x = -v->speed * v->speedUp;
-			if (i->right)
-				v->x = v->speed * v->speedUp;
 			if ((i->left && i->right) || (!i->left && !i->right))
 				v->x = 0.0f;
 
+			else if (i->left) {
+				v->x = -v->speed * v->speedUp;
+				i->lastDirection = LEFT;
+			}
+
+			else if (i->right) {
+				v->x = v->speed * v->speedUp;
+				i->lastDirection = RIGHT;
+			}
+
 			if ((world->mask[entityID] & FLYING) == FLYING) {
 
-				if (i->up)
-					v->y = -v->speed * v->speedUp;
-				if (i->down)
-					v->y = v->speed * v->speedUp;
 				if ((i->up && i->down) || (!i->up && !i->down))
 					v->y = 0.0f;
+				else if (i->up)
+					v->y = -v->speed * v->speedUp;
+				else if (i->down)
+					v->y = v->speed * v->speedUp;
 			
 			}
 
@@ -213,42 +344,6 @@ void movementSystem(World * world) {
 
 }
 
-#define ANIMATION_MASK (INPUT | SPRITE | SCRIPT)
-
-void animationSystem(World * world, float dt) {
-
-	Sprite * s;
-	Input * i;
-	ScriptParameters * sp;
-
-	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
-
-		if ((world->mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
-
-			s = &(world->sprite[entityID]);
-			i = &(world->input[entityID]);
-			sp = &(world->scriptParameters[entityID]);
-
-			if (i->left)
-				s->sprite.setTextureRect(sf::IntRect((int)s->sprite.getLocalBounds().width, 0, (int)-s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
-			else if (i->right)
-				s->sprite.setTextureRect(sf::IntRect(0, 0, (int)s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
-
-			s->sprite.setTexture(*s->animationManager.getCurrentTexture());
-			s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height / 2));
-
-			/* Allow Animation Changes If Current Animation Has Ended */
-			if (s->animationManager.updateAnimation(dt) == 1) {
-				sp->currentState = NO_STATE;
-
-			}
-
-		}
-
-	}
-
-}
-
 #define COLLISION_MASK (POSITION | VELOCITY | COLLISION | GRAVITY)
 
 void shapeCollSystem(World * world, PlatformMap * platformMap) {
@@ -274,6 +369,8 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
 	std::map<float, sf::ConvexShape *>::iterator it;
 
+	/* Find An Entity That Can Collide With Platforms */
+
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
 		if ((world->mask[entityID] & COLLISION_MASK) == COLLISION_MASK) {
@@ -283,10 +380,14 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 			tempSprite.setPosition(sprite->getPosition());
 			tempSprite.setPosition(tempSprite.getPosition().x + world->velocity[entityID].x, tempSprite.getPosition().y + world->velocity[entityID].y);
 
+			/* Retrieve The Entity Normals */
+
 			entityTopNormal = entity->getEntityNormal("top", sprite);
 			entityBottomNormal = entity->getEntityNormal("bottom", sprite);
 			entityLeftNormal = entity->getEntityNormal("left", sprite);
 			entityRightNormal = entity->getEntityNormal("right", sprite);
+
+			/* Check The Entity Against Platforms */
 
 			for (it = platformMap->map.begin(); it != platformMap->map.end(); it++) {
 
@@ -295,6 +396,8 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
 				shape = it->second;
 				collision = true;
+
+				/* Check Projections Against Each Normal Of The Shape */
 
 				for (size_t i = 0; i < shape->getPointCount(); i++) {
 
@@ -322,6 +425,10 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 					}
 				}
 
+				/* Check Projections Against Each Entity Projections */
+
+				/* Entity Top Projections */
+
 				entityProjection = entity->getEntityProjection(entityTopNormal, tempSprite);
 				shapeProjection = platformMap->getProjection(entityTopNormal, shape);
 
@@ -343,6 +450,8 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 					}
 				}
 
+				/* Entity Bottom Projections */
+
 				entityProjection = entity->getEntityProjection(entityBottomNormal, tempSprite);
 				shapeProjection = platformMap->getProjection(entityBottomNormal, shape);
 
@@ -362,6 +471,8 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 						smallestNormal = entityBottomNormal;
 					}
 				}
+
+				/* Entity Left Projections */
 
 				entityProjection = entity->getEntityProjection(entityLeftNormal, tempSprite);
 				shapeProjection = platformMap->getProjection(entityLeftNormal, shape);
@@ -383,6 +494,8 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 					}
 				}
 
+				/* Entity Right Projections */
+
 				entityProjection = entity->getEntityProjection(entityRightNormal, tempSprite);
 				shapeProjection = platformMap->getProjection(entityRightNormal, shape);
 
@@ -403,7 +516,8 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 					}
 				}
 
-				//COLLISION DETECTED, CALCULATE MTV
+				/* Collision Has Happened, Calculate And Apply The MTV */
+				
 				if (collision == true)
 				{
 					shape->setFillColor(sf::Color::Red);

@@ -2,6 +2,7 @@
 #include <SFML/Audio.hpp>
 #include "Game.h"
 #include "Entity.h"
+#include <fstream>
 #include <map>
 #include <string>
 #include <typeinfo>
@@ -14,6 +15,7 @@ class Event {
 	
 public:
 
+	std::string type; 
 	sf::RectangleShape * eventArea; 
 	virtual void trigger() = 0;
 	virtual bool isTriggered() = 0;
@@ -38,8 +40,9 @@ public:
 
 	void trigger();
 	bool isTriggered();
-	sf::Music * sound;
 	void clean();
+	sf::Music * sound;
+	std::string filename;
 	//bool loopSound; 
 	//bool isPlaying;
 
@@ -69,15 +72,24 @@ class EventHandler {
 
 public:
 	//void insertSpawn(sf::RectangleShape * rectangle, World * world);
-	void insertSound(sf::RectangleShape * rectangle, World * world, std::string fileName, float volume, bool loop);
+	void insertSound(sf::RectangleShape * rectangle, std::string fileName, float volume, bool loop);
 	//void insertSwitch(sf::RectangleShape * rectangle, World * world);
 //	void insertSwitchEffect(sf::RectangleShape * rectangle, World * world);
 	
 	void remove(std::map<float, Event *>::iterator oldEvent);
 	void clean();
+	void save();
+	void load();
+	void draw(sf::RenderWindow * window);
+	std::map <float, Event *>::iterator containment(sf::Vector2f mouse);
 
 	std::multimap<float, Event *> events; 
 	std::map<float, Event *>::iterator eit;
+	std::map<float, Event *>::iterator selected;
+
+	World * world;
+
+	int numEvents;
 };
 
 #endif 

@@ -13,8 +13,6 @@ TextButton::TextButton(std::string name, float x, float y, int size, sf::Font * 
 	text = sf::Text(name, *font, size);
 	text.setPosition(x, y);
 
-	text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
-
 	m_funcPtr = funcPtr;
 }
 
