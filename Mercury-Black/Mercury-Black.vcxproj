@@ -180,6 +180,7 @@
     <ClInclude Include="Hitbox.h" />
     <ClInclude Include="HitboxEditor.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="MathFunctions.h" />
     <ClInclude Include="Metaball.h" />
     <ClInclude Include="ObjectMap.h" />
     <ClInclude Include="OptionsMenu.h" />

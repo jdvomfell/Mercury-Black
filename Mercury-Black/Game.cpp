@@ -5,6 +5,7 @@
 #include "MainMenu.h"
 #include "PauseMenu.h"
 #include "Editor.h"
+#include "MathFunctions.h"
 #include <map>
 
 Game Game::game;
@@ -154,7 +155,7 @@ void Game::update(const float dt) {
 	sf::Listener::setPosition(world.position[0].x, 0, world.position[0].y);
 
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 3.5f, engine->window.getDefaultView().getSize().y * 3.5f));
-	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y - view.getSize().y / 4));
+	view.setCenter(sf::Vector2f(lerp(view.getCenter().x, world.position[PLAYER].x, 1.0 - exp(-0.9 * dt)), world.position[PLAYER].y - view.getSize().y / 6));
 	engine->window.setView(view);
 
 	metaballHandler.update(dt);
