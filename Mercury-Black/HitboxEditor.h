@@ -5,6 +5,13 @@
 #include "Hitbox.h"
 #include <SFML\Graphics.hpp>
 
+const enum HitboxSide {
+	HITBOXSIDE_TOP,
+	HITBOXSIDE_LEFT,
+	HITBOXSIDE_RIGHT,
+	HITBOXSIDE_BOTTOM
+};
+
 class HitboxEditor : public GameState {
 
 public:
@@ -19,6 +26,7 @@ public:
 	void render(const float dt);
 	void copy(std::string);
 	int parser(std::string, std::string);
+	void updateSelectText();
 
 	static HitboxEditor * instance(GameEngine * engine) { hitboxEditor.engine = engine; return &hitboxEditor; }
 
@@ -33,6 +41,7 @@ protected:
 
 private:
 
+	HitboxSide side;
 	HitboxMap hitMap;
 	Hitbox *hitbox;
 	static HitboxEditor hitboxEditor;
@@ -45,6 +54,12 @@ private:
 	sf::RectangleShape spriteBox;
 
 	sf::Text positionText;
+	sf::Text sideText;
+	sf::Text topText;
+	sf::Text leftText;
+	sf::Text rightText;
+	sf::Text bottomText;
+
 };
 
 #endif

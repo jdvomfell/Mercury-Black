@@ -64,6 +64,8 @@ public:
 	int spawnPerSecond;
 	float toSpawn;
 
+	bool kill;
+
 	void spawn(float dt);
 
 	/*

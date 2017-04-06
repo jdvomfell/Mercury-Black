@@ -13,6 +13,6 @@ void damageSystem(World * world, float dt, class HitboxMap * hitboxMap);
 void gravitySystem(World * world);
 void movementSystem(World * world);
 void animationSystem(World * world, float dt);
-void shapeCollSystem(World * world, PlatformMap * platformMap);
+void shapeCollSystem(World * world, PlatformMap * platformMap, HitboxMap * hitboxMap);
 
 #endif
