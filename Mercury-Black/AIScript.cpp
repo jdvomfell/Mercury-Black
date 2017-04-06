@@ -272,8 +272,8 @@ void scriptWisp(World * world, int entityID, float dt) {
 	sp = &(world->scriptParameters[entityID]);
 
 	if (sp->currentState == DEATH_STATE) {
-		//SUNBURT
-		//KILL SPAWNER LIFESPAN
+		world->metaballHandler->sunburst(sf::Vector2f(p->x, p->y), 10);
+		world->sprite[entityID].metaballSpawner->kill = true;
 		destroyEntity(world, entityID);
 		return;
 	}

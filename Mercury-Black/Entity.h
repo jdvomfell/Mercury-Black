@@ -22,6 +22,7 @@ struct World {
 	ScriptParameters scriptParameters[MAX_ENTITIES];
 
 	TextureManager * textureManager;
+	MetaballHandler * metaballHandler;
 
 };
 

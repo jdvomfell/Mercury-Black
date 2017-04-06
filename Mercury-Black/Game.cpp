@@ -11,9 +11,10 @@ Game Game::game;
 
 void Game::init() {
 
-	world.textureManager = &engine->textureManager;
-
 	metaballHandler.init(engine->window.getSize(), false);
+
+	world.textureManager = &engine->textureManager;
+	world.metaballHandler = &metaballHandler;
 
 	createPlayer(&world, 0, 0);
 	createTest(&world, 2000, -1500);
@@ -133,7 +134,7 @@ void Game::update(const float dt) {
 	animationSystem(&world, dt);
 	inputSystem(&world);
 	gravitySystem(&world);
-	shapeCollSystem(&world, &platformMap);
+	shapeCollSystem(&world, &platformMap, &hitboxMap);
 	movementSystem(&world);
 	damageSystem(&world, dt, &hitboxMap);
 

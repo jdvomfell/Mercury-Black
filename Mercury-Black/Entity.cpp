@@ -212,8 +212,8 @@ int createWisp(World * world, float x, float y, MetaballHandler * metaballHandle
 
 	world->name[entityID].name = "wisp";
 
-	world->health[entityID].max = 100;
-	world->health[entityID].current = 100;
+	world->health[entityID].max = 50;
+	world->health[entityID].current = 50;
 
 	world->scriptParameters[entityID].followDistMin = 0;
 	world->scriptParameters[entityID].followDistMax = 1000;
