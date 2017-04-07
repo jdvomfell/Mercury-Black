@@ -149,6 +149,7 @@ void Game::update(const float dt) {
 		eventMap.eit++;
 	}
 
+	waterHandler.dealDamage(&world);
 	waterHandler.update();
 	waterHandler.updateWaves(dt);
 

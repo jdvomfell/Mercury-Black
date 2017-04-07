@@ -217,7 +217,7 @@ int createWisp(World * world, float x, float y, MetaballHandler * metaballHandle
 
 	world->scriptParameters[entityID].followDistMin = 0;
 	world->scriptParameters[entityID].followDistMax = 1000;
-	world->scriptParameters[entityID].currentState = NO_STATE;
+	world->scriptParameters[entityID].currentState = ATTACK_STATE;
 
 	world->position[entityID].x = x;
 	world->position[entityID].x = y;

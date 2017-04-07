@@ -231,8 +231,6 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 			for (size_t i = 0; i < damageBoxes.size(); i++) {
 				for(size_t j = 0; j < hurtBoxes.size(); j++){
 
-					printf("Check\n");
-
 					/* If One Intersects Deal Damage */
 
 					if (damageBoxes[i].getGlobalBounds().intersects(hurtBoxes[j].getGlobalBounds())) {

@@ -83,6 +83,8 @@ private:
 	sf::Vector2f corner1;
 	sf::Vector2f corner2;
 
+	WaterType waterType;
+
 };
 
 #endif
