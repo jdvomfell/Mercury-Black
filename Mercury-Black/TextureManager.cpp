@@ -98,7 +98,7 @@ void TextureManager::loadAllTextures() {
 	
 	/* Idle Attack */
 
-	loadTextures("player_idleAttack", "Textures/Player/Idle-Attack/", 8);
+	loadTextures("player_idleAttack", "Textures/Player/Idle-Attack/", 7);
 
 	/* Roll */
 
@@ -111,6 +111,10 @@ void TextureManager::loadAllTextures() {
 	/* RunAttack */
 
 	loadTextures("player_runAttack", "Textures/Player/Run-Attack/", 6);
+
+	/* JumpAttack */
+
+	loadTextures("player_jumpAttack", "Textures/Player/Jump-Attack/", 6);
 
 	///Ceiling Plant///
 
@@ -214,6 +218,12 @@ void TextureManager::loadAllTextures() {
 	/* Rise */
 
 	loadTextures("lotusMb_rise", "Textures/Enemies/Lotus/Rise/", 14);
+
+	///Spitter///
+
+	/* Attack */
+
+	loadTextures("spitter_SingleAttack", "Textures/Enemies/Spitter/Attack/", 18);
 
 	/////PLAY//////
 

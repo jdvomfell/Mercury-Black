@@ -158,7 +158,7 @@ MetaballHandler::MetaballHandler() {
 void MetaballHandler::init(sf::Vector2u windowSize, bool highResolution) {
 
 	if (highResolution) {
-		metaballAddTexture.create(windowSize.x * 3.5, windowSize.y * 3.5);
+		metaballAddTexture.create(windowSize.x, windowSize.y);
 		metaballAddSprite.setScale(1.0f, -1.0f);
 	}
 

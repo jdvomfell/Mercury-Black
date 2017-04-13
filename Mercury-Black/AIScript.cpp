@@ -52,10 +52,8 @@ void scriptFollow(World * world, int entityID, float x, float y) {
 
 void scriptAttack(World* world, int entityID, float x, float y, float dt) {
 
-	if (world->scriptParameters[entityID].attackTimer > 0) {
-		world->scriptParameters[entityID].attackTimer -= dt;
+	if ((world->scriptParameters[entityID].attackTimer -= dt) > 0)
 		return;
-	}
 
 	if (std::fabs(world->position[entityID].x - x) <=
 		world->scriptParameters[entityID].attackRangeMax &&
@@ -74,14 +72,16 @@ void scriptAttack(World* world, int entityID, float x, float y, float dt) {
 void scriptRetreat(World * world, int entityID, float x, float y) {
 
 	if (std::fabs(world->position[entityID].x - x) <=
-		world->scriptParameters[entityID].followDistMin) {
+		world->scriptParameters[entityID].retreatDist) {
 
 		if (world->position[entityID].x < x) {
 			world->input[entityID].left = true;
+			world->input[entityID].right = false;
 		}
 
 		else {
 			world->input[entityID].right = true;
+			world->input[entityID].left = false;
 		}
 	}
 
@@ -173,9 +173,12 @@ void scriptPlayer(World *world, float dt) {
 		/* Moving */
 		if (v->x != 0) {
 			/* Attack */
-			//if (i->attack) {
-				//TODO
-			//}
+			if (i->attack) {
+				if (sp->currentState == JUMP_STATE || sp->currentState == NO_STATE) {
+					s->animationManager.changeAnimation("jumpAttack");
+					sp->currentState == ATTACK_STATE;
+				}
+			}
 			/* No Input */
 			//else {
 				if (sp->currentState == NO_STATE) {
@@ -186,9 +189,12 @@ void scriptPlayer(World *world, float dt) {
 		/* Not Moving  (Might Be Able To Remove)*/
 		else {
 			/* Attack */
-			//if (i->attack) {
-				//TODO
-			//}
+			if (i->attack) {
+				if (sp->currentState == JUMP_STATE || sp->currentState == NO_STATE) {
+					s->animationManager.changeAnimation("jumpAttack");
+					sp->currentState == ATTACK_STATE;
+				}
+			}
 			/* No Input */
 			//else {
 				if (sp->currentState == NO_STATE) {
@@ -303,12 +309,26 @@ void scriptTest(World * world, int entityID, float dt) {
 		return;
 	}
 
-	scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
 	scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt);
 
-	if (i->left || i->right)
+	if (world->scriptParameters[entityID].attackTimer > 0 && world->scriptParameters[entityID].currentState == NO_STATE)
+		scriptRetreat(world, entityID, world->position[0].x, world->position[0].y);
+
+	else if(world->scriptParameters[entityID].currentState == NO_STATE)
+		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
+
+	else {
+		world->input[entityID].left = false;
+		world->input[entityID].right = false;
+	}
+
+	/* Moving */
+	if (i->left || i->right) {
+
 		s->animationManager.changeAnimation("run");
-	
+
+	}
+	/* Not Moving */
 	else {
 
 		if (sp->currentState == ATTACK_STATE)

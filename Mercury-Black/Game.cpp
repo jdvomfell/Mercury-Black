@@ -6,6 +6,7 @@
 #include "PauseMenu.h"
 #include "Editor.h"
 #include "MathFunctions.h"
+#include "HealthBar.h"
 #include <map>
 
 Game Game::game;
@@ -19,8 +20,8 @@ void Game::init() {
 
 	createPlayer(&world, 0, 0);
 	//createGroundBlob(&world, 2000, -1500);
-	//createTest(&world, 3500, -1800);
-	createLotus(&world, 4500, -1700);
+	createTest(&world, 3500, -1800);
+	//createLotus(&world, 4500, -1700);
 	//createHeart(&world, 900, 500);
 	//createWisp(&world, 500, 500, &metaballHandler);
 	//createCeilingPlant(&world, 3000, 1000);
@@ -38,6 +39,11 @@ void Game::init() {
 	rect.setOutlineThickness(3);
 
 	waterHandler.load();
+
+	guiView.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 3.5f, engine->window.getDefaultView().getSize().y * 3.5f));
+
+	healthBar = new HealthBar(&guiView, world.health[0].current, world.health[0].max);
+
 }
 
 void Game::clean() {
@@ -159,10 +165,16 @@ void Game::update(const float dt) {
 	sf::Listener::setPosition(world.position[0].x, 0, world.position[0].y);
 
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 3.5f, engine->window.getDefaultView().getSize().y * 3.5f));
+	guiView.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 3.5f, engine->window.getDefaultView().getSize().y * 3.5f));
+
 	view.setCenter(sf::Vector2f(lerp(view.getCenter().x, world.position[PLAYER].x, 1.0 - exp(-2.0 * dt)), world.position[PLAYER].y - view.getSize().y / 6));
+	//view.setCenter(sf::Vector2f(world.position[0].x, world.position[0].y)); // NO LERP
+	
 	engine->window.setView(view);
 
 	metaballHandler.update(dt);
+
+	healthBar->update(&guiView, world.health[0].current, world.health[0].max);
 
 	/* Hitbox Temp */
 	//rect.setSize(sf::Vector2f(world.sprite[0].sprite.getLocalBounds().width, world.sprite[0].sprite.getLocalBounds().height));
@@ -223,5 +235,11 @@ void Game::render(const float dt) {
 		//}
 		//eventMap.eit++;
 //	}
+
+	engine->window.setView(guiView);
+
+	healthBar->draw(&engine->window);
+
+	engine->window.setView(view);
 
 }

@@ -35,6 +35,10 @@ void MainMenu::init() {
 
 	guiHandler.isSelected(sf::Vector2f(0, 0));
 
+	metaballHandler.init(engine->window.getSize(), true);
+	metaballHandler.addSpawner(new MetaballSpawner(&metaballHandler, sf::Vector2f(view.getCenter().x - (view.getSize().x / 2) * 1 / 3 - 135, title.getPosition().y + 100.0f), sf::Vector2f(0, 0.5f), -0.05f, 1.5f, 25, 5, 5));
+	metaballHandler.addSpawner(new MetaballSpawner(&metaballHandler, sf::Vector2f(view.getCenter().x + (view.getSize().x / 2) * 1 / 3 + 30, title.getPosition().y + 100.0f), sf::Vector2f(0, 0.5f), -0.05f, 1.5f, 25, 5, 5));
+
 }
 
 void MainMenu::clean() {
@@ -74,13 +78,17 @@ void MainMenu::handleEvent() {
 
 void MainMenu::update(const float dt) {
 
-
+	metaballHandler.update(dt);
 
 }
 
 void MainMenu::render(const float dt) {
 
+	engine->window.clear(sf::Color(34, 42, 96, 0));
+
 	guiHandler.draw(&engine->window);
 	engine->window.draw(title);
+
+	metaballHandler.draw(&engine->window, &view);
 
 }

@@ -108,6 +108,7 @@ struct ScriptParameters {
 	float secondsRemaining;
 	int currentState;
 	float spawnDistance;
+	float retreatDist;
 
 };
 

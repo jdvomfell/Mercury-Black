@@ -103,7 +103,7 @@ int createPlayer(World * world, float x, float y) {
 		(world->textureManager, world->name[entityID].name, "idle", 24, 0.15f);
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "idleAttack", 8, 0.1f);
+		(world->textureManager, world->name[entityID].name, "idleAttack", 7, 0.1f);
 
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "run", 6, 0.125f);
@@ -119,6 +119,9 @@ int createPlayer(World * world, float x, float y) {
 
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "runAttack", 6, 0.125f);
+
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "jumpAttack", 6, 0.125f);
 
 	return entityID;
 
@@ -231,17 +234,21 @@ int createTest(World * world, float x, float y) {
 	world->scriptParameters[entityID].followDistMin = 250.0f;
 	world->scriptParameters[entityID].followDistMax = 1500.0f;
 
+	world->scriptParameters[entityID].retreatDist = 1000.0f;
+
 	world->scriptParameters[entityID].attackRangeMin = 0.0f;
 	world->scriptParameters[entityID].attackRangeMax = 250.0f;
 
-	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "idleUnsheathed", 8, 0.2f);
+	world->scriptParameters[entityID].attackFrequency = 2.0f;
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "sheathedRun", 6, 0.125f);
+		(world->textureManager, world->name[entityID].name, "idle", 24, 0.2f);
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "idleAttack", 8, 0.1f);
+		(world->textureManager, world->name[entityID].name, "run", 6, 0.125f);
+
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "idleAttack", 7, 0.1f);
 	
 	return entityID;
 
