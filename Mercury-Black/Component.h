@@ -104,6 +104,7 @@ struct ScriptParameters {
 	float attackFrequency;
 	float attackRangeMin;
 	float attackRangeMax;
+	float attackTimer;
 	float secondsRemaining;
 	int currentState;
 	float spawnDistance;

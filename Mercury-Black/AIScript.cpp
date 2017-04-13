@@ -5,10 +5,15 @@
 
 void scriptFollow(World * world, int entityID, float x, float y) {
 
-	float distance = sqrt(pow(world->position[entityID].x - x, 2) + pow(world->position[entityID].y - y, 2));
+	Position * p;
 
-	if (distance <= world->scriptParameters[entityID].followDistMax && distance >=world->scriptParameters[entityID].followDistMin){
+	p = &(world->position[entityID]);
+
+	float xDist = fabs(p->x - x);
+	float yDist = fabs(p->y - y);
 			
+	if (xDist <= world->scriptParameters[entityID].followDistMax && xDist >= world->scriptParameters[entityID].followDistMin) {
+
 		if (world->position[entityID].x < x) {
 			world->input[entityID].right = true;
 			world->input[entityID].left = false;
@@ -18,6 +23,15 @@ void scriptFollow(World * world, int entityID, float x, float y) {
 			world->input[entityID].right = false;
 		}
 
+	}
+
+	else {
+		world->input[entityID].left = false;
+		world->input[entityID].right = false;
+	}
+
+	if (yDist <= world->scriptParameters[entityID].followDistMax && yDist >= world->scriptParameters[entityID].followDistMin) {
+
 		if (world->position[entityID].y > y) {
 			world->input[entityID].up = true;
 			world->input[entityID].down = false;
@@ -26,18 +40,22 @@ void scriptFollow(World * world, int entityID, float x, float y) {
 			world->input[entityID].down = true;
 			world->input[entityID].up = false;
 		}
+
 	}
 
 	else {
-		world->input[entityID].left = false;
-		world->input[entityID].right = false;
 		world->input[entityID].down = false;
 		world->input[entityID].up = false;
 	}
 
 }
 
-void scriptAttack(World* world, int entityID, float x, float y) {
+void scriptAttack(World* world, int entityID, float x, float y, float dt) {
+
+	if (world->scriptParameters[entityID].attackTimer > 0) {
+		world->scriptParameters[entityID].attackTimer -= dt;
+		return;
+	}
 
 	if (std::fabs(world->position[entityID].x - x) <=
 		world->scriptParameters[entityID].attackRangeMax &&
@@ -46,12 +64,11 @@ void scriptAttack(World* world, int entityID, float x, float y) {
 		world->scriptParameters[entityID].attackRangeMin) {
 			
 		world->scriptParameters[entityID].currentState = ATTACK_STATE;
-			//world->input[entityID].attack = true;
+
+		world->scriptParameters[entityID].attackTimer = world->scriptParameters[entityID].attackFrequency;
+
 	}
 
-	else {
-		//world->input[entityID].attack = false;
-	}
 }
 
 void scriptRetreat(World * world, int entityID, float x, float y) {
@@ -112,7 +129,7 @@ void scriptPlayer(World *world, float dt) {
 			/* No Input */
 			else {
 				if (sp->currentState == NO_STATE) {
-					s->animationManager.changeAnimation("sheathedRun");
+					s->animationManager.changeAnimation("run");
 				}
 			}
 		}
@@ -139,7 +156,7 @@ void scriptPlayer(World *world, float dt) {
 			/* No Input */
 			else {
 				if (sp->currentState == NO_STATE) {
-					s->animationManager.changeAnimation("idleUnsheathed");
+					s->animationManager.changeAnimation("idle");
 				}
 			}
 		}
@@ -162,7 +179,7 @@ void scriptPlayer(World *world, float dt) {
 			/* No Input */
 			//else {
 				if (sp->currentState == NO_STATE) {
-					s->animationManager.changeAnimation("inAir");
+					s->animationManager.changeAnimation("fall");
 				}
 			//}
 		}
@@ -175,11 +192,52 @@ void scriptPlayer(World *world, float dt) {
 			/* No Input */
 			//else {
 				if (sp->currentState == NO_STATE) {
-					s->animationManager.changeAnimation("inAir");
+					s->animationManager.changeAnimation("fall");
 				}
 			//}
 		}
 	
+	}
+
+}
+
+void scriptGroundBlob(World * world, int entityID, float dt) {
+
+	Velocity * v;
+	Sprite * s;
+	ScriptParameters * sp;
+	Input * i;
+
+	i = &(world->input[entityID]);
+	v = &(world->velocity[entityID]);
+	s = &(world->sprite[entityID]);
+	sp = &(world->scriptParameters[entityID]);
+
+	if (sp->currentState == DEATH_STATE) {
+		destroyEntity(world, entityID);
+		return;
+	}
+
+	scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
+	scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt);
+
+	/* Moving */
+
+	if (i->left || i->right) {
+	
+		s->animationManager.changeAnimation("idle");
+
+	}
+
+	/* Not Moving */
+
+	else {
+
+		/* Attack */
+
+		if (sp->currentState == ATTACK_STATE)
+			s->animationManager.changeAnimation("attack");
+
 	}
 
 }
@@ -194,7 +252,7 @@ void scriptPlant(World * world, int entityID, float dt) {
 		
 	if (sP->currentState == NO_STATE) {
 		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
-		scriptAttack(world, entityID, world->position[0].x, world->position[0].y);
+		scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt);
 		
 		if (sP->currentState == ATTACK_STATE)
 			s->animationManager.changeAnimation("tripleAttack");
@@ -240,23 +298,59 @@ void scriptTest(World * world, int entityID, float dt) {
 	sp = &(world->scriptParameters[entityID]);
 
 	if (sp->currentState == DEATH_STATE) {
+		world->metaballHandler->sunburst(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), 50);
 		destroyEntity(world, entityID);
 		return;
 	}
 
 	scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
-	scriptAttack(world, entityID, world->position[0].x, world->position[0].y);
+	scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt);
 
 	if (i->left || i->right)
-		s->animationManager.changeAnimation("sheathedRun");
+		s->animationManager.changeAnimation("run");
 	
 	else {
 
 		if (sp->currentState == ATTACK_STATE)
 			s->animationManager.changeAnimation("idleAttack");
 		else
-			s->animationManager.changeAnimation("idleUnsheathed");
+			s->animationManager.changeAnimation("idle");
 	
+	}
+
+}
+
+void scriptLotus(World * world, int entityID, float dt) {
+
+	Velocity * v;
+	Sprite * s;
+	Position * p;
+	ScriptParameters * sp;
+	Input * i;
+
+	i = &(world->input[entityID]);
+	v = &(world->velocity[entityID]);
+	s = &(world->sprite[entityID]);
+	p = &(world->position[entityID]);
+	sp = &(world->scriptParameters[entityID]);
+
+	if (sp->currentState == DEATH_STATE) {
+		world->metaballHandler->sunburst(sf::Vector2f(p->x, p->y), 100);
+		destroyEntity(world, entityID);
+		return;
+	}
+
+	scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt);
+
+	if (sp->currentState == ATTACK_STATE) {
+		i->left = false;
+		i->right = false;
+		s->animationManager.changeAnimation("dropAttack");
+	}
+
+	else {
+		s->animationManager.changeAnimation("idle");
+		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
 	}
 
 }

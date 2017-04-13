@@ -146,6 +146,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="HealthBar.cpp" />
     <ClCompile Include="Hitbox.cpp" />
     <ClCompile Include="HitboxEditor.cpp" />
     <ClCompile Include="KeyBind.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="HealthBar.h" />
     <ClInclude Include="Hitbox.h" />
     <ClInclude Include="HitboxEditor.h" />
     <ClInclude Include="MainMenu.h" />

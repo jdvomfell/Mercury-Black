@@ -82,19 +82,19 @@ void TextureManager::loadAllTextures() {
 
 	/* Idle */
 
-	loadTextures("player_idleUnsheathed", "Textures/Player/IdleUnsheathed/", 8);
+	loadTextures("player_idle", "Textures/Player/Idle/", 24);
 
 	/* Run */
 
-	loadTextures("player_sheathedRun", "Textures/Player/SheathedRun/", 6);
+	loadTextures("player_run", "Textures/Player/Run/", 6);
 
 	/* Jump */
 	
-	loadTextures("player_jump", "Textures/Player/Jump/", 7);
+	loadTextures("player_jump", "Textures/Player/Jump/", 6);
 
 	/* In Air */
 
-	loadTextures("player_inAir", "Textures/Player/Jump/", 1);
+	loadTextures("player_fall", "Textures/Player/Fall/", 3);
 	
 	/* Idle Attack */
 
@@ -107,7 +107,6 @@ void TextureManager::loadAllTextures() {
 	/* InkAttack */
 
 	loadTextures("player_inkArmAttack", "Textures/Player/Ink-Attack/", 9);
-
 
 	/* RunAttack */
 
@@ -184,11 +183,44 @@ void TextureManager::loadAllTextures() {
 	loadTexture("ceilingPlant_tripleAttack_24", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_24.png");
 	loadTexture("ceilingPlant_tripleAttack_25", "Textures/Enemies/CeilingPlant/TripleAttack/ceilingPlant_Triple_25.png");
 	
+	///Ceiling Plant///
+
+	/* Attack */
+
+	loadTextures("gblob_attack", "Textures/Enemies/GroundBlob/Attack/", 19);
+
+	/* Idle */
+
+	loadTextures("gblob_idle", "Textures/Enemies/GroundBlob/Idle/", 11);
+
+	/* Up */
+
+	loadTextures("gblob_up", "Textures/Enemies/GroundBlob/Up/", 14);
+
+	/* Down */
+
+	loadTextures("gblob_down", "Textures/Enemies/GroundBlob/Down/", 16);
+
+	///Lotus///
+
+	/* Idle */
+
+	loadTextures("lotusMb_idle", "Textures/Enemies/Lotus/Idle/", 10);
+
+	/* Drop-Attack */
+
+	loadTextures("lotusMb_dropAttack", "Textures/Enemies/Lotus/Drop-Attack/", 11);
+
+	/* Rise */
+
+	loadTextures("lotusMb_rise", "Textures/Enemies/Lotus/Rise/", 14);
+
 	/////PLAY//////
 
 	loadTexture("spring_background_1", "Textures/Test/spring_background_1.png");
 	loadTexture("spring_cliff_1", "Textures/Test/spring_cliff_1.png");
 	loadTexture("spring_cliff_2", "Textures/Test/spring_cliff_2.png");
+	loadTexture("spring_cliff_3", "Textures/Test/spring_cliff_3.png");
 	loadTexture("spring_tree_1", "Textures/Test/spring_tree_1.png");
 	loadTexture("spring_tree_2", "Textures/Test/spring_tree_2.png");
 	loadTexture("spring_log_1", "Textures/Test/spring_log_1.png");
@@ -202,8 +234,11 @@ void TextureManager::loadAllTextures() {
 	loadTexture("statue_1", "Textures/Test/statue_1.png");
 	loadTexture("bridge_1_back", "Textures/Test/bridge_1_back.png");
 	loadTexture("bridge_1_front", "Textures/Test/bridge_1_front.png");
+	loadTexture("bridge_2_back", "Textures/Test/bridge_2_back.png");
+	loadTexture("bridge_2_front", "Textures/Test/bridge_2_front.png");
 	loadTexture("spring_rock_1", "Textures/Test/spring_rock_1.png");
 	loadTexture("bamboo_1", "Textures/Test/bamboo_1.png");
+	loadTexture("beach_ground_1", "Textures/Test/beach_ground_1.png");
 
 	/////ICONS/////
 

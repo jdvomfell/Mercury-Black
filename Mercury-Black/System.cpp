@@ -33,6 +33,12 @@ void aiSystem(World * world, float dt) {
 			else if (world->name[entityID].name == "wisp")
 				scriptWisp(world, entityID, dt);
 
+			else if (world->name[entityID].name == "gblob")
+				scriptGroundBlob(world, entityID, dt);
+
+			else if (world->name[entityID].name == "lotusMb")
+				scriptLotus(world, entityID, dt);
+
 			else
 				printf("ERROR: Could Not Find Entity AI: %s\n", world->name[entityID].name.c_str());
 
@@ -93,7 +99,6 @@ void animationSystem(World * world, float dt) {
 			/* Allow Animation Changes If Current Animation Has Ended */
 			if (s->animationManager.updateAnimation(dt) == 1) {
 				sp->currentState = NO_STATE;
-
 			}
 
 		}

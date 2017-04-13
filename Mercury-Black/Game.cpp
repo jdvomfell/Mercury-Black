@@ -18,9 +18,11 @@ void Game::init() {
 	world.metaballHandler = &metaballHandler;
 
 	createPlayer(&world, 0, 0);
-	createTest(&world, 2000, -1500);
-	createHeart(&world, 900, 500);
-	createWisp(&world, 500, 500, &metaballHandler);
+	//createGroundBlob(&world, 2000, -1500);
+	//createTest(&world, 3500, -1800);
+	createLotus(&world, 4500, -1700);
+	//createHeart(&world, 900, 500);
+	//createWisp(&world, 500, 500, &metaballHandler);
 	//createCeilingPlant(&world, 3000, 1000);
 
 	objectMap = ObjectMap(&engine->textureManager);
