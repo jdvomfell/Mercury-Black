@@ -167,8 +167,8 @@ void Game::update(const float dt) {
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 3.5f, engine->window.getDefaultView().getSize().y * 3.5f));
 	guiView.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 3.5f, engine->window.getDefaultView().getSize().y * 3.5f));
 
-	view.setCenter(sf::Vector2f(lerp(view.getCenter().x, world.position[PLAYER].x, 1.0 - exp(-2.0 * dt)), world.position[PLAYER].y - view.getSize().y / 6));
-	//view.setCenter(sf::Vector2f(world.position[0].x, world.position[0].y)); // NO LERP
+	// @Hardcoded We assume dt will always be 0.01666666f, not good if we change frame rate
+	view.setCenter(sf::Vector2f(lerp(view.getCenter().x, world.position[PLAYER].x, 1.0f - exp(-2.0f * 0.01666666f)), world.position[PLAYER].y - view.getSize().y / 6));
 	
 	engine->window.setView(view);
 
