@@ -43,6 +43,7 @@ void Game::init() {
 	guiView.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 3.5f, engine->window.getDefaultView().getSize().y * 3.5f));
 
 	healthBar = new HealthBar(&guiView, world.health[0].current, world.health[0].max);
+	view.setCenter(sf::Vector2f(world.position[0].x, world.position[0].y)); // NO LERP
 
 }
 
