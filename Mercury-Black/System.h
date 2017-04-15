@@ -14,5 +14,6 @@ void gravitySystem(World * world);
 void movementSystem(World * world);
 void animationSystem(World * world, float dt);
 void shapeCollSystem(World * world, PlatformMap * platformMap, HitboxMap * hitboxMap);
+void metaballDamageSystem(World * world, HitboxMap * hitboxMap);
 
 #endif

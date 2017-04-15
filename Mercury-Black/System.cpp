@@ -561,3 +561,50 @@ void shapeCollSystem(World * world, PlatformMap * platformMap, HitboxMap * hitbo
 		}
 	}
 }
+
+void metaballDamageSystem(World * world, HitboxMap * hitboxMap) {
+
+	std::string hurtID;
+	std::vector <sf::RectangleShape> hurtBoxes;
+	std::vector <sf::RectangleShape> damageBoxes;
+
+	hurtID = world->sprite[0].animationManager.getCurrentTextureID();
+
+	if (world->input[0].lastDirection == LEFT) {
+		hurtBoxes = hitboxMap->getFlippedHitboxes(hurtID, HITBOXTYPE_HURT);
+		damageBoxes = hitboxMap->getFlippedHitboxes(hurtID, HITBOXTYPE_DAMAGE);
+	}
+	else {
+		hurtBoxes = hitboxMap->getHitboxes(hurtID, HITBOXTYPE_HURT);
+		damageBoxes = hitboxMap->getHitboxes(hurtID, HITBOXTYPE_DAMAGE);
+	}
+
+	for (int i = 0; i < hurtBoxes.size(); i++) {
+		hurtBoxes[i].move(world->position[0].x, world->position[0].y);
+	}
+	for (int i = 0; i < damageBoxes.size(); i++) {
+		damageBoxes[i].move(world->position[0].x, world->position[0].y);
+	}
+
+	for (size_t i = 0; i < world->metaballHandler->metaballList.size(); i++) {
+
+		if (world->metaballHandler->metaballList[i]->dealsDamage == false)
+			continue;
+
+		for (size_t j = 0; j < damageBoxes.size(); j++) {
+
+			if (damageBoxes[j].getGlobalBounds().contains(world->metaballHandler->metaballList[i]->position)) {
+				world->metaballHandler->metaballList[i]->lifespan = 0;
+			}
+
+		}
+		for (size_t j = 0; j < hurtBoxes.size(); j++) {
+
+			if (hurtBoxes[j].getGlobalBounds().contains(world->metaballHandler->metaballList[i]->position)) {
+				world->health[0].current -= 1;
+			}
+
+		}
+	}
+
+}

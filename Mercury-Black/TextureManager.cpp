@@ -191,15 +191,15 @@ void TextureManager::loadAllTextures() {
 
 	/* Attack */
 
-	loadTextures("gblob_attack", "Textures/Enemies/GroundBlob/Attack/", 19);
+	loadTextures("gblob_attack", "Textures/Enemies/GroundBlob/Attack/", 17);
 
 	/* Idle */
 
-	loadTextures("gblob_idle", "Textures/Enemies/GroundBlob/Idle/", 11);
+	loadTextures("gblob_idle", "Textures/Enemies/GroundBlob/Idle/", 10);
 
 	/* Up */
 
-	loadTextures("gblob_up", "Textures/Enemies/GroundBlob/Up/", 14);
+	loadTextures("gblob_up", "Textures/Enemies/GroundBlob/Up/", 11);
 
 	/* Down */
 

@@ -83,7 +83,7 @@ void MetaballHandler::addSpawner(class MetaballSpawner * metaballSpawner) {
 
 }
 
-void MetaballHandler::addMetaball(sf::Vector2f position, sf::Vector2f velocity, float lifespan, float weight, int spreadX, int spreadY) {
+void MetaballHandler::addMetaball(sf::Vector2f position, sf::Vector2f velocity, float lifespan, float weight, int spreadX, int spreadY, bool dealsDamage) {
 
 	float xMod = (rand() % spreadX) * 0.10f;
 	if (rand() % 2 == 1)
@@ -98,6 +98,7 @@ void MetaballHandler::addMetaball(sf::Vector2f position, sf::Vector2f velocity, 
 	metaball->velocity = velocity + sf::Vector2f(xMod, yMod);
 	metaball->lifespan = lifespan;
 	metaball->weight = weight;
+	metaball->dealsDamage = dealsDamage;
 
 	metaballList.push_back(metaball);
 
@@ -106,7 +107,7 @@ void MetaballHandler::addMetaball(sf::Vector2f position, sf::Vector2f velocity, 
 void MetaballHandler::sunburst(sf::Vector2f position, int metaballs) {
 
 	for (int i = 0; i < metaballs; i++) {
-		addMetaball(position, sf::Vector2f(0, 0), 1.0f, -0.5f, 100, 100);
+		addMetaball(position, sf::Vector2f(0, 0), 1.0f, -0.5f, 100, 100, false);
 	}
 
 }
@@ -171,7 +172,7 @@ void MetaballHandler::init(sf::Vector2u windowSize, bool highResolution) {
 
 }
 
-MetaballSpawner::MetaballSpawner(MetaballHandler * handler, sf::Vector2f position, sf::Vector2f velocity, float weight, float lifespan, int spawnPerSecond, int spreadX, int spreadY) {
+MetaballSpawner::MetaballSpawner(MetaballHandler * handler, sf::Vector2f position, sf::Vector2f velocity, float weight, float lifespan, int spawnPerSecond, int spreadX, int spreadY, bool dealsDamage) {
 
 	this->handler = handler;
 
@@ -182,6 +183,7 @@ MetaballSpawner::MetaballSpawner(MetaballHandler * handler, sf::Vector2f positio
 	this->spawnPerSecond = spawnPerSecond;
 	this->spreadX = spreadX;
 	this->spreadY = spreadY;
+	this->dealsDamage = dealsDamage;
 
 }
 
@@ -190,7 +192,7 @@ void MetaballSpawner::spawn(float dt) {
 	toSpawn += spawnPerSecond * dt;
 
 	for (int i = 0; i < (int)toSpawn; i++) {
-		handler->addMetaball(this->position, this->velocity, this->lifespan, this->weight, this->spreadX, this->spreadY);
+		handler->addMetaball(this->position, this->velocity, this->lifespan, this->weight, this->spreadX, this->spreadY, this->dealsDamage);
 		toSpawn--;
 	}
 

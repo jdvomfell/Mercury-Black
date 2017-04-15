@@ -3,11 +3,12 @@
 
 #include<SFML/Graphics.hpp>
 
-#define DEFAULT_SCALE 0.3f
+#define DEFAULT_SCALE 0.4f
 #define THRESHOLD 0.8f
 
 struct Metaball {
 
+	bool dealsDamage;
 	sf::Vector2f position;
 	sf::Vector2f velocity;
 	float lifespan;
@@ -35,7 +36,7 @@ public:
 	void init(sf::Vector2u windowSize, bool highResolution);
 
 	void addSpawner(class MetaballSpawner * metaballSpawner);
-	void addMetaball(sf::Vector2f position, sf::Vector2f velocity, float lifespan, float weight, int spreadX, int spreadY);
+	void addMetaball(sf::Vector2f position, sf::Vector2f velocity, float lifespan, float weight, int spreadX, int spreadY, bool dealsDamage);
 	void sunburst(sf::Vector2f positon, int metaballs);
 
 	void update(float dt);
@@ -65,6 +66,7 @@ public:
 	float toSpawn;
 
 	bool kill;
+	bool dealsDamage;
 
 	void spawn(float dt);
 
@@ -78,7 +80,7 @@ public:
 	spread - the possible spread of the metaballs initial velocity
 	(will be divide by 10)
 	*/
-	MetaballSpawner(MetaballHandler * handler, sf::Vector2f position, sf::Vector2f velocity, float weight, float lifespan, int spawnPerSecond, int spreadX, int spreadY);
+	MetaballSpawner(MetaballHandler * handler, sf::Vector2f position, sf::Vector2f velocity, float weight, float lifespan, int spawnPerSecond, int spreadX, int spreadY, bool dealsDamage);
 
 };
 

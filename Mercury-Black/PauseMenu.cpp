@@ -82,7 +82,7 @@ void PauseMenu::render(const float dt) {
 
 	engine->window.setView(view);
 
-	engine->window.clear(sf::Color(34, 42, 96, 0));
+	engine->window.clear(sf::Color(255, 255, 255, 0));
 	guiHandler.draw(&engine->window);
 
 	engine->window.draw(title);

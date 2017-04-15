@@ -19,8 +19,9 @@ void Game::init() {
 	world.metaballHandler = &metaballHandler;
 
 	createPlayer(&world, 0, 0);
-	//createGroundBlob(&world, 2000, -1500);
-	createTest(&world, 3500, -1800);
+
+	createGroundBlob(&world, 6000, -1500);
+	//createTest(&world, 3500, -1800);
 	//createLotus(&world, 4500, -1700);
 	//createHeart(&world, 900, 500);
 	//createWisp(&world, 500, 500, &metaballHandler);
@@ -147,6 +148,7 @@ void Game::update(const float dt) {
 	shapeCollSystem(&world, &platformMap, &hitboxMap);
 	movementSystem(&world);
 	damageSystem(&world, dt, &hitboxMap);
+	metaballDamageSystem(&world, &hitboxMap);
 
 	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end();) {
 
@@ -213,7 +215,7 @@ void Game::render(const float dt) {
 			else
 				hitboxes = hitboxMap.getHitboxes(texID, HITBOXTYPE_ALL);
 			
-			for (int i = 0; i < hitboxes.size(); i++) {
+			for (size_t i = 0; i < hitboxes.size(); i++) {
 				box = hitboxes[i];
 				box.move(world.position[entityID].x, world.position[entityID].y);
 				engine->window.draw(box);
