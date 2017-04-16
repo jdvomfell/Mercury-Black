@@ -29,12 +29,13 @@ int createEntity(World * world){
 
 void destroyEntity(World * world, int entityID) {
 
-	world->gravity[entityID].weight = 1.0f;
+	world->gravity[entityID].weight = 0.0f;
 
 	world->name[entityID].name = "";
 
 	world->health[entityID].max = 0;
 	world->health[entityID].current = 0;
+	world->health[entityID].hurtTimer = 0;
 
 	world->position[entityID].x = 0;
 	world->position[entityID].y = 0;
@@ -43,16 +44,21 @@ void destroyEntity(World * world, int entityID) {
 	world->velocity[entityID].y = 0.0f;
 	world->velocity[entityID].speed = 0.0f;
 	world->velocity[entityID].speedUp = 1.0f;
-	world->velocity[entityID].canJump = false;
 	world->velocity[entityID].onGround = false;
 
+	world->velocity[entityID].canJump = false;
+	world->velocity[entityID].canDoubleJump = false;
+
 	world->input[entityID].up = false;
+	world->input[entityID].jump = false;
 	world->input[entityID].down = false;
 	world->input[entityID].left = false;
 	world->input[entityID].right = false;
 	world->input[entityID].attack = false;
 	world->input[entityID].special = false;
 
+	world->scriptParameters[entityID].retreatDist = 0;
+	world->scriptParameters[entityID].attackTimer = 0;
 	world->scriptParameters[entityID].currentState = 0;
 	world->scriptParameters[entityID].spawnDistance = 0;
 	world->scriptParameters[entityID].followDistMax = 0;
@@ -137,6 +143,8 @@ int createGroundBlob(World * world, float x, float y) {
 
 	world->position[entityID].x = x;
 	world->position[entityID].y = y;
+
+	world->gravity[entityID].weight = 1.0f;
 
 	world->scriptParameters[entityID].currentState = NO_STATE;
 
@@ -316,7 +324,6 @@ int createLotus(World * world, float x, float y) {
 	world->velocity[entityID].x = 0;
 	world->velocity[entityID].y = 0;
 	world->velocity[entityID].speed = 7.0f;
-	world->velocity[entityID].speedUp = 1.0f;
 
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "idle", 10, 0.1f);

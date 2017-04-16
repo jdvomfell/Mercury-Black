@@ -20,9 +20,9 @@ void Game::init() {
 
 	createPlayer(&world, 0, 0);
 
-	createGroundBlob(&world, 6000, -1500);
-	createTest(&world, 3500, -1800);
-	createLotus(&world, 10000, -1700);
+	//createGroundBlob(&world, 6000, -1500);
+	//createTest(&world, 3500, -1800);
+	createLotus(&world, 0, -1000);
 	//createHeart(&world, 900, 500);
 	//createWisp(&world, 500, 500, &metaballHandler);
 	//createCeilingPlant(&world, 3000, 1000);
@@ -59,6 +59,7 @@ void Game::clean() {
 	hitboxMap.clean();
 
 	eventMap.clean();
+
 }
 
 void Game::handleEvent() {
