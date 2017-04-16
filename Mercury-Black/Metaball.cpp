@@ -104,10 +104,18 @@ void MetaballHandler::addMetaball(sf::Vector2f position, sf::Vector2f velocity, 
 
 }
 
-void MetaballHandler::sunburst(sf::Vector2f position, int metaballs) {
+void MetaballHandler::sunburst(sf::Vector2f position, int numMetaballs) {
 
-	for (int i = 0; i < metaballs; i++) {
+	for (int i = 0; i < numMetaballs; i++) {
 		addMetaball(position, sf::Vector2f(0, 0), 1.0f, -0.5f, 100, 100, false);
+	}
+
+}
+
+void MetaballHandler::sunburst(sf::Vector2f position, int numMetaballs, sf::Vector2f initialVelocity) {
+
+	for (int i = 0; i < numMetaballs; i++) {
+		addMetaball(position, initialVelocity, 0.5f, 0.3f, 100, 100, false);
 	}
 
 }

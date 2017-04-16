@@ -43,6 +43,8 @@ void MainMenu::init() {
 
 void MainMenu::clean() {
 
+	metaballHandler.clean();
+
 }
 
 void MainMenu::handleEvent() {

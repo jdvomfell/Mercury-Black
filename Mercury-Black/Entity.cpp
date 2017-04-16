@@ -154,7 +154,7 @@ int createGroundBlob(World * world, float x, float y) {
 	world->velocity[entityID].y = 0.0f;
 	world->velocity[entityID].onGround = false;
 
-	world->stats[entityID].power = 10.0f;
+	world->stats[entityID].power = 10;
 
 	world->health[entityID].max = 200;
 	world->health[entityID].current = world->health[entityID].max;
@@ -170,7 +170,7 @@ int createGroundBlob(World * world, float x, float y) {
 		(world->textureManager, world->name[entityID].name, "up", 11, 0.1f);
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "down", 16, 0.1f);
+		(world->textureManager, world->name[entityID].name, "down", 16, 0.15f);
 
 	return entityID;
 
@@ -319,7 +319,7 @@ int createLotus(World * world, float x, float y) {
 	world->velocity[entityID].speedUp = 1.0f;
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "idle", 10, 0.2f);
+		(world->textureManager, world->name[entityID].name, "idle", 10, 0.1f);
 
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "dropAttack", 11, 0.07f);

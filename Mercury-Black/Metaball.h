@@ -37,7 +37,9 @@ public:
 
 	void addSpawner(class MetaballSpawner * metaballSpawner);
 	void addMetaball(sf::Vector2f position, sf::Vector2f velocity, float lifespan, float weight, int spreadX, int spreadY, bool dealsDamage);
-	void sunburst(sf::Vector2f positon, int metaballs);
+	
+	void sunburst(sf::Vector2f positon, int numMetaballs);
+	void sunburst(sf::Vector2f position, int numMetaballs, sf::Vector2f initialVelocity);
 
 	void update(float dt);
 	void draw(sf::RenderWindow * window, sf::View * view);

@@ -29,7 +29,7 @@ void HitboxEditor::init() {
 	hitMap.load();
 	hitMap.select = hitMap.map.lower_bound(textureID);
 
-	view.setSize(engine->window.getSize().x, engine->window.getSize().y);
+	view.setSize((float) engine->window.getSize().x, (float) engine->window.getSize().y);
 
 	leftPlacing = 0;
 }
@@ -308,15 +308,15 @@ void HitboxEditor::update(const float dt) {
 
 void HitboxEditor::render(const float dt) {
 
-	if (sprite.getGlobalBounds().height > engine->window.getSize().y)
+	if (sprite.getGlobalBounds().height > (float) engine->window.getSize().y)
 		view.setSize(view.getSize().x, sprite.getGlobalBounds().height + 10);
 	else
 		view.setSize(view.getSize().x, engine->window.getSize().y + 10);
 
-	if (sprite.getGlobalBounds().width > engine->window.getSize().x)
+	if (sprite.getGlobalBounds().width > (float) engine->window.getSize().x)
 		view.setSize(sprite.getGlobalBounds().width + 10, view.getSize().y);
 	else
-		view.setSize(engine->window.getSize().x + 10, view.getSize().y);
+		view.setSize((float) engine->window.getSize().x + 10, view.getSize().y);
 
 	view.setCenter(sprite.getPosition().x, sprite.getPosition().y);
 

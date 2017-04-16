@@ -562,6 +562,8 @@ void shapeCollSystem(World * world, PlatformMap * platformMap, HitboxMap * hitbo
 	}
 }
 
+/* Should Eventually Be Mixed With Damage System Probably */
+
 void metaballDamageSystem(World * world, HitboxMap * hitboxMap) {
 
 	std::string hurtID;
@@ -579,10 +581,10 @@ void metaballDamageSystem(World * world, HitboxMap * hitboxMap) {
 		damageBoxes = hitboxMap->getHitboxes(hurtID, HITBOXTYPE_DAMAGE);
 	}
 
-	for (int i = 0; i < hurtBoxes.size(); i++) {
+	for (size_t i = 0; i < hurtBoxes.size(); i++) {
 		hurtBoxes[i].move(world->position[0].x, world->position[0].y);
 	}
-	for (int i = 0; i < damageBoxes.size(); i++) {
+	for (size_t i = 0; i < damageBoxes.size(); i++) {
 		damageBoxes[i].move(world->position[0].x, world->position[0].y);
 	}
 
@@ -595,6 +597,7 @@ void metaballDamageSystem(World * world, HitboxMap * hitboxMap) {
 
 			if (damageBoxes[j].getGlobalBounds().contains(world->metaballHandler->metaballList[i]->position)) {
 				world->metaballHandler->metaballList[i]->lifespan = 0;
+				world->metaballHandler->sunburst(world->metaballHandler->metaballList[i]->position, 10, world->metaballHandler->metaballList[i]->velocity);
 			}
 
 		}
