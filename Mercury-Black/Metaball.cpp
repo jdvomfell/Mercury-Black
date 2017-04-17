@@ -33,11 +33,12 @@ const char VertexShader[] =
 void MetaballHandler::update(float dt) {
 
 	for (size_t i = 0; i < spawners.size(); i++) {
+		spawners[i]->spawn(dt);
+
 		if (spawners[i]->kill) {
 			delete(spawners[i]);
 			spawners.erase(spawners.begin() + i);
 		}
-		spawners[i]->spawn(dt);
 	}
 
 	for (size_t i = 0; i < metaballList.size(); i++) {
