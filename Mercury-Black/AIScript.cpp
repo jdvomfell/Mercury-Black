@@ -93,16 +93,40 @@ bool scriptAttack(World* world, int entityID, float x, float y, float dt) {
 		return true;
 	}
 
+	return false;
 }
 void scriptFlyWait(World * world, int entityID, float x, float y) {
-	sf::Vector2f r;
-	if (std::fabs(world->position[entityID].x - x) ==
-		world->scriptParameters[entityID].attackRangeMin) {
-		r.x = std::fabs(x - world->position[entityID].x);
-		r.y = std::fabs(y - world->position[entityID].y);
+	Position * p;
 
-		world->position[entityID].x = r.x;
-		world->position[entityID].y = r.y;
+	p = &(world->position[entityID]);
+
+	float xDist = fabs(p->x - x);
+	float yDist = fabs(p->y - y);
+
+	if (xDist <= world->scriptParameters[entityID].attackRangeMax
+		&& yDist <= world->scriptParameters[entityID].attackRangeMax) {
+
+		if (world->position[entityID].x < x) {
+			world->input[entityID].up = false;
+			world->input[entityID].down = true;
+			printf("down\n");
+		}
+		else {
+			world->input[entityID].up = true;
+			world->input[entityID].down = false;
+			printf("up\n");
+		}
+		if (world->position[entityID].y < y) {
+			world->input[entityID].left = true;
+			world->input[entityID].right = false;
+			printf("left\n");
+		}
+		else {
+			world->input[entityID].left = false;
+			world->input[entityID].right = true;
+			printf("ohhhhh yesssss right\n");
+		}
+
 	}
 }
 void scriptRetreat(World * world, int entityID, float x, float y) {
@@ -476,8 +500,11 @@ void scriptWisp(World * world, int entityID, float dt) {
 		destroyEntity(world, entityID);
 		return;
 	}
-
-	scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
+	world->input[entityID].down = false;
+	world->input[entityID].up = false;
+	world->input[entityID].left = false;
+	world->input[entityID].right = false;
+	//scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
 	scriptFlyWait(world, entityID, world->position[0].x, world->position[0].y);
 	
 	s->metaballSpawner->position.x = p->x;
