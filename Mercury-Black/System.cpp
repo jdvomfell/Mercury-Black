@@ -77,29 +77,15 @@ void renderSystem(World * world, sf::RenderWindow * window) {
 void animationSystem(World * world, float dt) {
 
 	Sprite * s;
-	Input * i;
-	ScriptParameters * sp;
 
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
 		if ((world->mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
 
 			s = &(world->sprite[entityID]);
-			i = &(world->input[entityID]);
-			sp = &(world->scriptParameters[entityID]);
-
-			if (i->left)
-				s->sprite.setTextureRect(sf::IntRect((int)s->sprite.getLocalBounds().width, 0, (int)-s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
-			else if (i->right)
-				s->sprite.setTextureRect(sf::IntRect(0, 0, (int)s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
 
 			s->sprite.setTexture(*s->animationManager.getCurrentTexture());
 			s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height / 2));
-
-			/* Allow Animation Changes If Current Animation Has Ended */
-			if (s->animationManager.updateAnimation(dt) == 1) {
-				sp->currentState = NO_STATE;
-			}
 
 		}
 
@@ -335,6 +321,9 @@ void gravitySystem(World * world) {
 	Velocity * v;
 
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
+
+		if ((world->mask[entityID] & GRAVITY_MASK) != GRAVITY_MASK)
+			continue;
 
 		g = &(world->gravity[entityID]);
 		v = &(world->velocity[entityID]);

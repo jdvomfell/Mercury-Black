@@ -1,7 +1,32 @@
 #include "AIScript.h"
 #include <cmath>
 
+void inputFlip(World * world, int entityID) {
+
+	Input * i = &(world->input[entityID]);
+	Sprite * s = &(world->sprite[entityID]);
+
+	if (i->left)
+		s->sprite.setTextureRect(sf::IntRect((int)s->sprite.getLocalBounds().width, 0, (int)-s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
+	else if (i->right)
+		s->sprite.setTextureRect(sf::IntRect(0, 0, (int)s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
+
+}
+
 /* Utility Scripts */
+
+void scriptSpawn(World *world, int entityID) {
+	ScriptParameters * sp;
+
+	sp = &world->scriptParameters[entityID];
+
+	if (sp->spawnDistance >= abs(world->position[entityID].x - world->position[0].x) &&
+		sp->spawnDistance >= abs(world->position[entityID].y - world->position[0].y)) {
+		sp->currentState = SPAWN_STATE;
+	}
+
+	return;
+}
 
 void scriptFollow(World * world, int entityID, float x, float y) {
 
@@ -17,12 +42,10 @@ void scriptFollow(World * world, int entityID, float x, float y) {
 		if (world->position[entityID].x < x) {
 			world->input[entityID].right = true;
 			world->input[entityID].left = false;
-			world->input[entityID].lastDirection = RIGHT;
 		}
 		else {
 			world->input[entityID].left = true;
 			world->input[entityID].right = false;
-			world->input[entityID].lastDirection = LEFT;
 		}
 
 	}
@@ -112,6 +135,11 @@ void scriptPlayer(World *world, float dt) {
 		v->speedUp = 2.0f;
 	else
 		v->speedUp = 1.0f;
+
+	/* Allow Animation Changes If Current Animation Has Ended */
+	if (s->animationManager.updateAnimation(dt) == 1) {
+		sp->currentState = NO_STATE;
+	}
 	
 	/* On Ground */
 	if (v->onGround) {
@@ -208,6 +236,8 @@ void scriptPlayer(World *world, float dt) {
 	
 	}
 
+	inputFlip(world, 0);
+
 }
 
 void scriptGroundBlob(World * world, int entityID, float dt) {
@@ -231,9 +261,9 @@ void scriptGroundBlob(World * world, int entityID, float dt) {
 	if (scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt)) {
 		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
 		if (world->input[entityID].lastDirection = LEFT)
-			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(-6.0f, 0.0f), 4.0f, 0.005f, 1, 10, true);
+			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(-8.0f, 0.0f), 4.0f, 0.005f, 1, 10, true);
 		else
-			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(6.0f, 0.0f), 4.0f, 0.005f, 1, 10, true);
+			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(8.0f, 0.0f), 4.0f, 0.005f, 1, 10, true);
 	}
 
 	if (world->scriptParameters[entityID].attackTimer > 0 && world->scriptParameters[entityID].currentState == NO_STATE)
@@ -269,49 +299,48 @@ void scriptGroundBlob(World * world, int entityID, float dt) {
 
 	}
 
+	inputFlip(world, entityID);
+
+	/* Allow Animation Changes If Current Animation Has Ended */
+	if (s->animationManager.updateAnimation(dt) == 1) {
+		sp->currentState = NO_STATE;
+	}
+
 }
 
 void scriptPlant(World * world, int entityID, float dt) {
 	
 	Sprite *s;
-	ScriptParameters *sP;
+	ScriptParameters *sp;
 
 	s = &(world->sprite[entityID]);
-	sP = &(world->scriptParameters[entityID]);
+	sp = &(world->scriptParameters[entityID]);
 		
-	if (sP->currentState == NO_STATE) {
+	if (sp->currentState == NO_STATE) {
 		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
 		scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt);
-		
-		if (sP->currentState == ATTACK_STATE)
-			s->animationManager.changeAnimation("tripleAttack");
-		else {
-			if (sP->currentState == NO_STATE)
-				s->animationManager.changeAnimation("idle");
-		}
+		s->animationManager.changeAnimation("idle");
+	}
+
+	else if (sp->currentState == ATTACK_STATE) {
+		s->animationManager.changeAnimation("attack");
 	}
 	
-	else if (sP->currentState == NOT_SPAWNED_STATE) {
+	else if (sp->currentState == NOT_SPAWNED_STATE) {
 		scriptSpawn(world, entityID);
-		if (sP->currentState == SPAWN_STATE)
-			s->animationManager.changeAnimation("spawn");
+		if (sp->currentState == SPAWN_STATE)
+			s->animationManager.changeAnimation("drop");
 		else
 			s->animationManager.changeAnimation("notSpawn");
 	}
 
-}
+	inputFlip(world, entityID);
 
-void scriptSpawn(World *world, int entityID) {
-	ScriptParameters * sP;
-
-	sP = &world->scriptParameters[entityID];
-
-	if (sP->spawnDistance >= abs(world->position[entityID].x - world->position[0].x) &&
-		sP->spawnDistance >= abs(world->position[entityID].y - world->position[0].y)) {
-		sP->currentState = SPAWN_STATE;
+	/* Allow Animation Changes If Current Animation Has Ended */
+	if (s->animationManager.updateAnimation(dt) == 1) {
+		sp->currentState = NO_STATE;
 	}
 
-	return;
 }
 
 void scriptTest(World * world, int entityID, float dt) {
@@ -361,6 +390,13 @@ void scriptTest(World * world, int entityID, float dt) {
 	
 	}
 
+	inputFlip(world, entityID);
+
+	/* Allow Animation Changes If Current Animation Has Ended */
+	if (s->animationManager.updateAnimation(dt) == 1) {
+		sp->currentState = NO_STATE;
+	}
+
 }
 
 void scriptLotus(World * world, int entityID, float dt) {
@@ -377,6 +413,14 @@ void scriptLotus(World * world, int entityID, float dt) {
 	p = &(world->position[entityID]);
 	sp = &(world->scriptParameters[entityID]);
 
+	/* Allow Animation Changes If Current Animation Has Ended */
+	if (s->animationManager.updateAnimation(dt) == 1) {
+		if (sp->currentState == ATTACK_STATE)
+			sp->currentState = SPECIAL_STATE;
+		else
+			sp->currentState = NO_STATE;
+	}
+
 	if (sp->currentState == DEATH_STATE) {
 		world->metaballHandler->sunburst(sf::Vector2f(p->x, p->y), 100);
 		destroyEntity(world, entityID);
@@ -385,7 +429,13 @@ void scriptLotus(World * world, int entityID, float dt) {
 
 	scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt);
 
-	if (sp->currentState == ATTACK_STATE) {
+	if (sp->currentState == SPECIAL_STATE) {
+		i->left = false;
+		i->right = false;
+		s->animationManager.changeAnimation("rise");
+	}
+
+	else if (sp->currentState == ATTACK_STATE) {
 		i->left = false;
 		i->right = false;
 		s->animationManager.changeAnimation("dropAttack");

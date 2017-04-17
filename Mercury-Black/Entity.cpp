@@ -29,7 +29,7 @@ int createEntity(World * world){
 
 void destroyEntity(World * world, int entityID) {
 
-	world->gravity[entityID].weight = 0.0f;
+	world->gravity[entityID].weight = 1.0f;
 
 	world->name[entityID].name = "";
 
@@ -199,20 +199,22 @@ int createCeilingPlant(World * world, float x, float y) {
 	world->scriptParameters[entityID].attackRangeMax = 700.0f;
 	world->scriptParameters[entityID].attackRangeMin = 0.0f;
 
+	world->scriptParameters[entityID].attackFrequency = 3.0f;
+
 	world->scriptParameters[entityID].followDistMax = 500.0f;
 	world->scriptParameters[entityID].followDistMin = 0.0f;
 
 	world->scriptParameters[entityID].spawnDistance = 500.0f;
-	world->scriptParameters[entityID].currentState = NOT_SPAWNED_STATE;
+	world->scriptParameters[entityID].currentState = NO_STATE;
 	
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "idle", 11, 0.1f);
+		(world->textureManager, world->name[entityID].name, "idle", 12, 0.1f);
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "spawn", 20, 0.1f);
+		(world->textureManager, world->name[entityID].name, "drop", 17, 0.1f);
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "tripleAttack", 25, 0.065f);
+		(world->textureManager, world->name[entityID].name, "attack", 25, 0.065f);
 	
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "notSpawn", 2, 0.1f);
@@ -324,6 +326,7 @@ int createLotus(World * world, float x, float y) {
 	world->velocity[entityID].x = 0;
 	world->velocity[entityID].y = 0;
 	world->velocity[entityID].speed = 7.0f;
+	world->velocity[entityID].speedUp = 1.0f;
 
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "idle", 10, 0.1f);
@@ -332,7 +335,7 @@ int createLotus(World * world, float x, float y) {
 		(world->textureManager, world->name[entityID].name, "dropAttack", 11, 0.07f);
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "rise", 14, 0.2f);
+		(world->textureManager, world->name[entityID].name, "rise", 14, 0.07f);
 
 	world->stats[entityID].power = 30;
 

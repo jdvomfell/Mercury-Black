@@ -4,8 +4,10 @@
 #include "Entity.h"
 #include <SFML/Graphics.hpp>
 
-void scriptPlayer(World *world, float dt);
-void scriptPlant(World *world, int entityID, float dt);
+void inputFlip(World * world, int entityID);
+
+void scriptPlayer(World * world, float dt);
+void scriptPlant(World * world, int entityID, float dt);
 void scriptTest(World * world, int entityID, float dt);
 void scriptWisp(World * world, int entityID, float dt);
 void scriptHeart(World * world, int entityID);

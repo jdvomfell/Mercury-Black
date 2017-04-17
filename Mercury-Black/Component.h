@@ -20,7 +20,8 @@ const enum states {
 	SPAWN_STATE,
 	NOT_SPAWNED_STATE, 
 	DEATH_STATE,
-	MOVEMENT_STATE
+	MOVEMENT_STATE,
+	SPECIAL_STATE
 };
 
 enum Component {
