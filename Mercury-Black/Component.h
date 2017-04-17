@@ -100,6 +100,9 @@ struct Velocity {
 
 struct ScriptParameters {
 
+	float specialTimer1;
+	float specialTimer2;
+	float specialTimer3;
 	float followDistMin;
 	float followDistMax;
 	float attackFrequency;

@@ -93,6 +93,8 @@ bool scriptAttack(World* world, int entityID, float x, float y, float dt) {
 		return true;
 	}
 
+	return false;
+
 }
 void scriptFlyWait(World * world, int entityID, float x, float y) {
 	sf::Vector2f r;
@@ -125,6 +127,26 @@ void scriptRetreat(World * world, int entityID, float x, float y) {
 		world->input[entityID].left = false;
 		world->input[entityID].right = false;
 	}
+
+	if (std::fabs(world->position[entityID].y - y) <=
+		world->scriptParameters[entityID].retreatDist) {
+
+		if (world->position[entityID].y < y) {
+			world->input[entityID].up = true;
+			world->input[entityID].down = false;
+		}
+
+		else {
+			world->input[entityID].down = true;
+			world->input[entityID].up = false;
+		}
+	}
+
+	else {
+		world->input[entityID].up = false;
+		world->input[entityID].down = false;
+	}
+
 }
 void lineOfSight() {
 
@@ -271,7 +293,9 @@ void scriptGroundBlob(World * world, int entityID, float dt) {
 	}
 
 	if (scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt)) {
+		
 		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
+		
 		if (world->input[entityID].lastDirection = LEFT)
 			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(-8.0f, 0.0f), 4.0f, 0.005f, 1, 10, true);
 		else
@@ -477,8 +501,24 @@ void scriptWisp(World * world, int entityID, float dt) {
 		return;
 	}
 
-	scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
-	scriptFlyWait(world, entityID, world->position[0].x, world->position[0].y);
+	if (sp->attackTimer > 0) {
+		scriptRetreat(world, entityID, world->position[0].x, world->position[0].y);
+		sp->attackTimer -= dt;
+		sp->specialTimer1 = 3.0f;
+	}
+
+	else if (sp->specialTimer1 > 0){
+			
+			sp->specialTimer2 = 2.0f;
+	}
+
+	else {
+		scriptFollow(world, entityID, world->position[0].x, world->position[0].y - 30);
+		if ((sp->specialTimer2 -= dt) <= 0)
+			scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt);
+	}
+
+	//scriptFlyWait(world, entityID, world->position[0].x, world->position[0].y);
 	
 	s->metaballSpawner->position.x = p->x;
 	s->metaballSpawner->position.y = p->y;
