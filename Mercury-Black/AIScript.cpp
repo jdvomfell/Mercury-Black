@@ -524,6 +524,12 @@ void scriptWisp(World * world, int entityID, float dt) {
 		return;
 	}
 
+	world->input[entityID].up = false;
+	world->input[entityID].down = false;
+	world->input[entityID].left = false;
+	world->input[entityID].right = false;
+
+
 	if (sp->attackTimer > 0) {
 		scriptRetreat(world, entityID, world->position[0].x, world->position[0].y);
 		sp->attackTimer -= dt;
@@ -531,8 +537,9 @@ void scriptWisp(World * world, int entityID, float dt) {
 	}
 
 	else if (sp->specialTimer1 > 0){
-			
-			sp->specialTimer2 = 2.0f;
+		scriptFlyWait(world, entityID, world->position[0].x, world->position[0].y);
+		sp->specialTimer1 -= dt;
+		sp->specialTimer2 = 2.0f;
 	}
 
 	else {
