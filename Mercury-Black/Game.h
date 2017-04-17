@@ -38,6 +38,7 @@ private:
 	static Game game;
 
 	sf::View view;
+	sf::View guiView;
 
 	HitboxMap hitboxMap;
 	ObjectMap objectMap;
@@ -47,6 +48,8 @@ private:
 	MetaballHandler metaballHandler;
 
 	World world;
+
+	class HealthBar * healthBar;
 
 	sf::RectangleShape rect;
 

@@ -5,6 +5,11 @@
 #include <vector>
 #include <map>
 
+const enum WaterType {
+	WATERTYPE_INK,
+	WATERTYPE_WATER
+};
+
 class Spring {
 
 public:
@@ -32,17 +37,18 @@ public:
 
 	void clean();
 
-	Water(sf::Vector2f corner1, sf::Vector2f corner2);
+	Water(sf::Vector2f corner1, sf::Vector2f corner2, WaterType type);
 
 	//private:
 
 	sf::VertexArray waterShape;
 	std::vector<Spring *> springs;
 
-	sf::FloatRect rect;
-
 	sf::Vector2f topLeft;
 	sf::Vector2f bottomRight;
+
+	WaterType type;
+	sf::RectangleShape rect;
 
 	float targetHeight;
 	float x;
@@ -57,9 +63,10 @@ public:
 
 	std::map<float, Water *>::iterator selected;
 
-	void insert(sf::Vector2f topLeft, sf::Vector2f);
+	void insert(sf::Vector2f topLeft, sf::Vector2f, WaterType type);
 	void remove();
 
+	void dealDamage(struct World * world);
 	void updateWaves(float dt);
 	void update();
 	void draw(sf::RenderWindow * window);

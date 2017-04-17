@@ -5,21 +5,27 @@
 #include "MainMenu.h"
 #include "PauseMenu.h"
 #include "Editor.h"
+#include "MathFunctions.h"
+#include "HealthBar.h"
 #include <map>
 
 Game Game::game;
 
 void Game::init() {
 
-	world.textureManager = &engine->textureManager;
-
 	metaballHandler.init(engine->window.getSize(), false);
 
+	world.textureManager = &engine->textureManager;
+	world.metaballHandler = &metaballHandler;
+
 	createPlayer(&world, 0, 0);
-	createTest(&world, 2000, -1500);
-	createHeart(&world, 900, 500);
-	createWisp(&world, 500, 500, &metaballHandler);
-	//createCeilingPlant(&world, 3000, 1000);
+
+	//createGroundBlob(&world, 6000, -1500);
+	//createTest(&world, 3500, -1800);
+	//createLotus(&world, 0, -1000);
+	//createHeart(&world, 900, 500);
+	//createWisp(&world, 500, 500, &metaballHandler);
+	createCeilingPlant(&world, 0, -1000);
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
@@ -34,6 +40,12 @@ void Game::init() {
 	rect.setOutlineThickness(3);
 
 	waterHandler.load();
+
+	guiView.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 3.5f, engine->window.getDefaultView().getSize().y * 3.5f));
+
+	healthBar = new HealthBar(&guiView, world.health[0].current, world.health[0].max);
+	view.setCenter(sf::Vector2f(world.position[0].x, world.position[0].y)); // NO LERP
+
 }
 
 void Game::clean() {
@@ -47,6 +59,7 @@ void Game::clean() {
 	hitboxMap.clean();
 
 	eventMap.clean();
+
 }
 
 void Game::handleEvent() {
@@ -133,9 +146,10 @@ void Game::update(const float dt) {
 	animationSystem(&world, dt);
 	inputSystem(&world);
 	gravitySystem(&world);
-	shapeCollSystem(&world, &platformMap);
+	shapeCollSystem(&world, &platformMap, &hitboxMap);
 	movementSystem(&world);
 	damageSystem(&world, dt, &hitboxMap);
+	metaballDamageSystem(&world, &hitboxMap);
 
 	for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end();) {
 
@@ -147,6 +161,7 @@ void Game::update(const float dt) {
 		eventMap.eit++;
 	}
 
+	waterHandler.dealDamage(&world);
 	waterHandler.update();
 	waterHandler.updateWaves(dt);
 
@@ -154,10 +169,16 @@ void Game::update(const float dt) {
 	sf::Listener::setPosition(world.position[0].x, 0, world.position[0].y);
 
 	view.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 3.5f, engine->window.getDefaultView().getSize().y * 3.5f));
-	view.setCenter(sf::Vector2f(world.position[PLAYER].x, world.position[PLAYER].y - view.getSize().y / 4));
+	guiView.setSize(sf::Vector2f(engine->window.getDefaultView().getSize().x * 3.5f, engine->window.getDefaultView().getSize().y * 3.5f));
+
+	// @Hardcoded We assume dt will always be 0.01666666f, not good if we change frame rate
+	view.setCenter(sf::Vector2f(lerp(view.getCenter().x, world.position[PLAYER].x, 1.0f - exp(-2.0f * 0.01666666f)), world.position[PLAYER].y - view.getSize().y / 6));
+	
 	engine->window.setView(view);
 
 	metaballHandler.update(dt);
+
+	healthBar->update(&guiView, world.health[0].current, world.health[0].max);
 
 	/* Hitbox Temp */
 	//rect.setSize(sf::Vector2f(world.sprite[0].sprite.getLocalBounds().width, world.sprite[0].sprite.getLocalBounds().height));
@@ -195,7 +216,7 @@ void Game::render(const float dt) {
 			else
 				hitboxes = hitboxMap.getHitboxes(texID, HITBOXTYPE_ALL);
 			
-			for (int i = 0; i < hitboxes.size(); i++) {
+			for (size_t i = 0; i < hitboxes.size(); i++) {
 				box = hitboxes[i];
 				box.move(world.position[entityID].x, world.position[entityID].y);
 				engine->window.draw(box);
@@ -218,5 +239,11 @@ void Game::render(const float dt) {
 		//}
 		//eventMap.eit++;
 //	}
+
+	engine->window.setView(guiView);
+
+	healthBar->draw(&engine->window);
+
+	engine->window.setView(view);
 
 }

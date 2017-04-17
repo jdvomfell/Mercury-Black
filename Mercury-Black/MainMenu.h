@@ -3,6 +3,7 @@
 
 #include "GameState.h"
 #include "Buttons.h"
+#include "Metaball.h"
 
 #define MENU_FONT_SIZE 70
 #define MENU_TITLE_SIZE 200
@@ -37,6 +38,8 @@ private:
 	sf::Text title;
 
 	sf::View view;
+
+	MetaballHandler metaballHandler;
 
 	GUI_Handler guiHandler;
 	TextButton newButton;

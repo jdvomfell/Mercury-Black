@@ -28,6 +28,7 @@ void Editor::init() {
 	toolBox = ToolBox(engine);
 
 	waterHandler.load();
+	waterType = WATERTYPE_WATER;
 
 }
 
@@ -173,9 +174,9 @@ void Editor::handleEvent() {
 					waterHandler.selected = waterHandler.findClosest(engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
 
 					if (waterHandler.selected != waterHandler.map.end()) {
-						selector.rect.setSize(sf::Vector2f(waterHandler.selected->second->rect.width, waterHandler.selected->second->rect.height));
+						selector.rect.setSize(waterHandler.selected->second->bottomRight - waterHandler.selected->second->topLeft);
 						selector.rect.setOrigin(0, 0);
-						selector.rect.setPosition(waterHandler.selected->second->rect.left, waterHandler.selected->second->rect.top);
+						selector.rect.setPosition(waterHandler.selected->second->topLeft);
 						selector.rect.setOutlineColor(sf::Color::Blue);
 					}
 				}
@@ -228,7 +229,7 @@ void Editor::handleEvent() {
 				else if (toolBox.getMode() == WATER) {
 					previewBox.setOutlineColor(sf::Color::Transparent);
 					corner2 = engine->window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
-					waterHandler.insert(corner1, corner2);
+					waterHandler.insert(corner1, corner2, waterType);
 				}
 
 				else if (toolBox.getMode() == EVENT) {
@@ -356,6 +357,24 @@ void Editor::handleEvent() {
 			else if (event.key.code == sf::Keyboard::Dash && objectMap.selected != objectMap.map.end())
 				objectMap.objectScale(objectMap.selected->second, -.05f);
 		}
+
+		if (toolBox.getMode() == WATER) {
+			
+			if (event.key.code == sf::Keyboard::T) {
+				switch (waterType) {
+				case WATERTYPE_INK:
+					waterType = WATERTYPE_WATER;
+					printf("WATER\n");
+					break;
+				case WATERTYPE_WATER:
+					waterType = WATERTYPE_INK;
+					printf("INK\n");
+					break;
+				}
+			}
+		
+		}
+
 		break;
 
 	case sf::Event::KeyReleased:

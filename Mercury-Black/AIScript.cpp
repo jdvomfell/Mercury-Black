@@ -1,14 +1,44 @@
 #include "AIScript.h"
 #include <cmath>
 
+void inputFlip(World * world, int entityID) {
+
+	Input * i = &(world->input[entityID]);
+	Sprite * s = &(world->sprite[entityID]);
+
+	if (i->left)
+		s->sprite.setTextureRect(sf::IntRect((int)s->sprite.getLocalBounds().width, 0, (int)-s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
+	else if (i->right)
+		s->sprite.setTextureRect(sf::IntRect(0, 0, (int)s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
+
+}
+
 /* Utility Scripts */
+
+void scriptSpawn(World *world, int entityID) {
+	ScriptParameters * sp;
+
+	sp = &world->scriptParameters[entityID];
+
+	if (sp->spawnDistance >= abs(world->position[entityID].x - world->position[0].x) &&
+		sp->spawnDistance >= abs(world->position[entityID].y - world->position[0].y)) {
+		sp->currentState = SPAWN_STATE;
+	}
+
+	return;
+}
 
 void scriptFollow(World * world, int entityID, float x, float y) {
 
-	float distance = sqrt(pow(world->position[entityID].x - x, 2) + pow(world->position[entityID].y - y, 2));
+	Position * p;
 
-	if (distance <= world->scriptParameters[entityID].followDistMax && distance >=world->scriptParameters[entityID].followDistMin){
+	p = &(world->position[entityID]);
+
+	float xDist = fabs(p->x - x);
+	float yDist = fabs(p->y - y);
 			
+	if (xDist <= world->scriptParameters[entityID].followDistMax && xDist >= world->scriptParameters[entityID].followDistMin) {
+
 		if (world->position[entityID].x < x) {
 			world->input[entityID].right = true;
 			world->input[entityID].left = false;
@@ -18,6 +48,15 @@ void scriptFollow(World * world, int entityID, float x, float y) {
 			world->input[entityID].right = false;
 		}
 
+	}
+
+	else {
+		world->input[entityID].left = false;
+		world->input[entityID].right = false;
+	}
+
+	if (yDist <= world->scriptParameters[entityID].followDistMax && yDist >= world->scriptParameters[entityID].followDistMin) {
+
 		if (world->position[entityID].y > y) {
 			world->input[entityID].up = true;
 			world->input[entityID].down = false;
@@ -26,18 +65,20 @@ void scriptFollow(World * world, int entityID, float x, float y) {
 			world->input[entityID].down = true;
 			world->input[entityID].up = false;
 		}
+
 	}
 
 	else {
-		world->input[entityID].left = false;
-		world->input[entityID].right = false;
 		world->input[entityID].down = false;
 		world->input[entityID].up = false;
 	}
 
 }
 
-void scriptAttack(World* world, int entityID, float x, float y) {
+bool scriptAttack(World* world, int entityID, float x, float y, float dt) {
+
+	if ((world->scriptParameters[entityID].attackTimer -= dt) > 0)
+		return false;
 
 	if (std::fabs(world->position[entityID].x - x) <=
 		world->scriptParameters[entityID].attackRangeMax &&
@@ -46,12 +87,12 @@ void scriptAttack(World* world, int entityID, float x, float y) {
 		world->scriptParameters[entityID].attackRangeMin) {
 			
 		world->scriptParameters[entityID].currentState = ATTACK_STATE;
-			//world->input[entityID].attack = true;
+
+		world->scriptParameters[entityID].attackTimer = world->scriptParameters[entityID].attackFrequency;
+
+		return true;
 	}
 
-	else {
-		//world->input[entityID].attack = false;
-	}
 }
 void scriptFlyWait(World * world, int entityID, float x, float y) {
 	sf::Vector2f r;
@@ -67,14 +108,16 @@ void scriptFlyWait(World * world, int entityID, float x, float y) {
 void scriptRetreat(World * world, int entityID, float x, float y) {
 
 	if (std::fabs(world->position[entityID].x - x) <=
-		world->scriptParameters[entityID].followDistMin) {
+		world->scriptParameters[entityID].retreatDist) {
 
 		if (world->position[entityID].x < x) {
 			world->input[entityID].left = true;
+			world->input[entityID].right = false;
 		}
 
 		else {
 			world->input[entityID].right = true;
+			world->input[entityID].left = false;
 		}
 	}
 
@@ -104,6 +147,11 @@ void scriptPlayer(World *world, float dt) {
 		v->speedUp = 2.0f;
 	else
 		v->speedUp = 1.0f;
+
+	/* Allow Animation Changes If Current Animation Has Ended */
+	if (s->animationManager.updateAnimation(dt) == 1) {
+		sp->currentState = NO_STATE;
+	}
 	
 	/* On Ground */
 	if (v->onGround) {
@@ -124,7 +172,7 @@ void scriptPlayer(World *world, float dt) {
 			/* No Input */
 			else {
 				if (sp->currentState == NO_STATE) {
-					s->animationManager.changeAnimation("sheathedRun");
+					s->animationManager.changeAnimation("run");
 				}
 			}
 		}
@@ -151,7 +199,7 @@ void scriptPlayer(World *world, float dt) {
 			/* No Input */
 			else {
 				if (sp->currentState == NO_STATE) {
-					s->animationManager.changeAnimation("idleUnsheathed");
+					s->animationManager.changeAnimation("idle");
 				}
 			}
 		}
@@ -168,30 +216,106 @@ void scriptPlayer(World *world, float dt) {
 		/* Moving */
 		if (v->x != 0) {
 			/* Attack */
-			//if (i->attack) {
-				//TODO
-			//}
+			if (i->attack) {
+				if (sp->currentState == JUMP_STATE || sp->currentState == NO_STATE) {
+					s->animationManager.changeAnimation("jumpAttack");
+					sp->currentState = ATTACK_STATE;
+				}
+			}
 			/* No Input */
 			//else {
 				if (sp->currentState == NO_STATE) {
-					s->animationManager.changeAnimation("inAir");
+					s->animationManager.changeAnimation("fall");
 				}
 			//}
 		}
 		/* Not Moving  (Might Be Able To Remove)*/
 		else {
 			/* Attack */
-			//if (i->attack) {
-				//TODO
-			//}
+			if (i->attack) {
+				if (sp->currentState == JUMP_STATE || sp->currentState == NO_STATE) {
+					s->animationManager.changeAnimation("jumpAttack");
+					sp->currentState = ATTACK_STATE;
+				}
+			}
 			/* No Input */
 			//else {
 				if (sp->currentState == NO_STATE) {
-					s->animationManager.changeAnimation("inAir");
+					s->animationManager.changeAnimation("fall");
 				}
 			//}
 		}
 	
+	}
+
+	inputFlip(world, 0);
+
+}
+
+void scriptGroundBlob(World * world, int entityID, float dt) {
+
+	Velocity * v;
+	Sprite * s;
+	ScriptParameters * sp;
+	Input * i;
+
+	i = &(world->input[entityID]);
+	v = &(world->velocity[entityID]);
+	s = &(world->sprite[entityID]);
+	sp = &(world->scriptParameters[entityID]);
+
+	if (sp->currentState == DEATH_STATE) {
+		world->metaballHandler->sunburst(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), 30);
+		destroyEntity(world, entityID);
+		return;
+	}
+
+	if (scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt)) {
+		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
+		if (world->input[entityID].lastDirection = LEFT)
+			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(-8.0f, 0.0f), 4.0f, 0.005f, 1, 10, true);
+		else
+			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(8.0f, 0.0f), 4.0f, 0.005f, 1, 10, true);
+	}
+
+	if (world->scriptParameters[entityID].attackTimer > 0 && world->scriptParameters[entityID].currentState == NO_STATE)
+		scriptRetreat(world, entityID, world->position[0].x, world->position[0].y);
+
+	else if (world->scriptParameters[entityID].currentState == NO_STATE)
+		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
+
+	else {
+		world->input[entityID].left = false;
+		world->input[entityID].right = false;
+	}
+
+	/* Moving */
+
+	if (sp->currentState == NO_STATE && (i->left || i->right)) {
+	
+		s->animationManager.changeAnimation("idle");
+
+	}
+
+	/* Not Moving */
+
+	else {
+
+		/* Attack */
+
+		if (sp->currentState == ATTACK_STATE)
+			s->animationManager.changeAnimation("attack");
+
+		else
+			s->animationManager.changeAnimation("idle");
+
+	}
+
+	inputFlip(world, entityID);
+
+	/* Allow Animation Changes If Current Animation Has Ended */
+	if (s->animationManager.updateAnimation(dt) == 1) {
+		sp->currentState = NO_STATE;
 	}
 
 }
@@ -199,44 +323,36 @@ void scriptPlayer(World *world, float dt) {
 void scriptPlant(World * world, int entityID, float dt) {
 	
 	Sprite *s;
-	ScriptParameters *sP;
+	ScriptParameters *sp;
 
 	s = &(world->sprite[entityID]);
-	sP = &(world->scriptParameters[entityID]);
+	sp = &(world->scriptParameters[entityID]);
 		
-	if (sP->currentState == NO_STATE) {
+	if (sp->currentState == NO_STATE) {
 		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
-		scriptAttack(world, entityID, world->position[0].x, world->position[0].y);
-		
-		if (sP->currentState == ATTACK_STATE)
-			s->animationManager.changeAnimation("tripleAttack");
-		else {
-			if (sP->currentState == NO_STATE)
-				s->animationManager.changeAnimation("idle");
-		}
+		scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt);
+		s->animationManager.changeAnimation("idle");
+	}
+
+	else if (sp->currentState == ATTACK_STATE) {
+		s->animationManager.changeAnimation("attack");
 	}
 	
-	else if (sP->currentState == NOT_SPAWNED_STATE) {
+	else if (sp->currentState == NOT_SPAWNED_STATE) {
 		scriptSpawn(world, entityID);
-		if (sP->currentState == SPAWN_STATE)
-			s->animationManager.changeAnimation("spawn");
+		if (sp->currentState == SPAWN_STATE)
+			s->animationManager.changeAnimation("drop");
 		else
 			s->animationManager.changeAnimation("notSpawn");
 	}
 
-}
+	inputFlip(world, entityID);
 
-void scriptSpawn(World *world, int entityID) {
-	ScriptParameters * sP;
-
-	sP = &world->scriptParameters[entityID];
-
-	if (sP->spawnDistance >= abs(world->position[entityID].x - world->position[0].x) &&
-		sP->spawnDistance >= abs(world->position[entityID].y - world->position[0].y)) {
-		sP->currentState = SPAWN_STATE;
+	/* Allow Animation Changes If Current Animation Has Ended */
+	if (s->animationManager.updateAnimation(dt) == 1) {
+		sp->currentState = NO_STATE;
 	}
 
-	return;
 }
 
 void scriptTest(World * world, int entityID, float dt) {
@@ -252,23 +368,94 @@ void scriptTest(World * world, int entityID, float dt) {
 	sp = &(world->scriptParameters[entityID]);
 
 	if (sp->currentState == DEATH_STATE) {
+		world->metaballHandler->sunburst(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), 50);
 		destroyEntity(world, entityID);
 		return;
 	}
 
-	scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
-	scriptAttack(world, entityID, world->position[0].x, world->position[0].y);
+	scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt);
 
-	if (i->left || i->right)
-		s->animationManager.changeAnimation("sheathedRun");
-	
+	if (world->scriptParameters[entityID].attackTimer > 0 && world->scriptParameters[entityID].currentState == NO_STATE)
+		scriptRetreat(world, entityID, world->position[0].x, world->position[0].y);
+
+	else if(world->scriptParameters[entityID].currentState == NO_STATE)
+		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
+
+	else {
+		world->input[entityID].left = false;
+		world->input[entityID].right = false;
+	}
+
+	/* Moving */
+	if (i->left || i->right) {
+
+		s->animationManager.changeAnimation("run");
+
+	}
+	/* Not Moving */
 	else {
 
 		if (sp->currentState == ATTACK_STATE)
 			s->animationManager.changeAnimation("idleAttack");
 		else
-			s->animationManager.changeAnimation("idleUnsheathed");
+			s->animationManager.changeAnimation("idle");
 	
+	}
+
+	inputFlip(world, entityID);
+
+	/* Allow Animation Changes If Current Animation Has Ended */
+	if (s->animationManager.updateAnimation(dt) == 1) {
+		sp->currentState = NO_STATE;
+	}
+
+}
+
+void scriptLotus(World * world, int entityID, float dt) {
+
+	Velocity * v;
+	Sprite * s;
+	Position * p;
+	ScriptParameters * sp;
+	Input * i;
+
+	i = &(world->input[entityID]);
+	v = &(world->velocity[entityID]);
+	s = &(world->sprite[entityID]);
+	p = &(world->position[entityID]);
+	sp = &(world->scriptParameters[entityID]);
+
+	/* Allow Animation Changes If Current Animation Has Ended */
+	if (s->animationManager.updateAnimation(dt) == 1) {
+		if (sp->currentState == ATTACK_STATE)
+			sp->currentState = SPECIAL_STATE;
+		else
+			sp->currentState = NO_STATE;
+	}
+
+	if (sp->currentState == DEATH_STATE) {
+		world->metaballHandler->sunburst(sf::Vector2f(p->x, p->y), 100);
+		destroyEntity(world, entityID);
+		return;
+	}
+
+	scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt);
+
+	if (sp->currentState == SPECIAL_STATE) {
+		i->left = false;
+		i->right = false;
+		s->animationManager.changeAnimation("rise");
+	}
+
+	else if (sp->currentState == ATTACK_STATE) {
+		i->left = false;
+		i->right = false;
+		s->animationManager.changeAnimation("dropAttack");
+	}
+
+	else {
+		s->animationManager.changeAnimation("idle");
+		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
 	}
 
 }
@@ -284,8 +471,8 @@ void scriptWisp(World * world, int entityID, float dt) {
 	sp = &(world->scriptParameters[entityID]);
 
 	if (sp->currentState == DEATH_STATE) {
-		//SUNBURT
-		//KILL SPAWNER LIFESPAN
+		world->metaballHandler->sunburst(sf::Vector2f(p->x, p->y), 10);
+		world->sprite[entityID].metaballSpawner->kill = true;
 		destroyEntity(world, entityID);
 		return;
 	}

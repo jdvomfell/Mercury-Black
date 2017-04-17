@@ -3,6 +3,8 @@
 #include <cmath>
 #include <fstream>
 
+#include "Entity.h"
+
 #define PI 3.14159265f
 
 #define PIXELS_PER_SPRING 20.0f
@@ -29,6 +31,17 @@ Spring::Spring(float x, float targetHeight) {
 
 	this->height = targetHeight;
 	this->targetHeight = targetHeight;
+
+}
+
+void WaterHandler::dealDamage(World * world) {
+
+	for (std::map<float, Water *>::iterator it = map.begin(); it != map.end(); it++) {
+		if (it->second->type == WATERTYPE_INK && it->second->rect.getGlobalBounds().contains(world->position[0].x, world->position[0].y)) {
+			world->health[0].current -= 1;
+			printf("E: %d", world->health[0].current);
+		}
+	}
 
 }
 
@@ -93,19 +106,21 @@ void Water::splash(size_t index, float speed) {
 
 }
 
-Water::Water(sf::Vector2f topLeft, sf::Vector2f bottomRight) {
+Water::Water(sf::Vector2f topLeft, sf::Vector2f bottomRight, WaterType type) {
 
 	Spring * spring;
 
 	this->topLeft = topLeft;
 	this->bottomRight = bottomRight;
 
+	this->type = type;
+	rect = sf::RectangleShape(bottomRight - topLeft);
+	rect.move(topLeft);
+
 	x = topLeft.x;
 	depth = bottomRight.y;
 	length = (bottomRight.x - topLeft.x);
 	targetHeight = topLeft.y;
-
-	rect = sf::FloatRect(topLeft, bottomRight - topLeft);
 
 	float numSprings = length / PIXELS_PER_SPRING;
 
@@ -126,10 +141,20 @@ Water::Water(sf::Vector2f topLeft, sf::Vector2f bottomRight) {
 	for (size_t i = 0; i < springs.size(); i++) {
 		/* Make Water Surface */
 		waterShape[i * 2].position = sf::Vector2f(springs[i]->x, springs[i]->height);
-		waterShape[i * 2].color = sf::Color(0, 0, 0, 175);
+		if (type == WATERTYPE_INK) {
+			waterShape[i * 2].color = sf::Color(0, 0, 0, 175);
+		}
+		else if(type == WATERTYPE_WATER){
+			waterShape[i * 2].color = sf::Color(66, 194, 244, 175);
+		}
 		/* Make Bottom Of Water */
 		waterShape[i * 2 + 1].position = sf::Vector2f(springs[i]->x, depth);
-		waterShape[i * 2 + 1].color = sf::Color::Black;
+		if (type == WATERTYPE_INK) {
+			waterShape[i * 2 + 1].color = sf::Color::Black;
+		}
+		else if (type == WATERTYPE_WATER) {
+			waterShape[i * 2].color = sf::Color(35, 93, 132, 0);
+		}
 	}
 
 }
@@ -142,9 +167,9 @@ void Water::clean() {
 
 }
 
-void WaterHandler::insert(sf::Vector2f topLeft, sf::Vector2f bottomRight) {
+void WaterHandler::insert(sf::Vector2f topLeft, sf::Vector2f bottomRight, WaterType type) {
 
-	Water * water = new Water(topLeft, bottomRight);
+	Water * water = new Water(topLeft, bottomRight, type);
 
 	map.insert(std::make_pair(topLeft.x, water));
 
@@ -193,6 +218,7 @@ void WaterHandler::load() {
 
 	float x1, x2;
 	float y1, y2;
+	int type;
 
 	int numObjects = 0;
 
@@ -205,14 +231,14 @@ void WaterHandler::load() {
 		return;
 	}
 
-	while (ifstream >> x1 >> y1 >> x2 >> y2) {
+	while (ifstream >> x1 >> y1 >> x2 >> y2 >> type) {
 
 		if (ifstream.eof())
 			return;
 
 		numObjects++;
 
-		insert(sf::Vector2f(x1, y1), sf::Vector2f(x2, y2));
+		insert(sf::Vector2f(x1, y1), sf::Vector2f(x2, y2), (WaterType)type);
 
 	}
 
@@ -231,10 +257,11 @@ void WaterHandler::save() {
 	for (std::map<float, Water *>::iterator it = map.begin(); it != map.end(); it++) {
 
 		ofstream
-			<< it->second->topLeft.x << std::endl
-			<< it->second->topLeft.y << std::endl
-			<< it->second->bottomRight.x << std::endl
-			<< it->second->bottomRight.y << std::endl;
+			<< it->second->topLeft.x << " "
+			<< it->second->topLeft.y << " "
+			<< it->second->bottomRight.x << " "
+			<< it->second->bottomRight.y << " "
+			<< it->second->type << std::endl;
 
 	}
 

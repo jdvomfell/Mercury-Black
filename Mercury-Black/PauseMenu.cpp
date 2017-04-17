@@ -24,10 +24,10 @@ void PauseMenu::init() {
 
 	title.setPosition(view.getCenter().x, view.getCenter().y - (view.getSize().y / 3));
 
-	resumeButton.text.setPosition(view.getCenter().x, title.getPosition().y + (view.getSize().y / 6));
-	optionsButton.text.setPosition(view.getCenter().x, title.getPosition().y + 2 * (view.getSize().y / 6));
-	mainMenuButton.text.setPosition(view.getCenter().x, title.getPosition().y + 3 * (view.getSize().y / 6));
-	quitButton.text.setPosition(view.getCenter().x, title.getPosition().y + 4 * (view.getSize().y / 6));
+	resumeButton.text.setPosition(view.getCenter().x - resumeButton.text.getGlobalBounds().width / 2, title.getPosition().y + (view.getSize().y / 6));
+	optionsButton.text.setPosition(view.getCenter().x - optionsButton.text.getGlobalBounds().width / 2, title.getPosition().y + 2 * (view.getSize().y / 6));
+	mainMenuButton.text.setPosition(view.getCenter().x - mainMenuButton.text.getGlobalBounds().width / 2, title.getPosition().y + 3 * (view.getSize().y / 6));
+	quitButton.text.setPosition(view.getCenter().x - quitButton.text.getGlobalBounds().width / 2, title.getPosition().y + 4 * (view.getSize().y / 6));
 
 	guiHandler.isSelected(sf::Vector2f(0, 0));
 
@@ -76,13 +76,13 @@ void PauseMenu::handleEvent() {
 
 void PauseMenu::update(const float dt) {
 
-
-
 }
 
 void PauseMenu::render(const float dt) {
 
-	engine->window.clear(sf::Color(248, 240, 225));
+	engine->window.setView(view);
+
+	engine->window.clear(sf::Color(255, 255, 255, 0));
 	guiHandler.draw(&engine->window);
 
 	engine->window.draw(title);

@@ -1,7 +1,7 @@
 #include "CollisionHelper.h"
 #include <cmath>
 
-sf::Vector2f CollisionHelper::getEntityNormal(std::string side, sf::Sprite * entity) {
+sf::Vector2f getEntityNormal(std::string side) {
 
 	if (side == "left")
 		return sf::Vector2f(-1.0f, 0.0f);
@@ -19,15 +19,15 @@ sf::Vector2f CollisionHelper::getEntityNormal(std::string side, sf::Sprite * ent
 
 }
 
-sf::Vector2f CollisionHelper::getEntityProjection(sf::Vector2f unitNormal, sf::Sprite entity) {
+sf::Vector2f getEntityProjection(sf::Vector2f unitNormal, sf::RectangleShape bounds) {
 
 	float min, max, projection;
 	sf::Vector2f projReturn;
 
-	sf::Vector2f topLeft(entity.getGlobalBounds().left, entity.getGlobalBounds().top);
-	sf::Vector2f topRight(entity.getGlobalBounds().left + entity.getGlobalBounds().width, entity.getGlobalBounds().top);
-	sf::Vector2f bottomLeft(entity.getGlobalBounds().left, entity.getGlobalBounds().top + entity.getGlobalBounds().height);
-	sf::Vector2f bottomRight(entity.getGlobalBounds().left + entity.getGlobalBounds().width, entity.getGlobalBounds().top + entity.getGlobalBounds().height);
+	sf::Vector2f topLeft(bounds.getGlobalBounds().left, bounds.getGlobalBounds().top);
+	sf::Vector2f topRight(bounds.getGlobalBounds().left + bounds.getGlobalBounds().width, bounds.getGlobalBounds().top);
+	sf::Vector2f bottomLeft(bounds.getGlobalBounds().left, bounds.getGlobalBounds().top + bounds.getGlobalBounds().height);
+	sf::Vector2f bottomRight(bounds.getGlobalBounds().left + bounds.getGlobalBounds().width, bounds.getGlobalBounds().top + bounds.getGlobalBounds().height);
 
 	min = (topLeft.x * unitNormal.x) + (topLeft.y * unitNormal.y);
 	max = min;
@@ -62,13 +62,13 @@ sf::Vector2f CollisionHelper::getEntityProjection(sf::Vector2f unitNormal, sf::S
 	return projReturn;
 }
 
-bool CollisionHelper::isCollision(sf::Vector2f firstProj, sf::Vector2f secondProj) {
+bool isCollision(sf::Vector2f firstProj, sf::Vector2f secondProj) {
 
 	return !(firstProj.y < secondProj.x || secondProj.y < firstProj.x);
 
 }
 
-float CollisionHelper::getOverlap(sf::Vector2f shapeProj, sf::Vector2f entityProj) {
+float getOverlap(sf::Vector2f shapeProj, sf::Vector2f entityProj) {
 
 	if ((shapeProj.x < entityProj.x && shapeProj.y > entityProj.y) || (entityProj.x < shapeProj.x && entityProj.y > shapeProj.y))
 		return FLT_MAX;
@@ -79,7 +79,7 @@ float CollisionHelper::getOverlap(sf::Vector2f shapeProj, sf::Vector2f entityPro
 
 }
 
-void CollisionHelper::stopCollision(World * world, unsigned int entityID, float length, sf::Vector2f unitNormal)
+void stopCollision(World * world, unsigned int entityID, float length, sf::Vector2f unitNormal)
 {
 
 	sf::Vector2f mtv;

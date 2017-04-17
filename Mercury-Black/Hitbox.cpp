@@ -249,6 +249,7 @@ std::vector<sf::RectangleShape> HitboxMap::getHitboxes(std::string ID, HitboxTyp
 				it++;
 			}
 		}
+		break;
 	case HITBOXTYPE_HURT:
 		if ((it = hurtBoxes.find(ID)) != hurtBoxes.end()) {
 			while (it != hurtBoxes.upper_bound(ID)) {
@@ -256,6 +257,7 @@ std::vector<sf::RectangleShape> HitboxMap::getHitboxes(std::string ID, HitboxTyp
 				it++;
 			}
 		}
+		break;
 	case HITBOXTYPE_DAMAGE:
 		if ((it = damageBoxes.find(ID)) != damageBoxes.end()) {
 			while (it != damageBoxes.upper_bound(ID)) {
@@ -263,6 +265,7 @@ std::vector<sf::RectangleShape> HitboxMap::getHitboxes(std::string ID, HitboxTyp
 				it++;
 			}
 		}
+		break;
 	case HITBOXTYPE_DEFENCE:
 		if ((it = defenceBoxes.find(ID)) != defenceBoxes.end()) {
 			while (it != defenceBoxes.upper_bound(ID)) {
@@ -270,6 +273,7 @@ std::vector<sf::RectangleShape> HitboxMap::getHitboxes(std::string ID, HitboxTyp
 				it++;
 			}
 		}
+		break;
 	case HITBOXTYPE_COLLISION:
 		if ((it = collisionBoxes.find(ID)) != collisionBoxes.end()) {
 			while (it != collisionBoxes.upper_bound(ID)) {
@@ -277,6 +281,7 @@ std::vector<sf::RectangleShape> HitboxMap::getHitboxes(std::string ID, HitboxTyp
 				it++;
 			}
 		}
+		break;
 	}
 
 	return hitboxes;

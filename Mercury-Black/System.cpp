@@ -33,6 +33,12 @@ void aiSystem(World * world, float dt) {
 			else if (world->name[entityID].name == "wisp")
 				scriptWisp(world, entityID, dt);
 
+			else if (world->name[entityID].name == "gblob")
+				scriptGroundBlob(world, entityID, dt);
+
+			else if (world->name[entityID].name == "lotusMb")
+				scriptLotus(world, entityID, dt);
+
 			else
 				printf("ERROR: Could Not Find Entity AI: %s\n", world->name[entityID].name.c_str());
 
@@ -71,30 +77,15 @@ void renderSystem(World * world, sf::RenderWindow * window) {
 void animationSystem(World * world, float dt) {
 
 	Sprite * s;
-	Input * i;
-	ScriptParameters * sp;
 
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
 		if ((world->mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
 
 			s = &(world->sprite[entityID]);
-			i = &(world->input[entityID]);
-			sp = &(world->scriptParameters[entityID]);
-
-			if (i->left)
-				s->sprite.setTextureRect(sf::IntRect((int)s->sprite.getLocalBounds().width, 0, (int)-s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
-			else if (i->right)
-				s->sprite.setTextureRect(sf::IntRect(0, 0, (int)s->sprite.getLocalBounds().width, (int)s->sprite.getLocalBounds().height));
 
 			s->sprite.setTexture(*s->animationManager.getCurrentTexture());
 			s->sprite.setOrigin(sf::Vector2f(s->sprite.getLocalBounds().width / 2, s->sprite.getLocalBounds().height / 2));
-
-			/* Allow Animation Changes If Current Animation Has Ended */
-			if (s->animationManager.updateAnimation(dt) == 1) {
-				sp->currentState = NO_STATE;
-
-			}
 
 		}
 
@@ -158,6 +149,17 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 				hurtBoxes = hitboxMap->getFlippedHitboxes(hurtID, HITBOXTYPE_HURT);
 			else
 				hurtBoxes = hitboxMap->getHitboxes(hurtID, HITBOXTYPE_HURT);
+		
+		}
+
+		/* If The Entity Should Be Able To Take Damage But Has No Animation */
+		/* Make A Generic Hitbox */
+
+		else {
+
+			hurtBoxes.push_back(sf::RectangleShape(sf::Vector2f(10.0f, 10.0f)));
+			hurtBoxes[0].move(-5.0f, -5.0f);
+
 		}
 
 		/* Move The Hitboxes To The Entities Position */
@@ -200,6 +202,16 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 
 			}
 
+			/* If The Entity Should Be Able To Deal Damage But Has No Animation */
+			/* Make A Generic Hitbox */
+
+			else {
+
+				damageBoxes.push_back(sf::RectangleShape(sf::Vector2f(10.0f, 10.0f)));
+				damageBoxes[0].move(-5.0f, -5.0f);
+
+			}
+
 			/* Move The Hitboxes To The Entities Position */
 
 			for (int i = 0; i < damageBoxes.size(); i++)
@@ -209,8 +221,6 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 
 			for (size_t i = 0; i < damageBoxes.size(); i++) {
 				for(size_t j = 0; j < hurtBoxes.size(); j++){
-
-					printf("Check\n");
 
 					/* If One Intersects Deal Damage */
 
@@ -312,6 +322,9 @@ void gravitySystem(World * world) {
 
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
+		if ((world->mask[entityID] & GRAVITY_MASK) != GRAVITY_MASK)
+			continue;
+
 		g = &(world->gravity[entityID]);
 		v = &(world->velocity[entityID]);
 
@@ -346,11 +359,10 @@ void movementSystem(World * world) {
 
 #define COLLISION_MASK (POSITION | VELOCITY | COLLISION | GRAVITY)
 
-void shapeCollSystem(World * world, PlatformMap * platformMap) {
-
-	CollisionHelper * entity = new CollisionHelper;
+void shapeCollSystem(World * world, PlatformMap * platformMap, HitboxMap * hitboxMap) {
 
 	bool collision = true;
+	std::vector <sf::RectangleShape> collisionBoxes;
 	float overlap;
 	float overlapBuff;
 	sf::ConvexShape * shape;
@@ -375,6 +387,14 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
 		if ((world->mask[entityID] & COLLISION_MASK) == COLLISION_MASK) {
 
+			if (world->input[entityID].lastDirection == LEFT)
+				collisionBoxes = hitboxMap->getFlippedHitboxes(world->sprite[entityID].animationManager.getCurrentTextureID(), HITBOXTYPE_COLLISION);
+			else
+				collisionBoxes = hitboxMap->getHitboxes(world->sprite[entityID].animationManager.getCurrentTextureID(), HITBOXTYPE_COLLISION);
+
+			for (size_t i = 0; i < collisionBoxes.size(); i++)
+				collisionBoxes[i].move(world->position[entityID].x + world->velocity[entityID].x, world->position[entityID].y + world->velocity[entityID].y);
+
 			sprite = &world->sprite[entityID].sprite;
 			tempSprite = *sprite;
 			tempSprite.setPosition(sprite->getPosition());
@@ -382,10 +402,10 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
 			/* Retrieve The Entity Normals */
 
-			entityTopNormal = entity->getEntityNormal("top", sprite);
-			entityBottomNormal = entity->getEntityNormal("bottom", sprite);
-			entityLeftNormal = entity->getEntityNormal("left", sprite);
-			entityRightNormal = entity->getEntityNormal("right", sprite);
+			entityTopNormal = getEntityNormal("top");
+			entityBottomNormal = getEntityNormal("bottom");
+			entityLeftNormal = getEntityNormal("left");
+			entityRightNormal = getEntityNormal("right");
 
 			/* Check The Entity Against Platforms */
 
@@ -404,9 +424,9 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 					shapeNormal = platformMap->getEdgeNormal(i, shape);
 
 					shapeProjection = platformMap->getProjection(shapeNormal, shape);
-					entityProjection = entity->getEntityProjection(shapeNormal, tempSprite);
+					entityProjection = getEntityProjection(shapeNormal, collisionBoxes[0]);
 
-					if (!entity->isCollision(entityProjection, shapeProjection) && collision == true)
+					if (!isCollision(entityProjection, shapeProjection) && collision == true)
 					{
 						shape->setFillColor(sf::Color::Black);
 						collision = false;
@@ -415,7 +435,7 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 					else
 					{
 
-						overlapBuff = entity->getOverlap(shapeProjection, entityProjection);
+						overlapBuff = getOverlap(shapeProjection, entityProjection);
 
 						if (overlapBuff <= overlap)
 						{
@@ -429,10 +449,10 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
 				/* Entity Top Projections */
 
-				entityProjection = entity->getEntityProjection(entityTopNormal, tempSprite);
+				entityProjection = getEntityProjection(entityTopNormal, collisionBoxes[0]);
 				shapeProjection = platformMap->getProjection(entityTopNormal, shape);
 
-				if (!entity->isCollision(shapeProjection, entityProjection) && collision == true)
+				if (!isCollision(shapeProjection, entityProjection) && collision == true)
 				{
 					shape->setFillColor(sf::Color::Black);
 					collision = false;
@@ -441,7 +461,7 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 				else
 				{
 
-					overlapBuff = entity->getOverlap(entityProjection, shapeProjection);
+					overlapBuff = getOverlap(entityProjection, shapeProjection);
 
 					if (overlapBuff <= overlap && shapeProjection.x <= entityProjection.y)
 					{
@@ -452,10 +472,10 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
 				/* Entity Bottom Projections */
 
-				entityProjection = entity->getEntityProjection(entityBottomNormal, tempSprite);
+				entityProjection = getEntityProjection(entityBottomNormal, collisionBoxes[0]);
 				shapeProjection = platformMap->getProjection(entityBottomNormal, shape);
 
-				if (!entity->isCollision(shapeProjection, entityProjection) && collision == true)
+				if (!isCollision(shapeProjection, entityProjection) && collision == true)
 				{
 					shape->setFillColor(sf::Color::Black);
 					collision = false;
@@ -463,7 +483,7 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 				}
 				else
 				{
-					overlapBuff = entity->getOverlap(entityProjection, shapeProjection);
+					overlapBuff = getOverlap(entityProjection, shapeProjection);
 
 					if (overlapBuff <= overlap && shapeProjection.y >= entityProjection.x && entityProjection.y > shapeProjection.y)
 					{
@@ -474,10 +494,10 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
 				/* Entity Left Projections */
 
-				entityProjection = entity->getEntityProjection(entityLeftNormal, tempSprite);
+				entityProjection = getEntityProjection(entityLeftNormal, collisionBoxes[0]);
 				shapeProjection = platformMap->getProjection(entityLeftNormal, shape);
 
-				if (!entity->isCollision(shapeProjection, entityProjection) && collision == true)
+				if (!isCollision(shapeProjection, entityProjection) && collision == true)
 				{
 					shape->setFillColor(sf::Color::Black);
 					collision = false;
@@ -485,7 +505,7 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 				}
 				else
 				{
-					overlapBuff = entity->getOverlap(entityProjection, shapeProjection);
+					overlapBuff = getOverlap(entityProjection, shapeProjection);
 
 					if (overlapBuff <= overlap && shapeProjection.y >= entityProjection.x)
 					{
@@ -496,10 +516,10 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 
 				/* Entity Right Projections */
 
-				entityProjection = entity->getEntityProjection(entityRightNormal, tempSprite);
+				entityProjection = getEntityProjection(entityRightNormal, collisionBoxes[0]);
 				shapeProjection = platformMap->getProjection(entityRightNormal, shape);
 
-				if (!entity->isCollision(shapeProjection, entityProjection) && collision == true)
+				if (!isCollision(shapeProjection, entityProjection) && collision == true)
 				{
 					shape->setFillColor(sf::Color::Black);
 					collision = false;
@@ -507,7 +527,7 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 				}
 				else
 				{
-					overlapBuff = entity->getOverlap(entityProjection, shapeProjection);
+					overlapBuff = getOverlap(entityProjection, shapeProjection);
 
 					if (overlapBuff <= overlap && shapeProjection.y >= entityProjection.x && entityProjection.y > shapeProjection.y)
 					{
@@ -521,7 +541,7 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 				if (collision == true)
 				{
 					shape->setFillColor(sf::Color::Red);
-					entity->stopCollision(world, entityID, overlap, smallestNormal);
+					stopCollision(world, entityID, overlap, smallestNormal);
 					world->velocity[entityID].onGround = true;
 					world->velocity[entityID].canJump = true;
 					world->velocity[entityID].canDoubleJump = true;
@@ -529,6 +549,54 @@ void shapeCollSystem(World * world, PlatformMap * platformMap) {
 			}
 		}
 	}
+}
 
-	delete(entity);
+/* Should Eventually Be Mixed With Damage System Probably */
+
+void metaballDamageSystem(World * world, HitboxMap * hitboxMap) {
+
+	std::string hurtID;
+	std::vector <sf::RectangleShape> hurtBoxes;
+	std::vector <sf::RectangleShape> damageBoxes;
+
+	hurtID = world->sprite[0].animationManager.getCurrentTextureID();
+
+	if (world->input[0].lastDirection == LEFT) {
+		hurtBoxes = hitboxMap->getFlippedHitboxes(hurtID, HITBOXTYPE_HURT);
+		damageBoxes = hitboxMap->getFlippedHitboxes(hurtID, HITBOXTYPE_DAMAGE);
+	}
+	else {
+		hurtBoxes = hitboxMap->getHitboxes(hurtID, HITBOXTYPE_HURT);
+		damageBoxes = hitboxMap->getHitboxes(hurtID, HITBOXTYPE_DAMAGE);
+	}
+
+	for (size_t i = 0; i < hurtBoxes.size(); i++) {
+		hurtBoxes[i].move(world->position[0].x, world->position[0].y);
+	}
+	for (size_t i = 0; i < damageBoxes.size(); i++) {
+		damageBoxes[i].move(world->position[0].x, world->position[0].y);
+	}
+
+	for (size_t i = 0; i < world->metaballHandler->metaballList.size(); i++) {
+
+		if (world->metaballHandler->metaballList[i]->dealsDamage == false)
+			continue;
+
+		for (size_t j = 0; j < damageBoxes.size(); j++) {
+
+			if (damageBoxes[j].getGlobalBounds().contains(world->metaballHandler->metaballList[i]->position)) {
+				world->metaballHandler->metaballList[i]->lifespan = 0;
+				world->metaballHandler->sunburst(world->metaballHandler->metaballList[i]->position, 10, world->metaballHandler->metaballList[i]->velocity);
+			}
+
+		}
+		for (size_t j = 0; j < hurtBoxes.size(); j++) {
+
+			if (hurtBoxes[j].getGlobalBounds().contains(world->metaballHandler->metaballList[i]->position)) {
+				world->health[0].current -= 1;
+			}
+
+		}
+	}
+
 }

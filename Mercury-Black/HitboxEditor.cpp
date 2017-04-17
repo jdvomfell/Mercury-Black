@@ -5,8 +5,19 @@ HitboxEditor HitboxEditor::hitboxEditor;
 
 void HitboxEditor::init() {
 
-	positionText = sf::Text("Position", engine->textureManager.slideFont, 20);
+	positionText = sf::Text("Position: ", engine->textureManager.slideFont, 20);
 	positionText.setFillColor(sf::Color::Black);
+
+	topText = sf::Text("Top: ", engine->textureManager.slideFont, 20);
+	topText.setFillColor(sf::Color::Black);
+	leftText = sf::Text("Left: ", engine->textureManager.slideFont, 20);
+	leftText.setFillColor(sf::Color::Black);
+	rightText = sf::Text("Right: ", engine->textureManager.slideFont, 20);
+	rightText.setFillColor(sf::Color::Black);
+	bottomText = sf::Text("Bottom: ", engine->textureManager.slideFont, 20);
+	bottomText.setFillColor(sf::Color::Black);
+	sideText = sf::Text("Bottom: ", engine->textureManager.slideFont, 20);
+	sideText.setFillColor(sf::Color::Black);
 
 	textureID = engine->textureManager.textures.begin()->first;
 	drawHitBox.setFillColor(sf::Color::Transparent);
@@ -18,7 +29,7 @@ void HitboxEditor::init() {
 	hitMap.load();
 	hitMap.select = hitMap.map.lower_bound(textureID);
 
-	view.setSize(engine->window.getSize().x, engine->window.getSize().y);
+	view.setSize((float) engine->window.getSize().x, (float) engine->window.getSize().y);
 
 	leftPlacing = 0;
 }
@@ -81,36 +92,77 @@ void HitboxEditor::handleEvent() {
 		}
 		else if (event.key.code == sf::Keyboard::Up) {
 			
-			initialPosition.x = hitMap.select->second->box.getSize().x;
-			initialPosition.y = hitMap.select->second->box.getSize().y + 5;
-			
-			hitMap.select->second->box.setSize(initialPosition);
-			printf("%d\n", hitMap.select->second->box.getSize().x);
+			if (hitMap.select == hitMap.map.end())
+				break;
+
+			switch (side) {
+			case HITBOXSIDE_TOP:
+				hitMap.select->second->box.move(0, -1.0f);
+				hitMap.select->second->box.setSize(sf::Vector2f(hitMap.select->second->box.getSize().x, hitMap.select->second->box.getSize().y + 1.0f));
+				break;
+			case HITBOXSIDE_LEFT:
+				hitMap.select->second->box.move(1.0f, 0);
+				hitMap.select->second->box.setSize(sf::Vector2f(hitMap.select->second->box.getSize().x - 1.0f, hitMap.select->second->box.getSize().y));
+				break;
+			case HITBOXSIDE_RIGHT:
+				hitMap.select->second->box.setSize(sf::Vector2f(hitMap.select->second->box.getSize().x + 1.0f, hitMap.select->second->box.getSize().y));
+				break;
+			case HITBOXSIDE_BOTTOM:
+				hitMap.select->second->box.setSize(sf::Vector2f(hitMap.select->second->box.getSize().x, hitMap.select->second->box.getSize().y - 1.0f));
+				break;
+			}
+
+			updateSelectText();
+
 		}
 		else if (event.key.code == sf::Keyboard::Down) {
 
-			initialPosition.x = hitMap.select->second->box.getSize().x;
-			initialPosition.y = hitMap.select->second->box.getSize().y - 5;
+			if (hitMap.select == hitMap.map.end())
+				break;
 
-			hitMap.select->second->box.setSize(initialPosition);
-			printf("%d\n", hitMap.select->second->box.getSize().x);
+			switch (side) {
+			case HITBOXSIDE_TOP:
+				hitMap.select->second->box.move(0, 1.0f);
+				hitMap.select->second->box.setSize(sf::Vector2f(hitMap.select->second->box.getSize().x, hitMap.select->second->box.getSize().y - 1.0f));
+				break;
+			case HITBOXSIDE_LEFT:
+				hitMap.select->second->box.move(-1.0f, 0);
+				hitMap.select->second->box.setSize(sf::Vector2f(hitMap.select->second->box.getSize().x + 1.0f, hitMap.select->second->box.getSize().y));
+				break;
+			case HITBOXSIDE_RIGHT:
+				hitMap.select->second->box.setSize(sf::Vector2f(hitMap.select->second->box.getSize().x - 1.0f, hitMap.select->second->box.getSize().y));
+				break;
+			case HITBOXSIDE_BOTTOM:
+				hitMap.select->second->box.setSize(sf::Vector2f(hitMap.select->second->box.getSize().x, hitMap.select->second->box.getSize().y + 1.0f));
+				break;
+			}
+
+			updateSelectText();
+
 		}
 		else if (event.key.code == sf::Keyboard::Right) {
+			
+			switch (side) {
+			case HITBOXSIDE_TOP:
+				side = HITBOXSIDE_LEFT;
+				sideText.setString("Side: Left");
+				break;
+			case HITBOXSIDE_LEFT:
+				side = HITBOXSIDE_RIGHT;
+				sideText.setString("Side: Right");
+				break;
+			case HITBOXSIDE_RIGHT:
+				side = HITBOXSIDE_BOTTOM;
+				sideText.setString("Side: Bottom");
+				break;
+			case HITBOXSIDE_BOTTOM:
+				side = HITBOXSIDE_TOP;
+				sideText.setString("Side: Top");
+				break;
+			}
 
-			initialPosition.x = hitMap.select->second->box.getSize().x + 5;
-			initialPosition.y = hitMap.select->second->box.getSize().y;
-
-			hitMap.select->second->box.setSize(initialPosition);
-			printf("%d\n", hitMap.select->second->box.getSize().x);
 		}
-		else if (event.key.code == sf::Keyboard::Left) {
 
-			initialPosition.x = hitMap.select->second->box.getSize().x - 5;
-			initialPosition.y = hitMap.select->second->box.getSize().y;
-
-			hitMap.select->second->box.setSize(initialPosition);
-			printf("%d\n", hitMap.select->second->box.getSize().x);
-		}
 		else if (event.key.code == sf::Keyboard::Delete) {
 			if (hitMap.map.find(textureID) != hitMap.map.end()) {
 				hitMap.select = hitMap.map.find(textureID);
@@ -168,8 +220,7 @@ void HitboxEditor::handleEvent() {
 		}
 		else if (event.mouseButton.button == sf::Mouse::Right) {
 			hitMap.cycleHitbox(textureID);
-			if(hitMap.select != hitMap.map.end())
-				positionText.setString("Position:\n" + std::to_string(hitMap.select->second->box.getPosition().x) + "\n" + std::to_string(hitMap.select->second->box.getPosition().y));
+			updateSelectText();
 		}
 		break;
 	case sf::Event::MouseButtonReleased:
@@ -245,6 +296,11 @@ void HitboxEditor::update(const float dt) {
 	sprite.setPosition(0, 0);
 	
 	positionText.setPosition(view.getCenter().x - engine->window.getSize().x / 2 + 30, view.getCenter().y - engine->window.getSize().y / 2 + 30);
+	sideText.setPosition(view.getCenter().x - engine->window.getSize().x / 2 + 30, view.getCenter().y - engine->window.getSize().y / 2 + 120);
+	topText.setPosition(view.getCenter().x - engine->window.getSize().x / 2 + 30, view.getCenter().y - engine->window.getSize().y / 2 + 150);
+	leftText.setPosition(view.getCenter().x - engine->window.getSize().x / 2 + 30, view.getCenter().y - engine->window.getSize().y / 2 + 180);
+	rightText.setPosition(view.getCenter().x - engine->window.getSize().x / 2 + 30, view.getCenter().y - engine->window.getSize().y / 2 + 210);
+	bottomText.setPosition(view.getCenter().x - engine->window.getSize().x / 2 + 30, view.getCenter().y - engine->window.getSize().y / 2 + 240);
 	spriteBox.setSize(sf::Vector2f(sprite.getLocalBounds().width, sprite.getLocalBounds().height));
 	spriteBox.setPosition(sprite.getGlobalBounds().left, sprite.getGlobalBounds().top);
 
@@ -252,15 +308,15 @@ void HitboxEditor::update(const float dt) {
 
 void HitboxEditor::render(const float dt) {
 
-	if (sprite.getGlobalBounds().height > engine->window.getSize().y)
+	if (sprite.getGlobalBounds().height > (float) engine->window.getSize().y)
 		view.setSize(view.getSize().x, sprite.getGlobalBounds().height + 10);
 	else
 		view.setSize(view.getSize().x, engine->window.getSize().y + 10);
 
-	if (sprite.getGlobalBounds().width > engine->window.getSize().x)
+	if (sprite.getGlobalBounds().width > (float) engine->window.getSize().x)
 		view.setSize(sprite.getGlobalBounds().width + 10, view.getSize().y);
 	else
-		view.setSize(engine->window.getSize().x + 10, view.getSize().y);
+		view.setSize((float) engine->window.getSize().x + 10, view.getSize().y);
 
 	view.setCenter(sprite.getPosition().x, sprite.getPosition().y);
 
@@ -275,4 +331,29 @@ void HitboxEditor::render(const float dt) {
 	hitMap.draw(&engine->window, textureID);
 
 	engine->window.draw(positionText);
+	engine->window.draw(topText);
+	engine->window.draw(leftText);
+	engine->window.draw(rightText);
+	engine->window.draw(bottomText);
+	engine->window.draw(sideText);
+}
+
+void HitboxEditor::updateSelectText() {
+
+	if (hitMap.select == hitMap.map.end()) {
+		positionText.setString("Position: ");
+		topText.setString("Top: ");
+		leftText.setString("Left: ");
+		rightText.setString("Right: ");
+		bottomText.setString("Bottom: ");
+	}
+
+	else {
+		positionText.setString("Position:\n" + std::to_string(hitMap.select->second->box.getPosition().x) + "\n" + std::to_string(hitMap.select->second->box.getPosition().y));
+		topText.setString("Top: " + std::to_string(hitMap.select->second->box.getGlobalBounds().top));
+		leftText.setString("Left: " + std::to_string(hitMap.select->second->box.getGlobalBounds().left));
+		rightText.setString("Right: " + std::to_string(hitMap.select->second->box.getGlobalBounds().left + hitMap.select->second->box.getGlobalBounds().width));
+		bottomText.setString("Bottom: " + std::to_string(hitMap.select->second->box.getGlobalBounds().top + hitMap.select->second->box.getGlobalBounds().height));
+	}
+
 }
