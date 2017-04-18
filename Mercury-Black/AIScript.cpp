@@ -319,7 +319,7 @@ void scriptGroundBlob(World * world, int entityID, float dt) {
 		
 		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
 		
-		if (world->input[entityID].lastDirection = LEFT)
+		if (world->input[entityID].left)
 			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(-8.0f, 0.0f), 4.0f, 0.005f, 1, 10, true);
 		else
 			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(8.0f, 0.0f), 4.0f, 0.005f, 1, 10, true);
@@ -552,6 +552,40 @@ void scriptWisp(World * world, int entityID, float dt) {
 	
 	s->metaballSpawner->position.x = p->x;
 	s->metaballSpawner->position.y = p->y;
+
+}
+
+void scriptSpitter(World * world, int entityID, float dt) {
+
+	Sprite * s;
+	ScriptParameters * sp;
+
+	s = &(world->sprite[entityID]);
+	sp = &(world->scriptParameters[entityID]);
+
+	scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
+
+	if (sp->currentState == DEATH_STATE) {
+		world->metaballHandler->sunburst(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), 20);
+		destroyEntity(world, entityID);
+		return;
+	}
+
+	if ((sp->attackTimer -= dt) <= 0) {
+		sp->attackTimer = sp->attackFrequency;
+		
+		if (world->input[entityID].left)
+			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(-13.0f, 0.0f), 4.0f, 0.0f, 1, 10, true);
+		else
+			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(13.0f, 0.0f), 4.0f, 0.0f, 1, 10, true);
+	}
+
+	inputFlip(world, entityID);
+
+	/* Allow Animation Changes If Current Animation Has Ended */
+	if (s->animationManager.updateAnimation(dt) == 1) {
+		sp->currentState = NO_STATE;
+	}
 
 }
 

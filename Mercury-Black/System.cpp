@@ -39,6 +39,9 @@ void aiSystem(World * world, float dt) {
 			else if (world->name[entityID].name == "lotusMb")
 				scriptLotus(world, entityID, dt);
 
+			else if (world->name[entityID].name == "spitter")
+				scriptSpitter(world, entityID, dt);
+
 			else
 				printf("ERROR: Could Not Find Entity AI: %s\n", world->name[entityID].name.c_str());
 

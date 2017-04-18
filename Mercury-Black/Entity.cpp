@@ -286,7 +286,7 @@ int createWisp(World * world, float x, float y, MetaballHandler * metaballHandle
 
 	world->scriptParameters[entityID].retreatDist = 300;
 
-	world->scriptParameters[entityID].attackRangeMax = 300;
+	world->scriptParameters[entityID].attackRangeMax = 1000;
 	world->scriptParameters[entityID].attackRangeMin = 0;
 	world->scriptParameters[entityID].currentState = ATTACK_STATE;
 
@@ -372,6 +372,44 @@ int createHeart(World * world, float x, float y) {
 
 	world->position[entityID].x = x;
 	world->position[entityID].y = y;
+
+	return entityID;
+
+}
+
+int createSpitter(World * world, float x, float y) {
+
+	int entityID = createEntity(world);
+
+	world->mask[entityID] = NAME | HEALTH | SCRIPT | SPRITE | POSITION | INPUT;
+
+	world->name[entityID].name = "spitter";
+
+	world->health[entityID].max = 3000;
+	world->health[entityID].current = world->health[entityID].max;
+	world->health[entityID].hurtTimer = 0.0f;
+
+	world->scriptParameters[entityID].currentState = NO_STATE;
+	
+	world->scriptParameters[entityID].attackFrequency = 7.0f;
+
+	world->scriptParameters[entityID].attackRangeMin = 0.0f;
+	world->scriptParameters[entityID].attackRangeMax = 2000.0f;
+
+	world->scriptParameters[entityID].attackTimer = 0.0f;
+
+	world->scriptParameters[entityID].followDistMin = 0.0f;
+	world->scriptParameters[entityID].followDistMax = 2000.0f;
+
+	world->scriptParameters[entityID].secondsRemaining = 0.0f;
+
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "SingleAttack", 18, 0.1f);
+
+	world->position[entityID].x;
+	world->position[entityID].y;
+
+	world->sprite[entityID].animationManager.changeAnimation("SingleAttack");
 
 	return entityID;
 

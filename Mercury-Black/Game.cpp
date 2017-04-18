@@ -24,8 +24,9 @@ void Game::init() {
 	//createTest(&world, 3500, -1800);
 	//createLotus(&world, 0, -1000);
 	//createHeart(&world, 900, 500);
-	createWisp(&world, 500, 500, &metaballHandler);
+	//createWisp(&world, 500, 500, &metaballHandler);
 	//createCeilingPlant(&world, 0, -1000);
+	createSpitter(&world, 0, -1000);
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();

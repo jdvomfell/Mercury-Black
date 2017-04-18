@@ -36,6 +36,7 @@ int createGroundBlob(World * world, float x, float y);
 int createCeilingPlant(World * world, float x, float y);
 int createWisp(World * world, float x, float y, MetaballHandler * metaballHandler);
 int createLotus(World * world, float x, float y);
+int createSpitter(World * world, float x, float y);
 
 int createHeart(World * world, float x, float y);
 
