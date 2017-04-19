@@ -95,7 +95,7 @@ int createPlayer(World * world, float x, float y) {
 
 	world->stats[entityID].power = 30;
 
-	world->health[entityID].max = 100;
+	world->health[entityID].max = 500;
 	world->health[entityID].current = world->health[entityID].max;
 
 	world->gravity[entityID].weight = 1.0f;
@@ -344,10 +344,13 @@ int createLotus(World * world, float x, float y) {
 		(world->textureManager, world->name[entityID].name, "idle", 10, 0.1f);
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "dropAttack", 11, 0.07f);
+		(world->textureManager, world->name[entityID].name, "drop", 10, 0.07f);
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "rise", 14, 0.07f);
+		(world->textureManager, world->name[entityID].name, "up", 12, 0.07f);
+
+	world->sprite[entityID].animationManager.createAnimation
+		(world->textureManager, world->name[entityID].name, "gIdle", 5, 0.05f);
 
 	world->stats[entityID].power = 30;
 
@@ -406,8 +409,8 @@ int createSpitter(World * world, float x, float y) {
 	world->sprite[entityID].animationManager.createAnimation
 		(world->textureManager, world->name[entityID].name, "SingleAttack", 18, 0.1f);
 
-	world->position[entityID].x;
-	world->position[entityID].y;
+	world->position[entityID].x = x;
+	world->position[entityID].y = y;
 
 	world->sprite[entityID].animationManager.changeAnimation("SingleAttack");
 

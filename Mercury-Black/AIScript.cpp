@@ -110,22 +110,18 @@ void scriptFlyWait(World * world, int entityID, float x, float y) {
 		if (world->position[entityID].x < x) {
 			world->input[entityID].up = false;
 			world->input[entityID].down = true;
-			printf("down\n");
 		}
 		else {
 			world->input[entityID].up = true;
 			world->input[entityID].down = false;
-			printf("up\n");
 		}
 		if (world->position[entityID].y < y) {
 			world->input[entityID].left = true;
 			world->input[entityID].right = false;
-			printf("left\n");
 		}
 		else {
 			world->input[entityID].left = false;
 			world->input[entityID].right = true;
-			printf("ohhhhh yesssss right\n");
 		}
 
 	}
@@ -472,37 +468,48 @@ void scriptLotus(World * world, int entityID, float dt) {
 	p = &(world->position[entityID]);
 	sp = &(world->scriptParameters[entityID]);
 
-	/* Allow Animation Changes If Current Animation Has Ended */
-	if (s->animationManager.updateAnimation(dt) == 1) {
-		if (sp->currentState == ATTACK_STATE)
-			sp->currentState = SPECIAL_STATE;
-		else
-			sp->currentState = NO_STATE;
-	}
-
 	if (sp->currentState == DEATH_STATE) {
 		world->metaballHandler->sunburst(sf::Vector2f(p->x, p->y), 100);
 		destroyEntity(world, entityID);
 		return;
 	}
 
-	scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt);
+	i->left = false;
+	i->right = false;
+
+	/* Allow Animation Changes If Current Animation Has Ended */
+	if (s->animationManager.updateAnimation(dt) == 1) {
+		if (sp->currentState == ATTACK_STATE) {
+			sp->specialTimer1 = 2.0f;
+			sp->currentState = SPECIAL_STATE;
+		}
+		else if (sp->currentState != SPECIAL_STATE)
+			sp->currentState = NO_STATE;
+	}
 
 	if (sp->currentState == SPECIAL_STATE) {
-		i->left = false;
-		i->right = false;
-		s->animationManager.changeAnimation("rise");
+		if ((sp->specialTimer1 -= dt) > 0) {
+			s->animationManager.changeAnimation("gIdle");
+			return;
+		}
+		else {
+			sp->currentState = MOVEMENT_STATE;
+			s->animationManager.changeAnimation("up");
+		}
+	}
+
+	else if (sp->currentState == MOVEMENT_STATE) {
+		s->animationManager.changeAnimation("up");
 	}
 
 	else if (sp->currentState == ATTACK_STATE) {
-		i->left = false;
-		i->right = false;
-		s->animationManager.changeAnimation("dropAttack");
+		s->animationManager.changeAnimation("drop");
 	}
 
 	else {
 		s->animationManager.changeAnimation("idle");
 		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
+		scriptAttack(world, entityID, world->position[0].x, world->position[0].y, dt);
 	}
 
 }
@@ -575,9 +582,9 @@ void scriptSpitter(World * world, int entityID, float dt) {
 		sp->attackTimer = sp->attackFrequency;
 		
 		if (world->input[entityID].left)
-			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(-13.0f, 0.0f), 4.0f, 0.0f, 1, 10, true);
+			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(-13.0f, 0.0f), 4.0f, 0.0f, 1, 1, true);
 		else
-			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(13.0f, 0.0f), 4.0f, 0.0f, 1, 10, true);
+			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(13.0f, 0.0f), 4.0f, 0.0f, 1, 1, true);
 	}
 
 	inputFlip(world, entityID);

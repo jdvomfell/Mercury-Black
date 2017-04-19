@@ -161,11 +161,15 @@ void TextureManager::loadAllTextures() {
 
 	/* Drop-Attack */
 
-	loadTextures("lotusMb_dropAttack", "Textures/Enemies/Lotus/Drop-Attack/", 11);
+	loadTextures("lotusMb_drop", "Textures/Enemies/Lotus/Drop/", 10);
 
 	/* Rise */
 
-	loadTextures("lotusMb_rise", "Textures/Enemies/Lotus/Rise/", 14);
+	loadTextures("lotusMb_up", "Textures/Enemies/Lotus/Up/", 12);
+
+	/* Ground-Idle */
+
+	loadTextures("lotusMb_gIdle", "Textures/Enemies/Lotus/Ground-Idle/", 5);
 
 	///Spitter///
 
@@ -197,6 +201,7 @@ void TextureManager::loadAllTextures() {
 	loadTexture("spring_rock_1", "Textures/Test/spring_rock_1.png");
 	loadTexture("bamboo_1", "Textures/Test/bamboo_1.png");
 	loadTexture("beach_ground_1", "Textures/Test/beach_ground_1.png");
+	loadTexture("LillyPad", "Textures/Test/LillyPad.png");
 
 	/////ICONS/////
 

@@ -20,13 +20,14 @@ void Game::init() {
 
 	createPlayer(&world, 0, 0);
 
-	//createGroundBlob(&world, 6000, -1500);
-	//createTest(&world, 3500, -1800);
-	//createLotus(&world, 0, -1000);
+	createGroundBlob(&world, 6000, -1500);
+	createTest(&world, 3500, -1800);
+	createLotus(&world, 10000, -1200);
 	//createHeart(&world, 900, 500);
-	//createWisp(&world, 500, 500, &metaballHandler);
-	//createCeilingPlant(&world, 0, -1000);
-	createSpitter(&world, 0, -1000);
+	createWisp(&world, 500, 500, &metaballHandler);
+	createCeilingPlant(&world, 0, -1000);
+	createSpitter(&world, 9000, -900);
+	createSpitter(&world, 11500, -1100);
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
