@@ -239,13 +239,12 @@ void Editor::handleEvent() {
 
 					if (eventMap.events.empty()) eventMap.numEvents = 0;
 
-					if (eventMap.numEvents == 0) {
-						printf("fuck");
-						eventMap.insertSound(rectangle, "Music/drank.ogg", 25, true);
-					}
-					else if (eventMap.numEvents == 1) {
-						eventMap.insertSound(rectangle, "Music/frogs.ogg", 25, true);
-					}
+					//if (eventMap.numEvents == 0) {
+						eventMap.insertSound(rectangle, "Music/forest_song.ogg", 25, true);
+					//}
+					//else if (eventMap.numEvents == 1) {
+					//	eventMap.insertSound(rectangle, "Music/frogs.ogg", 25, true);
+					//}
 		
 				}
 

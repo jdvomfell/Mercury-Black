@@ -115,7 +115,6 @@ void EventHandler::load() {
 
 			numEvents++;
 
-			printf("fuckkckcckckckckc");
 			float volume; 
 			bool loop;
 			float minDistance; 
