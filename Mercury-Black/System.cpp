@@ -24,7 +24,7 @@ void aiSystem(World * world, float dt) {
 			else if (world->name[entityID].name == "ceilingPlant")
 				scriptPlant(world, entityID, dt);
 
-			else if (world->name[entityID].name == "test")
+			else if (world->name[entityID].name == "corruptPlayer")
 				scriptTest(world, entityID, dt);
 
 			else if (world->name[entityID].name == "heart")
@@ -167,7 +167,7 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 
 		/* Move The Hitboxes To The Entities Position */
 
-		for (int i = 0; i < hurtBoxes.size(); i++)
+		for (size_t i = 0; i < hurtBoxes.size(); i++)
 			hurtBoxes[i].move(dtp->x, dtp->y);
 
 		/* Find An Entity That Can Deal Damage */
@@ -217,7 +217,7 @@ void damageSystem(World * world, float dt, HitboxMap * hitboxMap) {
 
 			/* Move The Hitboxes To The Entities Position */
 
-			for (int i = 0; i < damageBoxes.size(); i++)
+			for (size_t i = 0; i < damageBoxes.size(); i++)
 				damageBoxes[i].move(ddp->x, ddp->y);
 
 			/* Check Each Damage Box Against Each Hurt Box */
@@ -384,16 +384,29 @@ void shapeCollSystem(World * world, PlatformMap * platformMap, HitboxMap * hitbo
 
 	std::map<float, sf::ConvexShape *>::iterator it;
 
+	/* Reset Platform Colors */
+
+	for (it = platformMap->map.begin(); it != platformMap->map.end(); it++) {
+		it->second->setFillColor(sf::Color::Black);
+	}
+
 	/* Find An Entity That Can Collide With Platforms */
 
 	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
 
 		if ((world->mask[entityID] & COLLISION_MASK) == COLLISION_MASK) {
 
+			collisionBoxes.clear();
+
 			if (world->input[entityID].lastDirection == LEFT)
 				collisionBoxes = hitboxMap->getFlippedHitboxes(world->sprite[entityID].animationManager.getCurrentTextureID(), HITBOXTYPE_COLLISION);
 			else
 				collisionBoxes = hitboxMap->getHitboxes(world->sprite[entityID].animationManager.getCurrentTextureID(), HITBOXTYPE_COLLISION);
+
+			if (collisionBoxes.size() == 0) {
+				printf("No Collision Boxes For: %s", world->name[entityID].name.c_str());
+				continue;
+			}
 
 			for (size_t i = 0; i < collisionBoxes.size(); i++)
 				collisionBoxes[i].move(world->position[entityID].x + world->velocity[entityID].x, world->position[entityID].y + world->velocity[entityID].y);
@@ -431,7 +444,6 @@ void shapeCollSystem(World * world, PlatformMap * platformMap, HitboxMap * hitbo
 
 					if (!isCollision(entityProjection, shapeProjection) && collision == true)
 					{
-						shape->setFillColor(sf::Color::Black);
 						collision = false;
 						break;
 					}
@@ -457,7 +469,6 @@ void shapeCollSystem(World * world, PlatformMap * platformMap, HitboxMap * hitbo
 
 				if (!isCollision(shapeProjection, entityProjection) && collision == true)
 				{
-					shape->setFillColor(sf::Color::Black);
 					collision = false;
 					continue;
 				}
@@ -480,7 +491,6 @@ void shapeCollSystem(World * world, PlatformMap * platformMap, HitboxMap * hitbo
 
 				if (!isCollision(shapeProjection, entityProjection) && collision == true)
 				{
-					shape->setFillColor(sf::Color::Black);
 					collision = false;
 					continue;
 				}
@@ -502,7 +512,6 @@ void shapeCollSystem(World * world, PlatformMap * platformMap, HitboxMap * hitbo
 
 				if (!isCollision(shapeProjection, entityProjection) && collision == true)
 				{
-					shape->setFillColor(sf::Color::Black);
 					collision = false;
 					continue;
 				}
@@ -524,7 +533,6 @@ void shapeCollSystem(World * world, PlatformMap * platformMap, HitboxMap * hitbo
 
 				if (!isCollision(shapeProjection, entityProjection) && collision == true)
 				{
-					shape->setFillColor(sf::Color::Black);
 					collision = false;
 					continue;
 				}

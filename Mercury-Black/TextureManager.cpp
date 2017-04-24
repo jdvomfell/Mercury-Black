@@ -116,6 +116,14 @@ void TextureManager::loadAllTextures() {
 
 	loadTextures("player_jumpAttack", "Textures/Player/Jump-Attack/", 6);
 
+	///CorruptPlayer///
+
+	loadTextures("corruptPlayer_idle", "Textures/Enemies/CorruptPlayer/Idle/", 24);
+
+	loadTextures("corruptPlayer_run", "Textures/Enemies/CorruptPlayer/Run/", 6);
+
+	loadTextures("corruptPlayer_idleAttack", "Textures/Enemies/CorruptPlayer/Idle-Attack/", 7);
+
 	///Ceiling Plant///
 
 	/* Drop */
@@ -201,7 +209,15 @@ void TextureManager::loadAllTextures() {
 	loadTexture("spring_rock_1", "Textures/Test/spring_rock_1.png");
 	loadTexture("bamboo_1", "Textures/Test/bamboo_1.png");
 	loadTexture("beach_ground_1", "Textures/Test/beach_ground_1.png");
-	loadTexture("LillyPad", "Textures/Test/LillyPad.png");
+	loadTexture("lily_pad_1", "Textures/Test/Lilly1.png");
+	loadTexture("lily_pad_2", "Textures/Test/Lilly2.png");
+	loadTexture("swamp_tree_1", "Textures/Test/Tree1.png");
+	loadTexture("swamp_tree_2", "Textures/Test/Tree2.png");
+	loadTexture("swamp_tree_3", "Textures/Test/Tree3.png");
+	loadTexture("swamp_foreground_1", "Textures/Test/MBEnv_Final_FG.png");
+	loadTexture("swamp_background_1", "Textures/Test/MBEnv_Final_BG.png");
+	loadTexture("swamp_foliage_1", "Textures/Test/Foliage1.png");
+	loadTexture("swamp_foliage_2", "Textures/Test/Foliage2.png");
 
 	/////ICONS/////
 

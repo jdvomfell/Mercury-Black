@@ -27,9 +27,6 @@ void AnimationManager::createAnimation(TextureManager * textureManager, std::str
 	std::string frameName;
 
 	Animation * animation = new Animation(animationSpeed);
-	
-	if (entityName == "test")
-		entityName = "player";
 
 	for (int i = 0; i < numFrames; i++) {
 		frameName = entityName;

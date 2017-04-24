@@ -18,16 +18,16 @@ void Game::init() {
 	world.textureManager = &engine->textureManager;
 	world.metaballHandler = &metaballHandler;
 
-	createPlayer(&world, 0, 0);
+	createPlayer(&world, 48000, 0);
 
 	createGroundBlob(&world, 6000, -1500);
-	createTest(&world, 3500, -1800);
-	createLotus(&world, 10000, -1200);
+	createTest(&world, 21100, -1100);
+	createLotus(&world, 48000, 2150);
 	//createHeart(&world, 900, 500);
 	createWisp(&world, 500, 500, &metaballHandler);
-	createCeilingPlant(&world, 0, -1000);
-	createSpitter(&world, 9000, -900);
-	createSpitter(&world, 11500, -1100);
+	createCeilingPlant(&world, 12700, -20);
+	//createSpitter(&world, 9000, -900);
+	//createSpitter(&world, 11500, -1100);
 
 	objectMap = ObjectMap(&engine->textureManager);
 	objectMap.load();
@@ -95,8 +95,10 @@ void Game::handleEvent() {
 			if (event.key.code == sf::Keyboard::D)
 				world.input[PLAYER].right = true;
 
-			if (event.key.code == sf::Keyboard::L)
-				drawPlatforms = !drawPlatforms;
+			if (event.key.code == sf::Keyboard::L) {
+				drawDebug = !drawDebug;
+				printf("%f, %f", world.position[0].x, world.position[0].y);
+			}
 
 			if (event.key.code == sf::Keyboard::J)
 				world.input[PLAYER].attack = true;
@@ -204,32 +206,34 @@ void Game::render(const float dt) {
 
 	objectMap.drawForeground(&engine->window);
 
-	/* HitboxTest */
-	std::string texID;
-	std::vector<sf::RectangleShape> hitboxes;
-	sf::RectangleShape box;
-	#define ANIMATION_MASK (INPUT | SPRITE | SCRIPT)
-	for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
-		if ((world.mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
-			texID = world.sprite[entityID].animationManager.getCurrentTextureID();
-			
-			if (world.input[entityID].lastDirection == LEFT)
-				hitboxes = hitboxMap.getFlippedHitboxes(texID, HITBOXTYPE_ALL);
-			else
-				hitboxes = hitboxMap.getHitboxes(texID, HITBOXTYPE_ALL);
-			
-			for (size_t i = 0; i < hitboxes.size(); i++) {
-				box = hitboxes[i];
-				box.move(world.position[entityID].x, world.position[entityID].y);
-				engine->window.draw(box);
+	if (drawDebug) {
+		
+		for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)
+			engine->window.draw(*(pit->second));
+	
+		/* HitboxTest */
+		std::string texID;
+		std::vector<sf::RectangleShape> hitboxes;
+		sf::RectangleShape box;
+		
+		#define ANIMATION_MASK (INPUT | SPRITE | SCRIPT)
+		for (int entityID = 0; entityID < MAX_ENTITIES; entityID++) {
+			if ((world.mask[entityID] & ANIMATION_MASK) == ANIMATION_MASK) {
+				texID = world.sprite[entityID].animationManager.getCurrentTextureID();
+
+				if (world.input[entityID].lastDirection == LEFT)
+					hitboxes = hitboxMap.getFlippedHitboxes(texID, HITBOXTYPE_ALL);
+				else
+					hitboxes = hitboxMap.getHitboxes(texID, HITBOXTYPE_ALL);
+
+				for (size_t i = 0; i < hitboxes.size(); i++) {
+					box = hitboxes[i];
+					box.move(world.position[entityID].x, world.position[entityID].y);
+					engine->window.draw(box);
+				}
 			}
 		}
 	}
-	//////////////////
-
-	if (drawPlatforms)
-		for (pit = platformMap.map.begin(); pit != platformMap.map.end(); pit++)
-			engine->window.draw(*(pit->second));
 
 	//for (eventMap.eit = eventMap.events.begin(); eventMap.eit != eventMap.events.end(); )
 	//{

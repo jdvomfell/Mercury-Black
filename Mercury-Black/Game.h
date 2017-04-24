@@ -53,7 +53,7 @@ private:
 
 	sf::RectangleShape rect;
 
-	bool drawPlatforms;
+	bool drawDebug;
 
 	std::map <float, sf::ConvexShape *>::iterator pit;
 

@@ -63,10 +63,10 @@ void MetaballHandler::draw(sf::RenderWindow * window, sf::View * view) {
 
 	for (size_t i = 0; i < metaballList.size(); i++) {
 
-		if (metaballList[i]->lifespan < DEFAULT_SCALE)
+		if (metaballList[i]->lifespan < metaballList[i]->scale)
 			metaballSprite.setScale(sf::Vector2f(metaballList[i]->lifespan, metaballList[i]->lifespan));
 		else
-			metaballSprite.setScale(sf::Vector2f(DEFAULT_SCALE, DEFAULT_SCALE));
+			metaballSprite.setScale(sf::Vector2f(metaballList[i]->scale, metaballList[i]->scale));
 
 		metaballSprite.setPosition(metaballList[i]->position);
 
@@ -84,7 +84,7 @@ void MetaballHandler::addSpawner(class MetaballSpawner * metaballSpawner) {
 
 }
 
-void MetaballHandler::addMetaball(sf::Vector2f position, sf::Vector2f velocity, float lifespan, float weight, int spreadX, int spreadY, bool dealsDamage) {
+void MetaballHandler::addMetaball(sf::Vector2f position, sf::Vector2f velocity, float lifespan, float weight, int spreadX, int spreadY, bool dealsDamage, float scale) {
 
 	float xMod = (rand() % spreadX) * 0.10f;
 	if (rand() % 2 == 1)
@@ -100,6 +100,7 @@ void MetaballHandler::addMetaball(sf::Vector2f position, sf::Vector2f velocity, 
 	metaball->lifespan = lifespan;
 	metaball->weight = weight;
 	metaball->dealsDamage = dealsDamage;
+	metaball->scale = scale;
 
 	metaballList.push_back(metaball);
 
@@ -108,7 +109,7 @@ void MetaballHandler::addMetaball(sf::Vector2f position, sf::Vector2f velocity, 
 void MetaballHandler::sunburst(sf::Vector2f position, int numMetaballs) {
 
 	for (int i = 0; i < numMetaballs; i++) {
-		addMetaball(position, sf::Vector2f(0, 0), 1.0f, -0.5f, 100, 100, false);
+		addMetaball(position, sf::Vector2f(0, 0), 1.0f, -0.5f, 100, 100, false, DEFAULT_SCALE);
 	}
 
 }
@@ -116,7 +117,7 @@ void MetaballHandler::sunburst(sf::Vector2f position, int numMetaballs) {
 void MetaballHandler::sunburst(sf::Vector2f position, int numMetaballs, sf::Vector2f initialVelocity) {
 
 	for (int i = 0; i < numMetaballs; i++) {
-		addMetaball(position, initialVelocity, 0.5f, 0.3f, 100, 100, false);
+		addMetaball(position, initialVelocity, 0.5f, 0.3f, 100, 100, false, DEFAULT_SCALE);
 	}
 
 }
@@ -201,7 +202,7 @@ void MetaballSpawner::spawn(float dt) {
 	toSpawn += spawnPerSecond * dt;
 
 	for (int i = 0; i < (int)toSpawn; i++) {
-		handler->addMetaball(this->position, this->velocity, this->lifespan, this->weight, this->spreadX, this->spreadY, this->dealsDamage);
+		handler->addMetaball(this->position, this->velocity, this->lifespan, this->weight, this->spreadX, this->spreadY, this->dealsDamage, DEFAULT_SCALE);
 		toSpawn--;
 	}
 

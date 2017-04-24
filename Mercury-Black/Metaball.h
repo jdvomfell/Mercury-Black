@@ -13,6 +13,7 @@ struct Metaball {
 	sf::Vector2f velocity;
 	float lifespan;
 	float weight;
+	float scale;
 
 };
 
@@ -36,7 +37,7 @@ public:
 	void init(sf::Vector2u windowSize, bool highResolution);
 
 	void addSpawner(class MetaballSpawner * metaballSpawner);
-	void addMetaball(sf::Vector2f position, sf::Vector2f velocity, float lifespan, float weight, int spreadX, int spreadY, bool dealsDamage);
+	void addMetaball(sf::Vector2f position, sf::Vector2f velocity, float lifespan, float weight, int spreadX, int spreadY, bool dealsDamage, float scale);
 	
 	void sunburst(sf::Vector2f positon, int numMetaballs);
 	void sunburst(sf::Vector2f position, int numMetaballs, sf::Vector2f initialVelocity);

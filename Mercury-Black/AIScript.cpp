@@ -316,9 +316,9 @@ void scriptGroundBlob(World * world, int entityID, float dt) {
 		scriptFollow(world, entityID, world->position[0].x, world->position[0].y);
 		
 		if (world->input[entityID].left)
-			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(-8.0f, 0.0f), 4.0f, 0.005f, 1, 10, true);
+			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(-8.0f, 0.0f), 4.0f, 0.005f, 1, 1, true, 1.5f);
 		else
-			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(8.0f, 0.0f), 4.0f, 0.005f, 1, 10, true);
+			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(8.0f, 0.0f), 4.0f, 0.005f, 1, 1, true, 1.5f);
 	}
 
 	if (world->scriptParameters[entityID].attackTimer > 0 && world->scriptParameters[entityID].currentState == NO_STATE)
@@ -469,7 +469,9 @@ void scriptLotus(World * world, int entityID, float dt) {
 	sp = &(world->scriptParameters[entityID]);
 
 	if (sp->currentState == DEATH_STATE) {
-		world->metaballHandler->sunburst(sf::Vector2f(p->x, p->y), 100);
+		for (size_t i = 0; i < sp->subEntities.size(); i++)
+			world->scriptParameters[sp->subEntities[i]].currentState = DEATH_STATE;
+		world->metaballHandler->sunburst(sf::Vector2f(p->x, p->y), 150);
 		destroyEntity(world, entityID);
 		return;
 	}
@@ -582,9 +584,9 @@ void scriptSpitter(World * world, int entityID, float dt) {
 		sp->attackTimer = sp->attackFrequency;
 		
 		if (world->input[entityID].left)
-			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(-13.0f, 0.0f), 4.0f, 0.0f, 1, 1, true);
+			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(-13.0f, 0.0f), 4.0f, 0.0f, 1, 1, true, 1.5f);
 		else
-			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(13.0f, 0.0f), 4.0f, 0.0f, 1, 1, true);
+			world->metaballHandler->addMetaball(sf::Vector2f(world->position[entityID].x, world->position[entityID].y), sf::Vector2f(13.0f, 0.0f), 4.0f, 0.0f, 1, 1, true, 1.5f);
 	}
 
 	inputFlip(world, entityID);

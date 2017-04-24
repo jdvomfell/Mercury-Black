@@ -127,7 +127,7 @@ int createPlayer(World * world, float x, float y) {
 		(world->textureManager, world->name[entityID].name, "runAttack", 6, 0.125f);
 
 	world->sprite[entityID].animationManager.createAnimation
-		(world->textureManager, world->name[entityID].name, "jumpAttack", 6, 0.125f);
+		(world->textureManager, world->name[entityID].name, "jumpAttack", 6, 0.05f);
 
 	return entityID;
 
@@ -228,7 +228,7 @@ int createTest(World * world, float x, float y) {
 
 	world->mask[entityID] = NAME | INPUT | POSITION | VELOCITY | SPRITE | COLLISION | GRAVITY | SCRIPT | HEALTH | STATS;
 
-	world->name[entityID].name = "test";
+	world->name[entityID].name = "corruptPlayer";
 
 	world->position[entityID].x = x;
 	world->position[entityID].y = y;
@@ -320,7 +320,7 @@ int createLotus(World * world, float x, float y) {
 
 	world->name[entityID].name = "lotusMb";
 
-	world->health[entityID].max = 500;
+	world->health[entityID].max = 150;
 	world->health[entityID].current = world->health[entityID].max;
 	world->health[entityID].hurtTimer = 0.0f;
 
@@ -353,6 +353,9 @@ int createLotus(World * world, float x, float y) {
 		(world->textureManager, world->name[entityID].name, "gIdle", 5, 0.05f);
 
 	world->stats[entityID].power = 30;
+
+	world->scriptParameters[entityID].subEntities.push_back(createSpitter(world, world->position[entityID].x - 1100.0f, world->position[entityID].y + 350.0f));
+	world->scriptParameters[entityID].subEntities.push_back(createSpitter(world, world->position[entityID].x + 1500.0f, world->position[entityID].y + 250.0f));
 
 	return entityID;
 

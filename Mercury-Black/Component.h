@@ -113,6 +113,7 @@ struct ScriptParameters {
 	int currentState;
 	float spawnDistance;
 	float retreatDist;
+	std::vector<int> subEntities;
 
 };
 
