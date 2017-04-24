@@ -18,7 +18,7 @@ void Game::init() {
 	world.textureManager = &engine->textureManager;
 	world.metaballHandler = &metaballHandler;
 
-	createPlayer(&world, 48000, 0);
+	createPlayer(&world, 0, 0);
 
 	createGroundBlob(&world, 6000, -1500);
 	createTest(&world, 21100, -1100);
